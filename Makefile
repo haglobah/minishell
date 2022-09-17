@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/09/17 15:45:21 by tpeters          ###   ########.fr        #
+#    Updated: 2022/09/17 17:59:54 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,13 @@ CC = cc
 
 ifeq ($(OS),Windows_NT)
 else
-    UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Linux)
-    endif
-    ifeq ($(UNAME_S),Darwin)
-    endif
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		LSANLFLAGS := -rdynamic -LLeakSanitizer -llsan -ldl -lstdc++
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		LSANLFLAGS := -LLeakSanitizer -llsan -lc++
+	endif
 endif
 
 LIBFTLIB=/libft/libft.a
@@ -37,7 +39,7 @@ $(LIBFTLIB):
 
 LSANLIB = /LeakSanitizer/liblsan.a
 lsan: CFLAGS += -ILeakSanitizer -Wno-gnu-include-next
-lsan: LINK_FLAGS += -LLeakSanitizer -llsan -lc++
+lsan: LINK_FLAGS += $(LSANLFLAGS)
 lsan: fclean $(LSANLIB)
 lsan: all
 
