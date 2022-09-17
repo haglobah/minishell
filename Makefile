@@ -6,16 +6,16 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/09/17 10:24:15 by tpeters          ###   ########.fr        #
+#    Updated: 2022/09/17 15:45:21 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = 
+SRCS = main.c
 OBJS = $(SRCS:.c=.o)
-NAME = 
+NAME = minishell
 
-CFLAGS = -Wall -Wextra -Werror
-LINK_FLAGS = -Llibft -lft
+CFLAGS = #-Wall -Wextra -Werror
+LINK_FLAGS = -Llibft -lft -lreadline
 CC = cc
 
 ifeq ($(OS),Windows_NT)
@@ -33,7 +33,7 @@ all: $(NAME)
 
 $(LIBFTLIB):
 	if [ ! -d "libft" ]; then git clone git@github.com:Ludmuterol/libft.git; fi
-	$(MAKE) -C libft
+	$(MAKE) -C libft bonus
 
 LSANLIB = /LeakSanitizer/liblsan.a
 lsan: CFLAGS += -ILeakSanitizer -Wno-gnu-include-next
