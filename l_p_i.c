@@ -94,7 +94,7 @@ t_list	*lex(char *in)
 		}
 		if (curr_token_type == 2)
 		{
-			
+			//?
 		}
 		else
 		{
@@ -117,13 +117,7 @@ void	print_tokens(t_list *tokens)
 	}
 }
 
-char	**parse(t_list *toks)
-{
-	//make AST
-	print_tokens(toks);
-}
-
-void	interpret(char **in)
+void	interpret(t_list *parse_tree)
 {
 	//run AST
 }
@@ -131,12 +125,26 @@ void	interpret(char **in)
 void	msh_loop(void)
 {
 	char	*t;
+	t_list	*parse_tree;
+
 	while(1)
 	{
 		t = readline("φ ");
 		add_history(t);
 		if (t)
-			interpret(parse(lex(t)));
+		{
+			parse_tree = lex(t);
+			if (parse(parse_tree))
+			{
+				ft_printf("Good Command!\n");
+				print_tokens(parse_tree);
+				interpret(parse_tree);
+			}
+			else
+			{
+				ft_printf("Bad Command!\n");
+			}
+		}
 		free(t);
 	}
 }

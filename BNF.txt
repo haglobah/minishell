@@ -6,7 +6,7 @@
 %token  NAME
 %token  NEWLINE
 
-%token  DLESS  DGREAT  
+%token  DLESS  DGREAT
 /*      '<<'   '>>'    */
 
 

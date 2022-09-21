@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = l_p_i.c
+SRCS = l_p_i.c parser.c
 MAIN = main.c
 OBJS = $(SRCS:.c=.o)
 MO = main.o
@@ -69,5 +69,6 @@ re: fclean
 
 test: $(TOBJS) $(OBJS)
 	$(CC) $(TOBJS) $(OBJS) $(LINK_FLAGS) -o $(TEST)
+	./$(TEST)
 
 .PHONY: lsan debug all clean fclean re
