@@ -10,8 +10,13 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = main.c
+SRCS = l_p_i.c
+MAIN = main.c
 OBJS = $(SRCS:.c=.o)
+MO = main.o
+TESTS = test.c test_main.c
+TOBJS = $(TESTS:.c=.o)
+TEST = msh_test
 NAME = minishell
 
 CFLAGS = #-Wall -Wextra -Werror
@@ -31,7 +36,7 @@ endif
 
 LIBFTLIB=/libft/libft.a
 all: $(LIBFTLIB)
-all: $(NAME) 
+all: $(NAME)
 
 $(LIBFTLIB):
 	if [ ! -d "libft" ]; then git clone git@github.com:Ludmuterol/libft.git; fi
@@ -43,15 +48,15 @@ lsan: LINK_FLAGS += $(LSANLFLAGS)
 lsan: fclean $(LSANLIB)
 lsan: all
 
-$(LSANLIB): 
+$(LSANLIB):
 	if [ ! -d "LeakSanitizer" ]; then git clone git@github.com:mhahnFr/LeakSanitizer.git; fi
 	$(MAKE) -C LeakSanitizer
 
 debug: CFLAGS += -g
 debug: all
 
-$(NAME): $(OBJS)
-	$(CC) $(OBJS) $(LINK_FLAGS) -o $(NAME)
+$(NAME): $(OBJS) $(MO)
+	$(CC) $(OBJS) $(MO) $(LINK_FLAGS) -o $(NAME)
 
 clean:
 	rm -f $(OBJS)
@@ -61,5 +66,8 @@ fclean: clean
 
 re: fclean
 	$(MAKE)
+
+test: $(TOBJS) $(OBJS)
+	$(CC) $(TOBJS) $(OBJS) $(LINK_FLAGS) -o $(TEST)
 
 .PHONY: lsan debug all clean fclean re
