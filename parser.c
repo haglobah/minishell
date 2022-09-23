@@ -230,7 +230,7 @@ int	program(t_list *t)
 	return (1);
 }
 
-int	parse_real(t_list *toks)
+int	parse_real_list(t_list *toks)
 {
 	if (!program(toks))
 		return (0);
@@ -238,7 +238,7 @@ int	parse_real(t_list *toks)
 	return (1);
 }
 
-int	parse(t_list *t)
+int	parse_list(t_list *t)
 {
 	if (!t)
 	{
@@ -248,7 +248,59 @@ int	parse(t_list *t)
 	if (!t->content)
 		ft_printf("No content.\n ");
 	ft_printf("t->content: %s\n", t->content);
-	if (nl_list(t))
+	if (pipe_seq(t))
 		return (1);
 	return (0);
+}
+
+int	throw_error(char *token)
+{
+	ft_printf("bash: syntax error near unexpected token '%s'\n", token);
+}
+
+int	count_pipes(char **toks, int *places)
+{
+	int	c;
+	int	i;
+
+	i = 0;
+	c = 0;
+	while (toks[i])
+	{
+		if (s_iseq(toks[i], "|"))
+		{
+			places[c] = i;
+			c++;
+		}
+		i++;
+	}
+	return (c);
+}
+
+int	split_by_pipes(t_msh *m)
+{
+	int	i;
+	int	pipecount;
+	int	*pipe_places;
+
+	pipe_places = (int *)ft_calloc(NUM_PIPES, sizeof(int));
+	if (!pipe_places)
+		return (-2);
+	pipecount = count_pipes(m->toks, pipe_places);
+	m->ct->cmds = (t_cmd *)ft_calloc(pipecount + 2, sizeof(t_cmd));
+	if (!m->ct->cmds)
+		return (-3);
+	i = 0;
+	while (i < pipecount + 1)
+	{
+		//one precommand (only split by pipe per table row.
+		i++;
+	}
+	free(pipe_places);
+}
+
+int	parse_msh(t_msh *m)
+{
+	split_by_pipes(m);
+	return (1);
 }

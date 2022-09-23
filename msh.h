@@ -15,16 +15,39 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+#define NUM_PIPES 50
+
+typedef struct s_command
+{
+	char	*cmd;
+	int	argc;
+	char	**argv;
+	
+}	t_cmd;
+
+typedef struct s_command_table
+{
+	t_cmd	*cmds;
+	char	***pipe_split;
+
+	char	*in;
+	char	*out;
+}	t_ct;
+
+t_ct	*mk_ct();
+void	del_ct(t_ct *ct);
+
 typedef struct s_minishell
 {
 	char	**toks;
+	t_ct	*ct;
 }	t_msh;
 
 t_msh	*mk_msh(char **toks);
 void	del_msh(t_msh *m);
 
 t_list	*lex(char *in);
-int	parse(t_msh *m);
+int	parse_msh(t_msh *m);
 
 int	run_tests(void);
 void	msh_loop(void);

@@ -178,6 +178,21 @@ void	interpret(t_list *parse_tree)
 	//run AST
 }
 
+t_ct	*mk_ct()
+{
+	t_ct	*ct;
+	char	*in;
+	char	*out;
+
+	ct = (t_ct *)ft_calloc(1, sizeof(t_ct));
+	if (!ct)
+		return (NULL);
+	ct->cmds = NULL;
+	ct->in = NULL;
+	ct->out = NULL;
+	return (ct);
+}
+
 t_msh	*mk_msh(char **toks)
 {
 	t_msh	*msh;
@@ -186,6 +201,7 @@ t_msh	*mk_msh(char **toks)
 	if (!msh)
 		return (NULL);
 	msh->toks = toks;
+	msh->ct = mk_ct();
 	return (msh);
 }
 
@@ -201,9 +217,12 @@ void	del_msh(t_msh *m)
 		free(m->toks[i]);
 		i++;
 	}
+	//del_ct(m->ct)
 	free(m);
 }
 
+
+// msh_loop = execute . evaluate . parse . tokenize
 void	msh_loop(void)
 {
 	char	*t;
@@ -219,7 +238,7 @@ void	msh_loop(void)
 			toks = list_to_arr(lex(t));
 			m = mk_msh(toks);
 			print_tokarr(m->toks);
-			if (toks)
+			if (parse_msh(m))
 			{
 				//ft_printf("Good Command!\n");
 				//print_tokens(parse_tree);
