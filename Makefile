@@ -71,4 +71,7 @@ test: $(TOBJS) $(OBJS)
 	$(CC) $(TOBJS) $(OBJS) $(LINK_FLAGS) -o $(TEST)
 	./$(TEST)
 
-.PHONY: lsan debug all clean fclean re
+run: all
+	./$(NAME)
+
+.PHONY: lsan debug all clean fclean re test

@@ -117,15 +117,98 @@ void	print_tokens(t_list *tokens)
 	}
 }
 
+void	print_tokarr(char **toks)
+{
+	if (!toks)
+		return ;
+	ft_printf("All the tokens: ");
+	while (*toks)
+	{
+		ft_printf("\'%s\', ", *toks);
+		toks++;
+	}
+	ft_printf("\n");
+}
+
+void	ft_strcpy(char *dst, char *src)
+{
+	while (*src)
+	{
+		*dst++ = *src++;
+	}
+}
+
+char	**list_to_arr(t_list *toks)
+{
+	int	slen;
+	int	llen;
+	char	**tok_arr;
+	t_list	*cpy;
+	int	i;
+
+	llen = 0;
+	cpy = toks;
+	while (cpy)
+	{
+		llen++;
+		cpy = cpy->next;
+	}
+//	ft_printf("toks: %i\n", llen);
+	tok_arr = (char **)ft_calloc(llen + 1, sizeof(char *));
+	if (!tok_arr)
+		return (NULL);
+	slen = 0;
+	i = 0;
+	while (toks)
+	{
+		slen = ft_strlen(toks->content);
+		tok_arr[i] = (char *)ft_calloc(slen + 1, sizeof(char));
+		if (!(*tok_arr))
+			return (NULL);
+		ft_strcpy(tok_arr[i], toks->content);
+//		ft_printf("Copied %s\n", tok_arr[i]);
+		toks = toks->next;
+		i++;
+	}
+	return (tok_arr);
+}
+
 void	interpret(t_list *parse_tree)
 {
 	//run AST
 }
 
+t_msh	*mk_msh(char **toks)
+{
+	t_msh	*msh;
+
+	msh = (t_msh *)ft_calloc(1, sizeof(t_msh));
+	if (!msh)
+		return (NULL);
+	msh->toks = toks;
+	return (msh);
+}
+
+void	del_msh(t_msh *m)
+{
+	//free_toks(m->toks);
+	int	i;
+	int	j;
+
+	i = 0;
+	while (m->toks[i])
+	{
+		free(m->toks[i]);
+		i++;
+	}
+	free(m);
+}
+
 void	msh_loop(void)
 {
 	char	*t;
-	t_list	*parse_tree;
+	char	**toks;
+	t_msh	*m;
 
 	while(1)
 	{
@@ -133,12 +216,14 @@ void	msh_loop(void)
 		add_history(t);
 		if (t)
 		{
-			parse_tree = lex(t);
-			if (parse(parse_tree))
+			toks = list_to_arr(lex(t));
+			m = mk_msh(toks);
+			print_tokarr(m->toks);
+			if (toks)
 			{
-				ft_printf("Good Command!\n");
-				print_tokens(parse_tree);
-				interpret(parse_tree);
+				//ft_printf("Good Command!\n");
+				//print_tokens(parse_tree);
+				//interpret();
 			}
 			else
 			{
@@ -146,6 +231,7 @@ void	msh_loop(void)
 			}
 		}
 		free(t);
+		del_msh(m);
 	}
 }
 

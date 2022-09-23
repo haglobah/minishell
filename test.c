@@ -58,6 +58,10 @@ void	test_lexer()
 	total_tests = 0;
 	pass_count = 0;
 	i = 0;
+	ft_printf("\nTesting Lexer...\n");
+	pass_count += lst_iseq(lex(""),
+						   mk_strlist(1, ""),
+						   &total_tests);
 	pass_count += lst_iseq(lex("hello>"),
 						   mk_strlist(2, "hello", ">"),
 						   &total_tests);
@@ -70,9 +74,24 @@ void	test_lexer()
 			  total_tests);
 }
 
+void	test_parser()
+{
+	int	total_tests;
+	int	pass_count;
+	int	i;
+
+	total_tests = 0;
+	pass_count = 0;
+	i = 0;
+	ft_printf("\nTesting Parser...\n");
+	pass_count +=
+	ft_printf("\nPassed %i / Failed %i (of %i)\n",
+			  pass_count,
+			  total_tests - pass_count,
+			  total_tests);
+}
 
 int	run_tests(void)
 {
-	ft_printf("\nTesting Lexer...\n");
 	test_lexer();
 }

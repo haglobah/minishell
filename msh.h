@@ -15,8 +15,16 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+typedef struct s_minishell
+{
+	char	**toks;
+}	t_msh;
+
+t_msh	*mk_msh(char **toks);
+void	del_msh(t_msh *m);
+
 t_list	*lex(char *in);
-int	parse(t_list *toks);
+int	parse(t_msh *m);
 
 int	run_tests(void);
 void	msh_loop(void);
