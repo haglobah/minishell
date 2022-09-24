@@ -59,7 +59,7 @@ $(NAME): $(OBJS) $(MO)
 	$(CC) $(OBJS) $(MO) $(LINK_FLAGS) -o $(NAME)
 
 clean:
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(MO)
 
 fclean: clean
 	rm -f $(NAME)
