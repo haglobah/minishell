@@ -68,12 +68,17 @@ t_list	*lex(char *in)
 			}
 			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
 			curr_start = n;
+			continue ;
 		}
-		if (char_in_set(in[n], "|><\n"))
+		if (curr_token_type != 1 && char_in_set(in[n], "|><\n"))
 		{
-			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
+			if (n != curr_start)
+				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
 			curr_start = n;
 			curr_token_type = 1;
+			if (in[n])
+				n++;
+			continue ;
 		}
 		if (char_in_set(in[n], " \v\t\f\r"))
 		{
@@ -92,11 +97,7 @@ t_list	*lex(char *in)
 				break;
 			}
 		}
-		if (curr_token_type == 2)
-		{
-			//?
-		}
-		else
+		if (curr_token_type == 0)
 		{
 			if (n != curr_start)
 				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
