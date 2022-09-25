@@ -182,15 +182,12 @@ void	interpret(t_list *parse_tree)
 t_ct	*mk_ct()
 {
 	t_ct	*ct;
-	char	*in;
-	char	*out;
 
 	ct = (t_ct *)ft_calloc(1, sizeof(t_ct));
 	if (!ct)
 		return (NULL);
 	ct->cmds = NULL;
-	ct->in = NULL;
-	ct->out = NULL;
+	ct->senc = -1;
 	return (ct);
 }
 
@@ -238,7 +235,6 @@ void	msh_loop(void)
 		{
 			toks = list_to_arr(lex(t));
 			m = mk_msh(toks);
-			print_tokarr(m->toks);
 			if (parse_msh(m))
 			{
 				//ft_printf("Good Command!\n");

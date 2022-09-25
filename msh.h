@@ -19,19 +19,20 @@
 
 typedef struct s_command
 {
-	char	*cmd;
 	int	argc;
 	char	**argv;
-	
+
+	char	*in;
+	char	*out;
+	int	appp;
 }	t_cmd;
 
 typedef struct s_command_table
 {
-	t_cmd	*cmds;
-	char	***pipe_split;
+	t_cmd	**cmds;
+	char	***sentences;
 
-	char	*in;
-	char	*out;
+	int	senc;
 }	t_ct;
 
 t_ct	*mk_ct();
