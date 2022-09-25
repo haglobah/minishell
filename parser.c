@@ -385,10 +385,14 @@ int	check_redirs(t_msh *m, char **sen)
 	{
 		if (s_in_s(sen[i], redirs))
 		{
-			if (!sen[i + 1]
-			||  s_in_s(sen[i + 1], redirs))
+			if (!sen[i + 1])
 			{
 				throw_error(sen[i]);
+				return (-1);
+			}
+			if (s_in_s(sen[i + 1], redirs))
+			{
+				throw_error(sen[i + 1]);
 				return (-1);
 			}
 			rc += 2;
@@ -465,7 +469,8 @@ int	sens2cmds(t_msh *m)
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
 		compute_io(m, m->ct->sentences[i], m->ct->cmds[i]);
-		printcmd(m->ct->cmds[i]);
+		//	printcmd(m->ct->cmds[i]);
+		//TODO: Check whether everything that has to be a word is one.
 		i++;
 	}
 }
