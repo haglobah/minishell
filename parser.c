@@ -469,7 +469,7 @@ int	sens2cmds(t_msh *m)
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
 		compute_io(m, m->ct->sentences[i], m->ct->cmds[i]);
-		//	printcmd(m->ct->cmds[i]);
+			printcmd(m->ct->cmds[i]);
 		//TODO: Check whether everything that has to be a word is one.
 		i++;
 	}
