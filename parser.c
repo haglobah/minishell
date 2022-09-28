@@ -12,19 +12,19 @@
 
 #include "msh.h"
 
-static int	s_isneq(char *s1, char *s2, int n)
+int	s_isneq(char *s1, char *s2, int n)
 {
 	if (!s1)
 		ft_printf("There is no token.\n");
 	return (!ft_strncmp(s1, s2, n));
 }
 
-static int	s_iseq(char *s1, char *s2)
+int	s_iseq(char *s1, char *s2)
 {
 	return (!ft_strcmp(s1, s2));
 }
 
-static int	consists_of_only(char *token, char *chars)
+int	consists_of_only(char *token, char *chars)
 {
 	while (*token)
 	{
@@ -469,7 +469,7 @@ int	sens2cmds(t_msh *m)
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
 		compute_io(m, m->ct->sentences[i], m->ct->cmds[i]);
-			printcmd(m->ct->cmds[i]);
+		printcmd(m->ct->cmds[i]);
 		//TODO: Check whether everything that has to be a word is one.
 		i++;
 	}

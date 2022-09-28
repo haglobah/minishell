@@ -12,46 +12,143 @@
 
 #include "msh.h"
 
-int	handle_nullchar(t_list *res, char *in, int curr_start, int curr_char)
+void	add_tok(t_list **res, char *in, int *cst, int *n, char *place)
 {
-	if (in[curr_char]  == '\0')
+	ft_printf(" Tok: %s, added in: %s;\n", ft_substr(in, *cst, *n - *cst), place);
+	ft_lstadd_back(res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+}
+
+int	handle_nullchar(t_list **res, char *in, int *cst, int *n)
+{
+	if (in[*n]  == '\0')
 	{
-		if (curr_char != curr_start)
-			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, curr_char - curr_start)));
+		if (*n != *cst)
+			add_tok(res, in, cst, n, "null");
 		return (1);
 	}
 	return (0);
 }
 
-void	handle_pipe(t_list *res, char *in, int *cst, int *n, int *cttype)
+void	handle_nlenv(t_list **res, char *in, int *cst, int *n, int *cttype, char *delim)
 {
+	char	*line;
+
+	while (in[*n])
+	{
+		if (in[*n] == '\n')
+		{
+			line = get_next_line(0);
+			ft_strlcat(in, line, ft_strlen(line));
+			ft_printf("in: %s", in);
+			if(s_iseq(line, delim))
+				add_tok(res, in, cst, n, "Le here");
+		}
+		(*n)++;
+	}
+}
+
+char	*read_delim(char *in, int *cst, int *n)
+{
+	char	*delim;
+
+	while (in[*n] && char_in_set(in[*n], " \v\t\f\r"))
+		(*n)++;
+	*cst = *n;
+	while (in[*n] && !char_in_set(in[*n], " \v\t\f\r\n"))
+	{
+		(*n)++;
+	}
+	delim = ft_substr(in, *cst, *n - *cst);
+	ft_strlcat(delim, "\n", 1);
+	while (in[*n] && char_in_set(in[*n], " \v\t\f\r"))
+		(*n)++;
+	return (delim);
+}
+
+void	handle_pipered(t_list **res, char *in, int *cst, int *n, int *cttype)
+{
+	char	*delim;
+
 	if (*cttype == 1
 		&& (in[*cst] == '|'
 			|| *n - *cst > 1
 			|| in[*cst] != in[*n]))
 	{
-		ft_lstadd_back(&res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+		add_tok(res, in, cst, n, "pipe&red");
+		if (s_isneq(&in[*cst], "<<", 2))
+		{
+			*cst = *n;
+			ft_printf("A HERE. This one: ");
+			// is quoted?
+			delim = read_delim(in, cst, n);
+			ft_printf("%s\n", delim);
+			handle_nlenv(res, in, cst, n, cttype, delim);
+		}
 		*cst = *n;
 		*cttype = 0;
 	}
 }
 
-void	handle_quotes(t_list *res, char *in, int *cst, int *n, int *cttype)
+void	handle_quotes(t_list **res, char *in, int *cst, int *n, int *cttype)
 {
 	while (char_in_set(in[*n], "\'\""))
 	{
 		if (*n != *cst)
-			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+			add_tok(res, in, cst, n, "q1");
 		*cst = *n;
 		(*n)++;
 		while (in[*n] && in[*cst] != in[*n])
 			(*n)++;
 		if (in[*n])
 			(*n)++;
-		ft_lstadd_back(&res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+		add_tok(res, in, cst, n, "q2");
 		*cst = *n;
 		*cttype = 0;
 	}
+}
+
+int	handle_vars(t_list **res, char *in, int *cst, int *n, int *cttype)
+{
+	if (in[*n] == '$')
+	{
+		if (*n != *cst)
+			add_tok(res, in, cst, n, "v1");
+		*cst = *n;
+		(*n)++;
+		if (in[*n] == '?')
+		{
+			(*n)++;
+		}
+		else
+		{
+			while (in[*n] && char_in_set(in[*n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+				&& ((*n - *cst == 1
+					 && char_in_set(in[*n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+					|| *n - *cst != 1))
+			{
+				(*n)++;
+			}
+		}
+		add_tok(res, in, cst, n, "v2");
+		*cst = *n;
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_prn(t_list **res, char *in, int *cst, int *n, int *cttype)
+{
+	if (*cttype != 1 && char_in_set(in[*n], "|><\n"))
+	{
+		if (*n != *cst)
+			add_tok(res, in, cst, n, "prn");
+		*cst = *n;
+		*cttype = 1;
+		if (in[*n])
+			(*n)++;
+		return (1);
+	}
+	return (0);
 }
 
 t_list	*lex(char *in)
@@ -62,48 +159,18 @@ t_list	*lex(char *in)
 	t_list	*res = NULL;
 	while (1)
 	{
-		if (handle_nullchar(res, in, curr_start, n))
+		if (handle_nullchar(&res, in, &curr_start, &n))
 			break ;
-		handle_pipe(res, in, &curr_start, &n, &curr_token_type);
-		handle_quotes(res, in, &curr_start, &n, &curr_token_type);
-		if (in[n] == '$')
-		{
-			if (n != curr_start)
-				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
-			curr_start = n;
-			n++;
-			if (in[n] == '?')
-			{
-				n++;
-			}
-			else
-			{
-				while (in[n] && char_in_set(in[n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-					&& ((n - curr_start == 1
-						 && char_in_set(in[n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-						|| n - curr_start != 1))
-				{
-					n++;
-				}
-			}
-			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
-			curr_start = n;
+		handle_pipered(&res, in, &curr_start, &n, &curr_token_type);
+		handle_quotes(&res, in, &curr_start, &n, &curr_token_type);
+		if (handle_vars(&res, in, &curr_start, &n, &curr_token_type))
 			continue ;
-		}
-		if (curr_token_type != 1 && char_in_set(in[n], "|><\n"))
-		{
-			if (n != curr_start)
-				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
-			curr_start = n;
-			curr_token_type = 1;
-			if (in[n])
-				n++;
+		if (handle_prn(&res, in, &curr_start, &n, &curr_token_type))
 			continue ;
-		}
 		if (char_in_set(in[n], " \v\t\f\r"))
 		{
 			if (n != curr_start)
-				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
+				add_tok(&res, in, &curr_start, &n, "ws");
 			curr_start = n;
 			if (in[n + 1])
 			{
@@ -120,7 +187,7 @@ t_list	*lex(char *in)
 		if (curr_token_type == 0)
 		{
 			if (n != curr_start)
-				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
+				add_tok(&res, in, &curr_start, &n, "word");
 			curr_token_type = 2;
 		}
 		if (in[n])
@@ -248,9 +315,10 @@ void	msh_loop(void)
 	t_msh	*m;
 
 	while(1)
-	{
+	{ // is_atty ? readline : gnl
 		t = readline("φ ");
 		add_history(t);
+		//	ft_printf("\n");
 		if (t)
 		{
 			toks = list_to_arr(lex(t));
