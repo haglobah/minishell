@@ -411,7 +411,7 @@ int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 	if(cmd->argc == -1)
 		return (-1);
 	cmd->appp = 0;
-	cmd->argv = (char **)ft_calloc(cmd->argc, sizeof(char *));
+	cmd->argv = (char **)ft_calloc(cmd->argc + 1, sizeof(char *));
 	i = 0;
 	j = 0;
 	while (sen[i])
