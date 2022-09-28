@@ -12,6 +12,48 @@
 
 #include "msh.h"
 
+int	handle_nullchar(t_list *res, char *in, int curr_start, int curr_char)
+{
+	if (in[curr_char]  == '\0')
+	{
+		if (curr_char != curr_start)
+			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, curr_char - curr_start)));
+		return (1);
+	}
+	return (0);
+}
+
+void	handle_pipe(t_list *res, char *in, int *cst, int *n, int *cttype)
+{
+	if (*cttype == 1
+		&& (in[*cst] == '|'
+			|| *n - *cst > 1
+			|| in[*cst] != in[*n]))
+	{
+		ft_lstadd_back(&res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+		*cst = *n;
+		*cttype = 0;
+	}
+}
+
+void	handle_quotes(t_list *res, char *in, int *cst, int *n, int *cttype)
+{
+	while (char_in_set(in[*n], "\'\""))
+	{
+		if (*n != *cst)
+			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+		*cst = *n;
+		(*n)++;
+		while (in[*n] && in[*cst] != in[*n])
+			(*n)++;
+		if (in[*n])
+			(*n)++;
+		ft_lstadd_back(&res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+		*cst = *n;
+		*cttype = 0;
+	}
+}
+
 t_list	*lex(char *in)
 {
 	int	curr_start = 0;
@@ -20,32 +62,10 @@ t_list	*lex(char *in)
 	t_list	*res = NULL;
 	while (1)
 	{
-		if (in[n] == '\0')
-		{
-			if (n != curr_start)
-				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
+		if (handle_nullchar(res, in, curr_start, n))
 			break ;
-		}
-		if (curr_token_type == 1 && (in[curr_start] == '|' || n - curr_start > 1 || in[curr_start] != in[n]))
-		{
-			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
-			curr_start = n;
-			curr_token_type = 0;
-		}
-		while (char_in_set(in[n], "\'\""))
-		{
-			if (n != curr_start)
-				ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
-			curr_start = n;
-			n++;
-			while (in[n] && in[curr_start] != in[n])
-				n++;
-			if (in[n])
-				n++;
-			ft_lstadd_back(&res, ft_lstnew(ft_substr(in, curr_start, n - curr_start)));
-			curr_start = n;
-			curr_token_type = 0;
-		}
+		handle_pipe(res, in, &curr_start, &n, &curr_token_type);
+		handle_quotes(res, in, &curr_start, &n, &curr_token_type);
 		if (in[n] == '$')
 		{
 			if (n != curr_start)
