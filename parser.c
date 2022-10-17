@@ -11,6 +11,19 @@
 /* ************************************************************************** */
 
 #include "msh.h"
+void	*ft_realloc(void *ptr, size_t size)
+{
+	void	*new_ptr;
+
+	if (ptr == NULL)
+		return (malloc(size));
+	if (!size)
+		return (ptr);
+	new_ptr = malloc(size);
+	ft_memcpy(new_ptr, ptr, size);
+	free(ptr);
+	return (new_ptr);
+}
 
 int	s_isneq(char *s1, char *s2, int n)
 {
@@ -428,7 +441,8 @@ int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 		}
 		else if (s_iseq(sen[i], "<<"))
 		{
-			//TODO
+			//HERE
+			i++;
 		}
 		else if (s_iseq(sen[i], ">>"))
 		{

@@ -47,6 +47,7 @@ typedef struct s_minishell
 t_msh	*mk_msh(char **toks);
 void	del_msh(t_msh *m);
 
+void	*ft_realloc(void *ptr, size_t size);
 int	s_iseq(char *s1, char *s2);
 int	s_isneq(char * s1, char *s2, int n);
 int	consists_of_only(char *token, char *chars);

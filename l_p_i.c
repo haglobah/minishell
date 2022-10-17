@@ -14,7 +14,7 @@
 
 void	add_tok(t_list **res, char *in, int *cst, int *n, char *place)
 {
-	ft_printf(" Tok: %s, added in: %s;\n", ft_substr(in, *cst, *n - *cst), place);
+	ft_printf(" Tok: '%s', added in: %s;\n", ft_substr(in, *cst, *n - *cst), place);
 	ft_lstadd_back(res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
 }
 
@@ -33,18 +33,28 @@ void	handle_nlenv(t_list **res, char *in, int *cst, int *n, int *cttype, char *d
 {
 	char	*line;
 
-	while (in[*n])
+//	ft_printf("d: '%s'", delim);
+	line = get_next_line(0);
+	in = (char *)ft_realloc(in, ft_strlen(line) + ft_strlen(in) + 1);
+	ft_strlcat(in, line, ft_strlen(line) + ft_strlen(in) + 1);
+	ft_printf("content: %s;\n", in);
+	while (!s_iseq(line, delim))
 	{
-		if (in[*n] == '\n')
-		{
-			line = get_next_line(0);
-			ft_strlcat(in, line, ft_strlen(line));
-			ft_printf("in: %s", in);
-			if(s_iseq(line, delim))
-				add_tok(res, in, cst, n, "Le here");
-		}
+		line = get_next_line(0);
+//		ft_printf("in: %p\n", in);
+		in = (char *)ft_realloc(in, ft_strlen(line) + ft_strlen(in) + 1);
+//		ft_printf("in: %p\n", in);
+		ft_strlcat(in, line, ft_strlen(line) + ft_strlen(in) + 1);
+//		ft_printf("in:'%s';\n", in);
+//		ft_printf("ran %i times.\n", *n);
 		(*n)++;
 	}
+	if(s_iseq(line, delim))
+	{
+//		ft_printf("found delim!");
+		add_tok(res, in, cst, n, "Le here");
+	}
+	//free(line);
 }
 
 char	*read_delim(char *in, int *cst, int *n)
@@ -59,7 +69,10 @@ char	*read_delim(char *in, int *cst, int *n)
 		(*n)++;
 	}
 	delim = ft_substr(in, *cst, *n - *cst);
-	ft_strlcat(delim, "\n", 1);
+	delim = ft_realloc(delim, ft_strlen(delim) + 1);
+//	ft_printf("del: '%s'", delim);
+	delim[ft_strlen(delim)] = '\n';
+//	ft_printf("del: '%s'", delim);
 	while (in[*n] && char_in_set(in[*n], " \v\t\f\r"))
 		(*n)++;
 	return (delim);
@@ -78,10 +91,10 @@ void	handle_pipered(t_list **res, char *in, int *cst, int *n, int *cttype)
 		if (s_isneq(&in[*cst], "<<", 2))
 		{
 			*cst = *n;
-			ft_printf("A HERE. This one: ");
+//			ft_printf("A HERE. This one: ");
 			// is quoted?
 			delim = read_delim(in, cst, n);
-			ft_printf("%s\n", delim);
+			ft_printf("'%s'\n", delim);
 			handle_nlenv(res, in, cst, n, cttype, delim);
 		}
 		*cst = *n;
