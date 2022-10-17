@@ -467,7 +467,7 @@ int	printcmd(t_cmd *cmd)
 	ft_printf(" argv: ");
 	i = 0;
 	while (cmd->argv[i])
-		ft_printf("%s, ", cmd->argv[i++]);
+		ft_printf("'%s' ", cmd->argv[i++]);
 	ft_printf("\n in: %s\n", cmd->in);
 	ft_printf(" out: %s\n", cmd->out);
 	return (i);

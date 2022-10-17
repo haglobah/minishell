@@ -29,30 +29,39 @@ int	handle_nullchar(t_list **res, char *in, int *cst, int *n)
 	return (0);
 }
 
+void	read_n_app(char **line, char **in, int *n)
+{
+	*line = get_next_line(0);
+	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1);
+	ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
+//	ft_printf("content: '%s'\n", *in);
+	ft_printf("linelen: %i\n", ft_strlen(*line));
+}
+
+void	insert_nl(char **in)
+{
+	*in = ft_realloc(*in, ft_strlen(*in) + 3);
+	*in[ft_strlen(*in)] = '\n';
+	*in[ft_strlen(*in) + 1] = '\n';
+	*in[ft_strlen(*in) + 2] = '\0';
+	ft_printf("in: %s", *in);
+}
+
 void	handle_nlenv(t_list **res, char *in, int *cst, int *n, int *cttype, char *delim)
 {
 	char	*line;
 
-//	ft_printf("d: '%s'", delim);
-	line = get_next_line(0);
-	in = (char *)ft_realloc(in, ft_strlen(line) + ft_strlen(in) + 1);
-	ft_strlcat(in, line, ft_strlen(line) + ft_strlen(in) + 1);
-	ft_printf("content: %s;\n", in);
+//	insert_nl(&in);
+	read_n_app(&line, &in, n);
+	(*n) += ft_strlen(line);
 	while (!s_iseq(line, delim))
 	{
-		line = get_next_line(0);
-//		ft_printf("in: %p\n", in);
-		in = (char *)ft_realloc(in, ft_strlen(line) + ft_strlen(in) + 1);
-//		ft_printf("in: %p\n", in);
-		ft_strlcat(in, line, ft_strlen(line) + ft_strlen(in) + 1);
-//		ft_printf("in:'%s';\n", in);
-//		ft_printf("ran %i times.\n", *n);
-		(*n)++;
+		read_n_app(&line, &in, n);
+		(*n) += ft_strlen(line);
 	}
 	if(s_iseq(line, delim))
 	{
-//		ft_printf("found delim!");
-		add_tok(res, in, cst, n, "Le here");
+		add_tok(res, in, cst, n, "heredoc");
 	}
 	//free(line);
 }
@@ -69,10 +78,9 @@ char	*read_delim(char *in, int *cst, int *n)
 		(*n)++;
 	}
 	delim = ft_substr(in, *cst, *n - *cst);
-	delim = ft_realloc(delim, ft_strlen(delim) + 1);
-//	ft_printf("del: '%s'", delim);
+	delim = ft_realloc(delim, ft_strlen(delim) + 2); // +1 or +2?
 	delim[ft_strlen(delim)] = '\n';
-//	ft_printf("del: '%s'", delim);
+	delim[ft_strlen(delim) + 1] = '\0';
 	while (in[*n] && char_in_set(in[*n], " \v\t\f\r"))
 		(*n)++;
 	return (delim);
@@ -94,7 +102,7 @@ void	handle_pipered(t_list **res, char *in, int *cst, int *n, int *cttype)
 //			ft_printf("A HERE. This one: ");
 			// is quoted?
 			delim = read_delim(in, cst, n);
-			ft_printf("'%s'\n", delim);
+//			ft_printf("'%s'\n", delim);
 			handle_nlenv(res, in, cst, n, cttype, delim);
 		}
 		*cst = *n;
@@ -225,7 +233,7 @@ void	print_tokarr(char **toks)
 	ft_printf("All the tokens: ");
 	while (*toks)
 	{
-		ft_printf("\'%s\', ", *toks);
+		ft_printf("'%s' ", *toks);
 		toks++;
 	}
 	ft_printf("\n");
