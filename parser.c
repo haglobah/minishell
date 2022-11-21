@@ -12,7 +12,7 @@
 
 #include "msh.h"
 
-//Beware: c = 1! (pipecount one to high)
+//Beware: c = 1! (pipecount one 'too high')
 int	count_pipes(char **toks, int *places)
 {
 	int	c;
