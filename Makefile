@@ -19,7 +19,7 @@ TOBJS = $(TESTS:.c=.o)
 TEST = msh_test
 NAME = minishell
 
-CFLAGS = #-Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra #-Werror
 LINK_FLAGS = -Llibft -lft -lreadline
 CC = cc
 

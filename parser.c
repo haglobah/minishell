@@ -415,6 +415,35 @@ int	check_redirs(t_msh *m, char **sen)
 	return (i - rc);
 }
 
+char	*parse_here(t_cmd *cmd, char *here)
+{
+	int	is_quoted;
+	int	i;
+	int	j;
+
+	j = ft_strlen(here) - 2;
+	while (here[j] != '\n')
+	{
+		j--;
+	}
+	i = 0;
+	//is_quoted
+	if (char_in_set(here[i], "'\""))
+	{
+		//del_delim
+		i++;
+		while (!char_in_set(here[i], "'\""))
+			i++;
+		i++;
+		cmd->here_quoted = 1;
+	}
+	else
+	{
+		i += ft_strlen(here) - 2 - j;
+	}
+	return (ft_substr(here, i, j - i));
+}
+
 int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 {
 	int	i;
@@ -442,6 +471,7 @@ int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 		else if (s_iseq(sen[i], "<<"))
 		{
 			//HERE
+			cmd->in = parse_here(cmd, sen[i + 1]);
 			i++;
 		}
 		else if (s_iseq(sen[i], ">>"))
@@ -470,6 +500,7 @@ int	printcmd(t_cmd *cmd)
 		ft_printf("'%s' ", cmd->argv[i++]);
 	ft_printf("\n in: %s\n", cmd->in);
 	ft_printf(" out: %s\n", cmd->out);
+	ft_printf(" here_quoted: %i\n", cmd->here_quoted);
 	return (i);
 }
 

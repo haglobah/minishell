@@ -70,18 +70,22 @@ char	*read_delim(char *in, int *cst, int *n)
 {
 	char	*delim;
 
-	while (in[*n] && char_in_set(in[*n], " \v\t\f\r"))
+	while (in[*n] && char_in_set(in[*n], "'\" \v\t\f\r"))
+	{
 		(*n)++;
+	}
 	*cst = *n;
-	while (in[*n] && !char_in_set(in[*n], " \v\t\f\r\n"))
+	while (in[*n] && !char_in_set(in[*n], "'\" \v\t\f\r\n"))
 	{
 		(*n)++;
 	}
 	delim = ft_substr(in, *cst, *n - *cst);
-	delim = ft_realloc(delim, ft_strlen(delim) + 2); // +1 or +2?
+	delim = ft_realloc(delim, ft_strlen(delim) + 2);
 	delim[ft_strlen(delim)] = '\n';
 	delim[ft_strlen(delim) + 1] = '\0';
-	while (in[*n] && char_in_set(in[*n], " \v\t\f\r"))
+	if (char_in_set(in[*cst - 1], "'\""))
+		*cst += -1;
+	while (in[*n] && char_in_set(in[*n], "'\" \v\t\f\r"))
 		(*n)++;
 	return (delim);
 }
@@ -102,7 +106,7 @@ void	handle_pipered(t_list **res, char *in, int *cst, int *n, int *cttype)
 //			ft_printf("A HERE. This one: ");
 			// is quoted?
 			delim = read_delim(in, cst, n);
-//			ft_printf("'%s'\n", delim);
+			ft_printf("'%s'\n", delim);
 			handle_nlenv(res, in, cst, n, cttype, delim);
 		}
 		*cst = *n;

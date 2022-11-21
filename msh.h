@@ -25,6 +25,7 @@ typedef struct s_command
 	char	*in;
 	char	*out;
 	int	appp;
+	int	here_quoted;
 }	t_cmd;
 
 typedef struct s_command_table
@@ -54,6 +55,7 @@ int	consists_of_only(char *token, char *chars);
 
 t_list	*lex(char *in);
 int	parse_msh(t_msh *m);
+char	*parse_here(t_cmd *cmd, char *here);
 
 int	run_tests(void);
 void	msh_loop(void);
