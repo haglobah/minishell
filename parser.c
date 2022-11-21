@@ -508,6 +508,8 @@ int	check_for_quotes(char **sen)
 {
 	int	i;
 
+	if (sen[0] == NULL)
+		return (1);
 	i = 0;
 	while (sen[i])
 		i++;
@@ -536,11 +538,15 @@ int	sens2cmds(t_msh *m)
 	while (m->ct->sentences[i])
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
+		ft_printf("here");
 		if (!check_for_quotes(m->ct->sentences[i]))
-			return (NULL);
-		compute_io(m, m->ct->sentences[i], m->ct->cmds[i]);
-		printcmd(m->ct->cmds[i]);
-		//TODO: Check whether everything that has to be a word is one.
+			;
+		else
+		{
+			compute_io(m, m->ct->sentences[i], m->ct->cmds[i]);
+			printcmd(m->ct->cmds[i]);
+			//TODO: Check whether everything that has to be a word is one.
+		}
 		i++;
 	}
 }
