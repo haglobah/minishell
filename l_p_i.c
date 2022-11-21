@@ -12,24 +12,24 @@
 
 #include "msh.h"
 
-void	add_tok(t_list **res, char *in, int *cst, int *n, char *place)
+void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 {
-	ft_printf(" Tok: '%s', added in: %s;\n", ft_substr(in, *cst, *n - *cst), place);
-	ft_lstadd_back(res, ft_lstnew(ft_substr(in, *cst, *n - *cst)));
+	ft_printf(" Tok: '%s', added in: %s;\n", ft_substr(in, l->cst, l->n - l->cst), place);
+	ft_lstadd_back(res, ft_lstnew(ft_substr(in, l->cst, l->n - l->cst)));
 }
 
-int	handle_nullchar(t_list **res, char *in, int *cst, int *n)
+int	handle_nullchar(t_list **res, char *in, t_lex *l)
 {
-	if (in[*n]  == '\0')
+	if (in[l->n]  == '\0')
 	{
-		if (*n != *cst)
-			add_tok(res, in, cst, n, "null");
+		if (l->n != l->cst)
+			add_tok(res, in, l, "null");
 		return (1);
 	}
 	return (0);
 }
 
-void	read_n_app(char **line, char **in, int *n)
+void	read_n_app(char **line, char **in)
 {
 	*line = get_next_line(0);
 	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1);
@@ -47,130 +47,130 @@ void	insert_nl(char **in)
 	ft_printf("in: %s", *in);
 }
 
-void	handle_nlenv(t_list **res, char *in, int *cst, int *n, int *cttype, char *delim)
+void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
 {
 	char	*line;
 
 //	insert_nl(&in);
-	read_n_app(&line, &in, n);
-	(*n) += ft_strlen(line);
+	read_n_app(&line, &in);
+	l->n += ft_strlen(line);
 	while (!s_iseq(line, delim))
 	{
-		read_n_app(&line, &in, n);
-		(*n) += ft_strlen(line);
+		read_n_app(&line, &in);
+		l->n += ft_strlen(line);
 	}
 	if(s_iseq(line, delim))
 	{
-		add_tok(res, in, cst, n, "heredoc");
+		add_tok(res, in, l, "heredoc");
 	}
 	//free(line);
 }
 
-char	*read_delim(char *in, int *cst, int *n)
+char	*read_delim(char *in, t_lex *l)
 {
 	char	*delim;
 
-	while (in[*n] && char_in_set(in[*n], "'\" \v\t\f\r"))
+	while (in[l->n] && char_in_set(in[l->n], "'\" \v\t\f\r"))
 	{
-		(*n)++;
+		(l->n)++;
 	}
-	*cst = *n;
-	while (in[*n] && !char_in_set(in[*n], "'\" \v\t\f\r\n"))
+	l->cst = l->n;
+	while (in[l->n] && !char_in_set(in[l->n], "'\" \v\t\f\r\n"))
 	{
-		(*n)++;
+		(l->n)++;
 	}
-	delim = ft_substr(in, *cst, *n - *cst);
+	delim = ft_substr(in, l->cst, l->n - l->cst);
 	delim = ft_realloc(delim, ft_strlen(delim) + 2);
 	delim[ft_strlen(delim)] = '\n';
 	delim[ft_strlen(delim) + 1] = '\0';
-	if (char_in_set(in[*cst - 1], "'\""))
-		*cst += -1;
-	while (in[*n] && char_in_set(in[*n], "'\" \v\t\f\r"))
-		(*n)++;
+	if (char_in_set(in[l->cst - 1], "'\""))
+		l->cst += -1;
+	while (in[l->n] && char_in_set(in[l->n], "'\" \v\t\f\r"))
+		(l->n)++;
 	return (delim);
 }
 
-void	handle_pipered(t_list **res, char *in, int *cst, int *n, int *cttype)
+void	handle_pipered(t_list **res, char *in, t_lex *l)
 {
 	char	*delim;
 
-	if (*cttype == 1
-		&& (in[*cst] == '|'
-			|| *n - *cst > 1
-			|| in[*cst] != in[*n]))
+	if (l->ctt == 1
+		&& (in[l->cst] == '|'
+			|| l->n - l->cst > 1
+			|| in[l->cst] != in[l->n]))
 	{
-		add_tok(res, in, cst, n, "pipe&red");
-		if (s_isneq(&in[*cst], "<<", 2))
+		add_tok(res, in, l, "pipe&red");
+		if (s_isneq(&in[l->cst], "<<", 2))
 		{
-			*cst = *n;
+			l->cst = l->n;
 //			ft_printf("A HERE. This one: ");
 			// is quoted?
-			delim = read_delim(in, cst, n);
+			delim = read_delim(in, l);
 			ft_printf("'%s'\n", delim);
-			handle_nlenv(res, in, cst, n, cttype, delim);
+			handle_nlenv(res, in, l, delim);
 		}
-		*cst = *n;
-		*cttype = 0;
+		l->cst = l->n;
+		l->ctt = 0;
 	}
 }
 
-void	handle_quotes(t_list **res, char *in, int *cst, int *n, int *cttype)
+void	handle_quotes(t_list **res, char *in, t_lex *l)
 {
-	while (char_in_set(in[*n], "\'\""))
+	while (char_in_set(in[l->n], "\'\""))
 	{
-		if (*n != *cst)
-			add_tok(res, in, cst, n, "q1");
-		*cst = *n;
-		(*n)++;
-		while (in[*n] && in[*cst] != in[*n])
-			(*n)++;
-		if (in[*n])
-			(*n)++;
-		add_tok(res, in, cst, n, "q2");
-		*cst = *n;
-		*cttype = 0;
+		if (l->n != l->cst)
+			add_tok(res, in, l, "q1");
+		l->cst = l->n;
+		(l->n)++;
+		while (in[l->n] && in[l->cst] != in[l->n])
+			(l->n)++;
+		if (in[l->n])
+			(l->n)++;
+		add_tok(res, in, l, "q2");
+		l->cst = l->n;
+		l->ctt = 0;
 	}
 }
 
-int	handle_vars(t_list **res, char *in, int *cst, int *n, int *cttype)
+int	handle_vars(t_list **res, char *in, t_lex *l)
 {
-	if (in[*n] == '$')
+	if (in[l->n] == '$')
 	{
-		if (*n != *cst)
-			add_tok(res, in, cst, n, "v1");
-		*cst = *n;
-		(*n)++;
-		if (in[*n] == '?')
+		if (l->n != l->cst)
+			add_tok(res, in, l, "v1");
+		l->cst = l->n;
+		(l->n)++;
+		if (in[l->n] == '?')
 		{
-			(*n)++;
+			(l->n)++;
 		}
 		else
 		{
-			while (in[*n] && char_in_set(in[*n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-				&& ((*n - *cst == 1
-					 && char_in_set(in[*n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-					|| *n - *cst != 1))
+			while (in[l->n] && char_in_set(in[l->n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+				&& ((l->n - l->cst == 1
+					 && char_in_set(in[l->n], "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+					|| l->n - l->cst != 1))
 			{
-				(*n)++;
+				(l->n)++;
 			}
 		}
-		add_tok(res, in, cst, n, "v2");
-		*cst = *n;
+		add_tok(res, in, l, "v2");
+		l->cst = l->n;
 		return (1);
 	}
 	return (0);
 }
 
-int	handle_prn(t_list **res, char *in, int *cst, int *n, int *cttype)
+int	handle_prn(t_list **res, char *in, t_lex *l)
 {
-	if (*cttype != 1 && char_in_set(in[*n], "|><\n"))
+	if (l->ctt != 1 && char_in_set(in[l->n], "|><\n"))
 	{
-		if (*n != *cst)
-			add_tok(res, in, cst, n, "prn");
-		*cst = *n;
-		*cttype = 1;
-		if (in[*n])
-			(*n)++;
+		if (l->n != l->cst)
+			add_tok(res, in, l, "prn");
+		l->cst = l->n;
+		l->ctt = 1;
+		if (in[l->n])
+			(l->n)++;
 		return (1);
 	}
 	return (0);
@@ -178,159 +178,54 @@ int	handle_prn(t_list **res, char *in, int *cst, int *n, int *cttype)
 
 t_list	*lex(char *in)
 {
-	int	curr_start = 0;
-	int	n = 0;
-	int	curr_token_type = 0; // 0 default ; 1 operator ; 2 word
 	t_list	*res = NULL;
+	t_lex	l;
+
+	l = (t_lex){.cst = 0, .n = 0, .ctt = 0};
 	while (1)
 	{
-		if (handle_nullchar(&res, in, &curr_start, &n))
+		if (handle_nullchar(&res, in, &l))
 			break ;
-		handle_pipered(&res, in, &curr_start, &n, &curr_token_type);
-		handle_quotes(&res, in, &curr_start, &n, &curr_token_type);
-		if (handle_vars(&res, in, &curr_start, &n, &curr_token_type))
+		handle_pipered(&res, in, &l);
+		handle_quotes(&res, in, &l);
+		if (handle_vars(&res, in, &l))
 			continue ;
-		if (handle_prn(&res, in, &curr_start, &n, &curr_token_type))
+		if (handle_prn(&res, in, &l))
 			continue ;
-		if (char_in_set(in[n], " \v\t\f\r"))
+		if (char_in_set(in[l.n], " \v\t\f\r"))
 		{
-			if (n != curr_start)
-				add_tok(&res, in, &curr_start, &n, "ws");
-			curr_start = n;
-			if (in[n + 1])
+			if (l.n != l.cst)
+				add_tok(&res, in, &l, "ws");
+			l.cst = l.n;
+			if (in[l.n + 1])
 			{
-				curr_start = n + 1;
-				n++;
+				l.cst = l.n + 1;
+				l.n++;
 				continue ;
 			}
 			else
 			{
-				n++;
+				l.n++;
 				break;
 			}
 		}
-		if (curr_token_type == 0)
+		if (l.ctt == 0)
 		{
-			if (n != curr_start)
-				add_tok(&res, in, &curr_start, &n, "word");
-			curr_token_type = 2;
+			if (l.n != l.cst)
+				add_tok(&res, in, &l, "word");
+			l.ctt = 2;
 		}
-		if (in[n])
-			n++;
+		if (in[l.n])
+			l.n++;
 	}
 	return (res);
 }
 
-void	print_tokens(t_list *tokens)
-{
-	while(tokens)
-	{
-		ft_printf("%s%%\n", tokens->content);
-		tokens = tokens->next;
-	}
-}
-
-void	print_tokarr(char **toks)
-{
-	if (!toks)
-		return ;
-	ft_printf("All the tokens: ");
-	while (*toks)
-	{
-		ft_printf("'%s' ", *toks);
-		toks++;
-	}
-	ft_printf("\n");
-}
-
-void	ft_strcpy(char *dst, char *src)
-{
-	while (*src)
-	{
-		*dst++ = *src++;
-	}
-}
-
-char	**list_to_arr(t_list *toks)
-{
-	int	slen;
-	int	llen;
-	char	**tok_arr;
-	t_list	*cpy;
-	int	i;
-
-	llen = 0;
-	cpy = toks;
-	while (cpy)
-	{
-		llen++;
-		cpy = cpy->next;
-	}
-//	ft_printf("toks: %i\n", llen);
-	tok_arr = (char **)ft_calloc(llen + 1, sizeof(char *));
-	if (!tok_arr)
-		return (NULL);
-	slen = 0;
-	i = 0;
-	while (toks)
-	{
-		slen = ft_strlen(toks->content);
-		tok_arr[i] = (char *)ft_calloc(slen + 1, sizeof(char));
-		if (!(*tok_arr))
-			return (NULL);
-		ft_strcpy(tok_arr[i], toks->content);
-//		ft_printf("Copied %s\n", tok_arr[i]);
-		toks = toks->next;
-		i++;
-	}
-	return (tok_arr);
-}
-
-void	interpret(t_list *parse_tree)
+void	interpret(t_msh *m)
 {
 	//run AST
+	(void)m;
 }
-
-t_ct	*mk_ct()
-{
-	t_ct	*ct;
-
-	ct = (t_ct *)ft_calloc(1, sizeof(t_ct));
-	if (!ct)
-		return (NULL);
-	ct->cmds = NULL;
-	ct->senc = -1;
-	return (ct);
-}
-
-t_msh	*mk_msh(char **toks)
-{
-	t_msh	*msh;
-
-	msh = (t_msh *)ft_calloc(1, sizeof(t_msh));
-	if (!msh)
-		return (NULL);
-	msh->toks = toks;
-	msh->ct = mk_ct();
-	return (msh);
-}
-
-void	del_msh(t_msh *m)
-{
-	//free_toks(m->toks);
-	int	i;
-	int	j;
-
-	i = 0;
-	while (m->toks[i])
-	{
-		free(m->toks[i]);
-		i++;
-	}
-	//del_ct(m->ct)
-	free(m);
-}
-
 
 // msh_loop = execute . evaluate . parse . tokenize
 void	msh_loop(void)
