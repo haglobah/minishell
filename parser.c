@@ -504,6 +504,29 @@ int	printcmd(t_cmd *cmd)
 	return (i);
 }
 
+int	check_for_quotes(char **sen)
+{
+	int	i;
+
+	i = 0;
+	while (sen[i])
+		i++;
+	i--;
+	if (char_in_set(sen[i][0], "'\""))
+	{
+		if (char_in_set(sen[i][ft_strlen(sen[i]) - 1], "'\""))
+		{
+			return (1);
+		}
+		else
+		{
+			throw_error(sen[i]);
+			return (0);
+		}
+	}
+	return (1);
+}
+
 int	sens2cmds(t_msh *m)
 {
 	int	i;
@@ -513,6 +536,8 @@ int	sens2cmds(t_msh *m)
 	while (m->ct->sentences[i])
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
+		if (!check_for_quotes(m->ct->sentences[i]))
+			return (NULL);
 		compute_io(m, m->ct->sentences[i], m->ct->cmds[i]);
 		printcmd(m->ct->cmds[i]);
 		//TODO: Check whether everything that has to be a word is one.
