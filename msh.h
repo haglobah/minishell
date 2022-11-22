@@ -10,12 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/libft.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#ifndef MSH_H
 
-#define NUM_PIPES 50
+# define MSH_H
+
+# include "libft/libft.h"
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+
+# define NUM_PIPES 50
 
 typedef int current_token_start;
 typedef int current_token_type;
@@ -73,9 +79,18 @@ void	print_tokens(t_list *tokens);
 void	print_tokarr(char **toks);
 char	**list_to_arr(t_list *toks);
 
+//lexer
 t_list	*lex(char *in);
+
+//parser.c
 int	parse_msh(t_msh *m);
 char	*parse_here(t_cmd *cmd, char *here);
+int	printcmd(t_cmd *cmd);
+
+//evaluator.c
+int	evaluate(t_msh *m);
 
 int	run_tests(void);
 void	msh_loop(void);
+
+#endif
