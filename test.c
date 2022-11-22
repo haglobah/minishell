@@ -13,6 +13,12 @@
 #include "msh.h"
 #include <stdarg.h>
 
+int	printt(int passed, int total)
+{
+	return (ft_printf("\nPassed %i / Failed %i (of %i)\n", passed,
+					  total - passed, total));
+}
+
 t_list	*mk_strlist(int argc, ...)
 {
 	va_list	argp;
@@ -53,11 +59,9 @@ void	test_lexer()
 {
 	int	total_tests;
 	int	pass_count;
-	int	i;
 
 	total_tests = 0;
 	pass_count = 0;
-	i = 0;
 	ft_printf("\nTesting Lexer...\n");
 	pass_count += lst_iseq(lex(""),
 						   mk_strlist(1, ""),
@@ -71,34 +75,46 @@ void	test_lexer()
 	pass_count += lst_iseq(lex("hello|bla<infile"),
 						   mk_strlist(5, "hello", "|", "bla", "<", "infile"),
 						   &total_tests);
-	pass_count += lst_iseq(lex("hello|bla<<HERE\nbla\nasdf\nHERE"),
-						   mk_strlist(5, "hello", "|", "bla", "<<", "HERE\nbla\nasdf\nHERE"),
-						   &total_tests);
-	ft_printf("\nPassed %i / Failed %i (of %i)\n",
-			  pass_count,
-			  total_tests - pass_count,
-			  total_tests);
+	/* pass_count += lst_iseq(lex("hello|bla<<HERE\nbla\nasdf\nHERE"), */
+	/* 					   mk_strlist(5, "hello", "|", "bla", "<<", "HERE\nbla\nasdf\nHERE"), */
+	/* 					   &total_tests); */
+	printt(pass_count, total_tests);
+}
+
+int	int_iseq(int parsed, int expected, int *num_tests)
+{
+	*num_tests += 1;
+	if (parsed != expected)
+	{
+		ft_printf("parse: Test %i failed.", *num_tests);
+	}
+	return (parsed == expected);
+}
+
+int	parse(char *t)
+{
+	return (parse_msh(mk_msh(list_to_arr(lex(t)))));
 }
 
 void	test_parser()
 {
 	int	total_tests;
-	int	pass_count;
-	int	i;
+	int	passed;
 
 	total_tests = 0;
-	pass_count = 0;
-	i = 0;
+	passed = 0;
 	ft_printf("\nTesting Parser...\n");
-	pass_count += 0;
-	ft_printf("\nPassed %i / Failed %i (of %i)\n",
-			  pass_count,
-			  total_tests - pass_count,
-			  total_tests);
+	passed += int_iseq(parse("bla"), 1, &total_tests);
+	passed += int_iseq(parse("'hello "), 0, &total_tests);
+	passed += int_iseq(parse("I < am > a \" crazy \" | string"), 1, &total_tests);
+	passed += int_iseq(parse("\" lala "), 0, &total_tests);
+	passed += int_iseq(parse("|"), 0, &total_tests);
+	printt(passed, total_tests);
 }
 
 int	run_tests(void)
 {
 	test_lexer();
+	test_parser();
 	return (0);
 }

@@ -188,7 +188,7 @@ int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 
 	cmd->argc = check_redirs(m, sen);
 	if(cmd->argc == -1)
-		return (-1);
+		return (0);
 	cmd->appp = 0;
 	cmd->argv = (char **)ft_calloc(cmd->argc + 1, sizeof(char *));
 	i = 0;
@@ -254,7 +254,8 @@ int	check_for_quotes(char **sen)
 	i--;
 	if (char_in_set(sen[i][0], "'\""))
 	{
-		if (char_in_set(sen[i][ft_strlen(sen[i]) - 1], "'\""))
+		if ((ft_strlen(sen[i]) != 1)
+			&& char_in_set(sen[i][ft_strlen(sen[i]) - 1], "'\""))
 		{
 			return (1);
 		}
@@ -267,7 +268,7 @@ int	check_for_quotes(char **sen)
 	return (1);
 }
 
-void	sens2cmds(t_msh *m)
+int	sens2cmds(t_msh *m)
 {
 	int	i;
 
@@ -276,17 +277,19 @@ void	sens2cmds(t_msh *m)
 	while (m->ct->sentences[i])
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
-		ft_printf("here");
+		/* ft_printf("here"); */
 		if (!check_for_quotes(m->ct->sentences[i]))
-			;
+			return (0);
 		else
 		{
-			compute_io(m, m->ct->sentences[i], m->ct->cmds[i]);
+			if (!compute_io(m, m->ct->sentences[i], m->ct->cmds[i]))
+				return (0);
 			printcmd(m->ct->cmds[i]);
 			//TODO: Check whether everything that has to be a word is one.
 		}
 		i++;
 	}
+	return (1);
 }
 
 int	parse_msh(t_msh *m)
@@ -294,8 +297,9 @@ int	parse_msh(t_msh *m)
 	int	pc;
 
 	pc = split_by_pipes(m);
-	if (pc > 1)
-		pipe_checkup(m);
-	sens2cmds(m);
+	if (pc > 1 && !pipe_checkup(m)) //short-circuit if
+		return (0);
+	if (!sens2cmds(m))
+		return (0);
 	return (1);
 }
