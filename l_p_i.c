@@ -15,6 +15,7 @@
 void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 {
 	/* ft_printf(" Tok: '%s', added in: %s;\n", ft_substr(in, l->cst, l->n - l->cst), place); */
+	(void)place;
 	ft_lstadd_back(res, ft_lstnew(ft_substr(in, l->cst, l->n - l->cst)));
 }
 
@@ -244,7 +245,7 @@ void	msh_loop(void)
 	char	*t;
 	char	**toks;
 	t_msh	*m;
-	extern char **environ;
+//	extern char **environ;
 
 	while(1)
 	{ // is_atty ? readline : gnl

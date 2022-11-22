@@ -103,7 +103,6 @@ int	rm_quotes(char **sp, int here_quoted)
 void	swap_in_vars(char **sp, int here_quoted)
 {
 	int	i;
-	int	is_quoted;
 
 	if (*sp == NULL)
 		return ;
@@ -147,4 +146,5 @@ void	loop_through_cmds(t_msh *m)
 int	evaluate(t_msh *m)
 {
 	loop_through_cmds(m);
+	return (0);
 }
