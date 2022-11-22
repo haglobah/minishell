@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = l_p_i.c parser.c tokens.c utils.c data.c
+SRCS = l_p_i.c parser.c evaluator.c tokens.c utils.c data.c
 MAIN = main.c
 OBJS = $(SRCS:.c=.o)
 MO = main.o

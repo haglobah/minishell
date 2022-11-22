@@ -14,7 +14,7 @@
 
 void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 {
-	ft_printf(" Tok: '%s', added in: %s;\n", ft_substr(in, l->cst, l->n - l->cst), place);
+	/* ft_printf(" Tok: '%s', added in: %s;\n", ft_substr(in, l->cst, l->n - l->cst), place); */
 	ft_lstadd_back(res, ft_lstnew(ft_substr(in, l->cst, l->n - l->cst)));
 }
 
@@ -227,12 +227,24 @@ void	interpret(t_msh *m)
 	(void)m;
 }
 
+void	prints(char **slist)
+{
+	int	i;
+
+	i = -1;
+	while (slist[++i])
+	{
+		ft_printf("%i: %s\n", i, slist[i]);
+	}
+}
+
 // msh_loop = execute . evaluate . parse . tokenize
 void	msh_loop(void)
 {
 	char	*t;
 	char	**toks;
 	t_msh	*m;
+	extern char **environ;
 
 	while(1)
 	{ // is_atty ? readline : gnl
@@ -245,13 +257,14 @@ void	msh_loop(void)
 			m = mk_msh(toks);
 			if (parse_msh(m))
 			{
-				//ft_printf("Good Command!\n");
+				evaluate(m);
+				//prints(environ);
 				//print_tokens(parse_tree);
 				//interpret();
 			}
 			else
 			{
-				ft_printf("Bad Command!\n");
+				/* ft_printf("Bad Command!\n"); */
 			}
 		}
 		free(t);
