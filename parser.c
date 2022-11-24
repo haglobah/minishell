@@ -115,7 +115,7 @@ int	pipe_checkup(t_msh *m)
 	{
 		if (!m->ct->sentences[i][0])
 		{
-			throw_error("|");
+			serror("|");
 			return (0);
 		}
 		i++;
@@ -138,12 +138,12 @@ int	check_redirs(t_msh *m, char **sen)
 		{
 			if (!sen[i + 1])
 			{
-				throw_error(sen[i]);
+				serror(sen[i]);
 				return (-1);
 			}
 			if (s_in_s(sen[i + 1], redirs))
 			{
-				throw_error(sen[i + 1]);
+				serror(sen[i + 1]);
 				return (-1);
 			}
 			rc += 2;
@@ -261,7 +261,7 @@ int	check_for_quotes(char **sen)
 		}
 		else
 		{
-			throw_error(sen[i]);
+			serror(sen[i]);
 			return (0);
 		}
 	}
@@ -284,7 +284,7 @@ int	sens2cmds(t_msh *m)
 		{
 			if (!compute_io(m, m->ct->sentences[i], m->ct->cmds[i]))
 				return (0);
-			printcmd(m->ct->cmds[i]);
+//			printcmd(m->ct->cmds[i]);
 			//TODO: Check whether everything that has to be a word is one.
 		}
 		i++;

@@ -20,6 +20,9 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 # define NUM_PIPES 50
 
@@ -32,6 +35,13 @@ typedef struct s_lexer
 	int					n;
 	current_token_type	ctt;
 }	t_lex;
+
+typedef struct s_execute
+{
+	char	*pathname;
+	char	**args;
+	char	**env;
+}	t_exec;
 
 typedef struct s_command
 {
@@ -72,7 +82,9 @@ int	s_isneq(char * s1, char *s2, int n);
 int	s_in_s(char *s, char **slist);
 int	consists_of_only(char *token, char *chars);
 void	ft_strcpy(char *dst, char *src);
-void	throw_error(char *token);
+void	serror(char *token);
+void	free_strs(char **sp);
+void	prints(char **slist);
 
 //tokens.c
 void	print_tokens(t_list *tokens);
@@ -89,6 +101,11 @@ int	printcmd(t_cmd *cmd);
 
 //evaluator.c
 int	evaluate(t_msh *m);
+
+//executor.c
+int	execute(t_msh *m);
+t_exec	*mk_exec(t_cmd *cmd);
+void	del_exec(t_exec *e);
 
 int	run_tests(void);
 void	msh_loop(void);

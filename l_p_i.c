@@ -228,17 +228,6 @@ void	interpret(t_msh *m)
 	(void)m;
 }
 
-void	prints(char **slist)
-{
-	int	i;
-
-	i = -1;
-	while (slist[++i])
-	{
-		ft_printf("%i: %s\n", i, slist[i]);
-	}
-}
-
 // msh_loop = execute . evaluate . parse . tokenize
 void	msh_loop(void)
 {
@@ -259,6 +248,7 @@ void	msh_loop(void)
 			if (parse_msh(m))
 			{
 				evaluate(m);
+				execute(m);
 				//prints(environ);
 				//print_tokens(parse_tree);
 				//interpret();

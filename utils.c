@@ -74,8 +74,32 @@ int	s_in_s(char *s, char **slist)
 	return (0);
 }
 
-void	throw_error(char *token)
+void	serror(char *token)
 {
 	ft_printf("bash: syntax error near unexpected token '%s'\n", token);
 }
 
+
+void	free_strs(char **sp)
+{
+	int	i;
+
+	i = -1;
+	while (sp[++i] != NULL)
+	{
+		free(sp[i]);
+	}
+	free(sp);
+	return ;
+}
+
+void	prints(char **slist)
+{
+	int	i;
+
+	i = -1;
+	while (slist[++i])
+	{
+		ft_printf("%i: %s\n", i, slist[i]);
+	}
+}
