@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heil...>      +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/24 09:39:54 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/11/26 02:22:45 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ char **cons_args(t_cmd *cmd)
 	{
 		if (s_iseq(cmd->argv[i], ""))
 			continue ;
-		args[j] = ft_calloc(sizeof(char), ft_strlen(cmd->argv[i]));
+		args[j] = ft_calloc(sizeof(char), ft_strlen(cmd->argv[i]) + 1);
 		if (args[j] == NULL)
 			return (NULL);
 		ft_strcpy(args[j], cmd->argv[i]);
@@ -126,7 +126,7 @@ char	*find_path(char **args)
 		return (NULL);
 	//find the path (missing)
 	ft_strcpy(path, args[0]);
-	ft_printf("path: %s\n");
+	ft_printf("path: %s\n", path);
 	return (path);
 }
 
@@ -197,7 +197,8 @@ int	execute_all_cmds(t_msh *m)
 				fdout = dup(tmpout);
 			else
 			{
-				pipe(fdpipe);
+				if (pipe(fdpipe) < 0)
+					ft_printf("pipecreation failed\n");
 				fdout = fdpipe[1];
 				fdin = fdpipe[0];
 			}
@@ -216,6 +217,8 @@ int	execute_all_cmds(t_msh *m)
 				ft_printf("execve failed.\n");
 			free(e);
 		}
+		else if (ret == -1)
+			ft_printf("fork failed\n");
 
 		//restore IO defaults
 		dup2(tmpin, 0);

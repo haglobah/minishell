@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heil...>      +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:17:26 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/21 20:17:26 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/11/25 15:34:49 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	print_tokarr(char **toks)
 	ft_printf("\n");
 }
 
+//returns NULL terminated array of strings
 char	**list_to_arr(t_list *toks)
 {
 	int	slen;
