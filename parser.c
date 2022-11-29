@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heil...>      +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/09/25 19:15:17 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/11/29 20:17:56 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,7 +272,7 @@ int	sens2cmds(t_msh *m)
 {
 	int	i;
 
-	m->ct->cmds = (t_cmd **)ft_calloc(1, sizeof(t_cmd *));
+	m->ct->cmds = (t_cmd **)ft_calloc(m->ct->senc + 1, sizeof(t_cmd *));
 	i = 0;
 	while (m->ct->sentences[i])
 	{
