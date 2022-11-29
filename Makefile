@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/11/29 21:11:53 by tpeters          ###   ########.fr        #
+#    Updated: 2022/11/29 21:21:34 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,7 @@ run: all
 	./$(NAME)
 	
 tools: $(LIBFTLIB)
-	gcc echo.c -o echo
+	gcc echo.c -o echo -Llibft -lft
 	gcc cat.c -o cat -Llibft -lft
 
 .PHONY: lsan debug all clean fclean re test

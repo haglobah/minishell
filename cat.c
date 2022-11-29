@@ -1,19 +1,6 @@
 #include "libft/libft.h"
 #include <fcntl.h>
 
-/*
-void	prints(char **slist)
-{
-	int	i;
-
-	i = -1;
-	while (slist[++i])
-	{
-		printf("%i: %s\n", i, slist[i]);
-	}
-}
-*/
-
 void	printstdin(int fd)
 {
 	char	*i;

@@ -1,31 +1,24 @@
-#include <stdio.h>
-
-void	prints(char **slist)
-{
-	int	i;
-
-	i = -1;
-	while (slist[++i])
-	{
-		printf("%i: %s\n", i, slist[i]);
-	}
-}
-
-//void	printa(int argc, char **args)
-//{
-//	int	i;
-//
-//	i = -1;
-//	while (++i < argc)
-//	{
-//		printf("%i: %s\n", i, args[i]);
-//	}
-//}
+#include "libft/libft.h"
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	printf("\n----------------\n");
-	prints(argv);
-	printf("\n----------------\n");
-	//prints(envp);
+	int	i;
+	int	n_flag;
+
+	n_flag = 0;
+	ft_printf("\n----------------\n");
+	i = 1;
+	if (!ft_strcmp(argv[1], "-n"))
+	{
+		i++;
+		n_flag = 1;
+	}
+	while (argv[i])
+	{
+		ft_printf("%i: %s", i, argv[i]);
+		if (!n_flag || (n_flag && i < argc - 1))
+			ft_printf("\n");
+		i++;
+	}
+	ft_printf("\n----------------\n");
 }
