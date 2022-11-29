@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/29 20:17:56 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/11/29 20:53:02 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,6 +268,24 @@ int	check_for_quotes(char **sen)
 	return (1);
 }
 
+int	is_only_dollar(char **sen)
+{
+	int	i;
+
+	if (sen[0] == NULL)
+		return (0);
+	i = -1;
+	while (sen[++i])
+	{
+		if (s_iseq(sen[i], "$"))
+		{
+			serror(sen[i]);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 int	sens2cmds(t_msh *m)
 {
 	int	i;
@@ -277,16 +295,14 @@ int	sens2cmds(t_msh *m)
 	while (m->ct->sentences[i])
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
-		/* ft_printf("here"); */
+		// ft_printf("here");
 		if (!check_for_quotes(m->ct->sentences[i]))
 			return (0);
-		else
-		{
-			if (!compute_io(m, m->ct->sentences[i], m->ct->cmds[i]))
-				return (0);
-//			printcmd(m->ct->cmds[i]);
-			//TODO: Check whether everything that has to be a word is one.
-		}
+		if (is_only_dollar(m->ct->sentences[i]))
+			return (0);
+		if (!compute_io(m, m->ct->sentences[i], m->ct->cmds[i]))
+			return (0);
+		printcmd(m->ct->cmds[i]);
 		i++;
 	}
 	return (1);
