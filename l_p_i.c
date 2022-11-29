@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   l_p_i.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/29 20:31:49 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/11/29 21:06:09 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,7 @@ void	msh_loop(void)
 		if (parse_msh(m))
 		{
 			evaluate(m);
-			//execute(m);
+			execute(m);
 			//prints(environ);
 			//print_tokens(parse_tree);
 			//interpret();

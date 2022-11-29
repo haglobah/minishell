@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/09/17 17:59:54 by tpeters          ###   ########.fr        #
+#    Updated: 2022/11/29 21:11:53 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,7 @@ clean:
 	rm -f $(OBJS) $(MO)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) cat echo
 
 re: fclean
 	$(MAKE)
@@ -73,5 +73,9 @@ test: $(TOBJS) $(OBJS)
 
 run: all
 	./$(NAME)
+	
+tools: $(LIBFTLIB)
+	gcc echo.c -o echo
+	gcc cat.c -o cat -Llibft -lft
 
 .PHONY: lsan debug all clean fclean re test
