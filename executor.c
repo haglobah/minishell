@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/26 02:22:45 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/11/29 21:46:09 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,9 +147,9 @@ t_exec	*mk_exec(t_cmd *cmd)
 	if (e == NULL)
 		return (NULL);
 	e->args = cons_args(cmd);
-	ft_printf("here\n");
+	// ft_printf("here\n");
 	e->pathname = find_path(e->args);
-	ft_printf("%s\n", e->pathname);
+	// ft_printf("%s\n", e->pathname);
 	e->env = cons_env();
 	return (e);
 }
@@ -218,7 +218,7 @@ int	execute_all_cmds(t_msh *m)
 			free(e);
 		}
 		else if (ret == -1)
-			ft_printf("fork failed\n");
+			perror("fork failed\n");
 
 		//restore IO defaults
 		dup2(tmpin, 0);

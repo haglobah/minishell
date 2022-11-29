@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/29 20:53:02 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/11/29 21:33:57 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,7 +302,7 @@ int	sens2cmds(t_msh *m)
 			return (0);
 		if (!compute_io(m, m->ct->sentences[i], m->ct->cmds[i]))
 			return (0);
-		printcmd(m->ct->cmds[i]);
+		// printcmd(m->ct->cmds[i]);
 		i++;
 	}
 	return (1);
