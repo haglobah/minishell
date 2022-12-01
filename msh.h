@@ -83,7 +83,8 @@ int	s_in_s(char *s, char **slist);
 int	consists_of_only(char *token, char *chars);
 void	ft_strcpy(char *dst, char *src);
 void	serror(char *token);
-void	free_strs(char **sp);
+int	strslen(char **strs);
+int	free_strs(char **sp);
 void	prints(char **slist);
 
 //tokens.c
@@ -106,6 +107,10 @@ int	evaluate(t_msh *m);
 int	execute(t_msh *m);
 t_exec	*mk_exec(t_cmd *cmd);
 void	del_exec(t_exec *e);
+
+
+//builtins.c
+int	export(void);
 
 int	run_tests(void);
 void	msh_loop(void);

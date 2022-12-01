@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = l_p_i.c parser.c evaluator.c tokens.c utils.c data.c executor.c
+SRCS = l_p_i.c parser.c evaluator.c tokens.c utils.c data.c executor.c export.c
 MAIN = main.c
 OBJS = $(SRCS:.c=.o)
 MO = main.o
@@ -23,6 +23,9 @@ CFLAGS = -Wall -Wextra #-Werror
 LINK_FLAGS = -Llibft -lft -lreadline
 CC = cc
 
+LFT = libft
+LFTLIB=/libft/libft.a
+
 ifeq ($(OS),Windows_NT)
 else
 	UNAME_S := $(shell uname -s)
@@ -34,12 +37,12 @@ else
 	endif
 endif
 
-LIBFTLIB=/libft/libft.a
-all: $(LIBFTLIB)
 all: $(NAME)
 
-$(LIBFTLIB):
-	if [ ! -d "libft" ]; then git clone git@github.com:Ludmuterol/libft.git; fi
+$(LFT) :
+	git clone git@github.com:Ludmuterol/libft.git
+
+$(LFTLIB) : $(LFT)
 	$(MAKE) -C libft bonus
 
 LSANLIB = /LeakSanitizer/liblsan.a
@@ -55,8 +58,8 @@ $(LSANLIB):
 debug: CFLAGS += -g
 debug: all
 
-$(NAME): $(OBJS) $(MO)
-	$(CC) $(OBJS) $(MO) $(LINK_FLAGS) -o $(NAME)
+$(NAME): $(SRCS) $(MAIN)  $(LIBFT)
+	$(CC) $(SRCS) $(MAIN) $(LINK_FLAGS) -o $(NAME)
 
 clean:
 	rm -f $(OBJS) $(MO)
@@ -73,9 +76,11 @@ test: $(TOBJS) $(OBJS)
 
 run: all
 	./$(NAME)
-	
+
 tools: $(LIBFTLIB)
 	gcc echo.c -o echo -Llibft -lft
 	gcc cat.c -o cat -Llibft -lft
+	gcc pwd.c -o cat -Llibft -lft
+
 
 .PHONY: lsan debug all clean fclean re test

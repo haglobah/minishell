@@ -79,8 +79,19 @@ void	serror(char *token)
 	ft_printf("bash: syntax error near unexpected token '%s'\n", token);
 }
 
+int	strslen(char **strs)
+{
+	int	i;
 
-void	free_strs(char **sp)
+	i = -1;
+	if (strs == NULL)
+		return (0);
+	while (strs[++i] != NULL)
+		;
+	return (i);
+}
+
+int	free_strs(char **sp)
 {
 	int	i;
 
@@ -90,7 +101,7 @@ void	free_strs(char **sp)
 		free(sp[i]);
 	}
 	free(sp);
-	return ;
+	return (0);
 }
 
 void	prints(char **slist)

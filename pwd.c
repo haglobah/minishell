@@ -1,32 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heil...>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/11/25 16:19:23 by tpeters          ###   ########.fr       */
+/*   Created: 2022/12/01 16:08:27 by bhagenlo          #+#    #+#             */
+/*   Updated: 2022/12/01 16:08:27 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void	handle_signal(int sig)
+int	pwd()
 {
-	ft_printf("sig caught: %d\n", sig);
-	if (sig == SIGINT)
-	{
-		//show prompt again
-		//(kill all subsequent processes?)
-	}
+	ft_printf("%s\n", getenv("PWD"));
+	return (0);
 }
 
-int	main(void)
+int	main()
 {
-	signal(SIGINT, handle_signal);
-	signal(SIGQUIT, handle_signal);
-//	msh_loop();
-	export();
-	return (0);
+	pwd();
 }
