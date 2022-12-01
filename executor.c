@@ -3,87 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/29 21:46:09 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/01 17:43:06 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-/* void exec_cmd() */
-/* { */
-/* 	//save in/out */
-/* 	int tmpin = dup(0); */
-/* 	int tmpout = dup(1); */
-/* 	//set the initial input */
-/* 	int fdin; */
-/* 	if (infile) { */
-/* 		fdin = open(infile,O_READ); */
-/* 	} */
-/* 	else { */
-/* 		// Use default input */
-/* 		fdin=dup(tmpin); */
-/* 	} */
-/* 	int ret; */
-/* 	int fdout; */
-/* 	for(i=0;i<numsimplecommands; i++) */
-/* 	{ */
-/* 		//redirect input */
-/* 		dup2(fdin, 0); */
-/* 		close(fdin); */
-/* 		//setup output */
-/* 		if (i == numsimplecommands 1){ */
-/* 			// Last simple command */
-/* 			if(outfile){ */
-/* 				fdout=open(outfile,); */
-/* 			} */
-/* 			else { */
-/* 				// Use default output */
-/* 				fdout=dup(tmpout); */
-/* 			} */
-/* 		} */
-/* 		else */
-/* 		{ */
-/* 			// Not last */
-/* 			//simple command */
-/* 			//create pipe */
-/* 			int fdpipe[2]; */
-/* 			pipe(fdpipe); */
-/* 			fdout=fdpipe[1]; */
-/* 			fdin=fdpipe[0]; */
-/* 		}// if/else */
-/* 		// Redirect output */
-/* 		dup2(fdout,1); */
-/* 		close(fdout); */
-/* 		// Create child process */
-/* 		ret=fork(); */
-/* 		if(ret==0) { */
-/* 			execvp(scmd[i].args[0], scmd[i].args); */
-/* 			perror("execvp"); */
-/* 			_exit(1); */
-/* 		} */
-/* 	} // for */
-/* 	//restore in/out defaults */
-/* 	dup2(tmpin,0); */
-/* 	dup2(tmpout,1); */
-/* 	close(tmpin); */
-/* 	close(tmpout); */
-/* 	if (!background) { */
-/* 		// Wait for last command */
-/* 		waitpid(ret, NULL); */
-/* 	} */
-/* } // execute */
-
-void	exec_cmd(t_msh *m)
-{
-	//if infile, read from infile
-	//execute
-	//if outfile, put into outfile
-	//if !last, create pipe
-	(void)m;
-}
 
 char **cons_args(t_cmd *cmd)
 {
@@ -162,74 +89,98 @@ void	del_exec(t_exec *e)
 	free(e);
 }
 
+void	close_fds(int pos, int *fd, int num_pipes)
+{
+	while (pos < num_pipes * 2)
+	{
+		close(fd[pos]);
+		pos++;
+	}
+}
+
 int	execute_all_cmds(t_msh *m)
 {
-	int	tmpin;
-	int	tmpout;
-	int	fdin;
-	int	fdout;
-	int	fdpipe[2];
-	int	ret;
-	char	*infile;
-	char	*outfile;
-	t_exec	*e;
+	int	*fd;
 	int	i;
+	int	pid;
+	int	forks;
 
-	tmpin = dup(0);
-	tmpout = dup(1);
-	i = -1;
-	while (m->ct->cmds[++i])
+	fd = (int *)calloc(sizeof(int), (m->ct->senc + 1) * 2);
+	if (!fd)
+		return (-1);
+	i = 0;
+	while (i < m->ct->senc + 1)
 	{
-		infile = m->ct->cmds[i]->in;
-		if (infile)
-			fdin = open(infile, O_RDONLY);
-		else
-			fdin = dup(tmpin);
-		dup2(fdin, 0);
-		close(fdin);
-
-		outfile = m->ct->cmds[i]->out;
-		if (outfile)
-			fdout = open(outfile, O_WRONLY | (m->ct->cmds[i]->appp) ? O_APPEND : 0);
-		else
+		if(pipe(fd + i * 2)){
+			perror("pipe");
+			return -1;
+		}
+		i++;
+	}
+	forks = 0;
+	while (forks < m->ct->senc)
+	{
+		pid = fork();
+		if (pid == -1)
 		{
-			if (m->ct->cmds[i + 1] == NULL)
-				fdout = dup(tmpout);
+			perror("fork");
+			return -1;
+		}
+		else if (pid == 0)
+		{
+			// child
+			close(fd[forks * 2 + 1]);
+			
+			char *infile = m->ct->cmds[forks]->in;
+			if (infile)
+			{
+				int fd_open = open(infile, O_RDONLY);
+				dup2(fd_open, STDIN_FILENO);
+				close(fd_open);
+			}
 			else
 			{
-				if (pipe(fdpipe) < 0)
-					ft_printf("pipecreation failed\n");
-				fdout = fdpipe[1];
-				fdin = fdpipe[0];
+				if (forks != 0)
+					dup2(fd[forks * 2 + 0], STDIN_FILENO);
 			}
-		}
-		dup2(fdout, 1);
-		close(fdout);
-
-		ret = fork();
-		if (ret == 0)
-		{
+			close(fd[forks * 2 + 0]);
+			if (forks != m->ct->senc - 1)
+				dup2(fd[(forks + 1) * 2 + 1], STDOUT_FILENO);
+			close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
+			t_exec	*e;
 			ft_printf("I exist: pid %i\n", getpid());
-			e = mk_exec(m->ct->cmds[i]);
-			if (e == NULL)
-				return (1);
-			if (execve(e->pathname, e->args, e->env) == -1)
-				ft_printf("execve failed.\n");
-			free(e);
+ 			e = mk_exec(m->ct->cmds[forks]);
+ 			if (e == NULL)
+ 				return (1);
+ 			if (execve(e->pathname, e->args, e->env) == -1)
+ 				ft_printf("execve failed.\n");
+ 			free(e);
 		}
-		else if (ret == -1)
-			perror("fork failed\n");
-
-		//restore IO defaults
-		dup2(tmpin, 0);
-		dup2(tmpout, 1);
-
+		else
+		{
+			// parent
+			if (m->ct->cmds[0]->in && forks == 0)
+			{
+				int fdin;
+				fdin = open(m->ct->cmds[0]->in, O_RDONLY);
+				char *tmp = get_next_line(fdin);
+				while (tmp)
+				{
+					free(tmp);
+					write(fd[forks * 2 + 1], tmp, ft_strlen(tmp));
+					tmp = get_next_line(fdin);
+				}
+				if (fdin)
+					close(fdin);
+			}
+			close(fd[forks * 2 + 0]);
+			close(fd[forks * 2 + 1]);
+			waitpid(pid, NULL, 0);
+		}
+		forks++;
 	}
-	close(tmpin);
-	close(tmpout);
-	waitpid(ret, NULL, 0);
-	//return the error code?
-	return (0);
+	free(fd);
+	return 0;
 }
 
 int	execute(t_msh *m)
