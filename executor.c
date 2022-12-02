@@ -12,38 +12,6 @@
 
 #include "msh.h"
 
-char **cons_args(t_cmd *cmd)
-{
-	int	i;
-	int	j;
-	int	empty_count;
-	char	**args;
-
-	empty_count = 0;
-	i = -1;
-	while (++i < cmd->argc)
-	{
-		if (s_iseq(cmd->argv[i], ""))
-			empty_count += 1;
-	}
-	args = ft_calloc(sizeof(char *), (i - empty_count + 1));
-	if (args == NULL)
-		return (NULL);
-	i = -1;
-	j = 0;
-	while (++i < cmd->argc)
-	{
-		if (s_iseq(cmd->argv[i], ""))
-			continue ;
-		args[j] = ft_calloc(sizeof(char), ft_strlen(cmd->argv[i]) + 1);
-		if (args[j] == NULL)
-			return (NULL);
-		ft_strcpy(args[j], cmd->argv[i]);
-		j++;
-	}
-	return (args);
-}
-
 char	*find_path(char **args)
 {
 	char	*path;
@@ -73,7 +41,7 @@ t_exec	*mk_exec(t_cmd *cmd)
 	e = ft_calloc(sizeof(t_exec), 1);
 	if (e == NULL)
 		return (NULL);
-	e->args = cons_args(cmd);
+	e->args = cmd->args;
 	// ft_printf("here\n");
 	e->pathname = find_path(e->args);
 	// ft_printf("%s\n", e->pathname);
@@ -96,6 +64,43 @@ void	close_fds(int pos, int *fd, int num_pipes)
 		close(fd[pos]);
 		pos++;
 	}
+}
+
+int	is_builtin(t_msh *m, int forks)
+{
+	char	*builtins[] = {"echo", "cd", "pwd",
+		"export", "unset", "env", "exit"};
+	if (s_in_s(m->ct->cmds[forks]->args[0], builtins))
+		return (1);
+	return (0);
+}
+
+int	exec_builtin(t_msh *m, int forks)
+{
+	ft_printf("Is a builtin!\n");
+	
+	return (0);
+}
+
+int	execute_cmd(t_msh *m, int forks)
+{
+	t_exec	*e;
+
+	ft_printf("I exist: pid %i\n", getpid());
+	if (is_builtin(m, forks))
+	{
+		exec_builtin(m, forks);
+	}
+	else
+	{
+		e = mk_exec(m->ct->cmds[forks]);
+		if (e == NULL)
+			return (1);
+		if (execve(e->pathname, e->args, e->env) == -1)
+			ft_printf("execve failed.\n");
+		free(e);
+	}
+	return (0);
 }
 
 int	execute_all_cmds(t_msh *m)
@@ -147,14 +152,8 @@ int	execute_all_cmds(t_msh *m)
 			if (forks != m->ct->senc - 1)
 				dup2(fd[(forks + 1) * 2 + 1], STDOUT_FILENO);
 			close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
-			t_exec	*e;
-			ft_printf("I exist: pid %i\n", getpid());
- 			e = mk_exec(m->ct->cmds[forks]);
- 			if (e == NULL)
- 				return (1);
- 			if (execve(e->pathname, e->args, e->env) == -1)
- 				ft_printf("execve failed.\n");
- 			free(e);
+			if (execute_cmd(m, forks) == 1)
+				return (1);
 		}
 		else
 		{

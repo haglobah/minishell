@@ -26,7 +26,7 @@ int	main(void)
 {
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, handle_signal);
-//	msh_loop();
-	export();
+	msh_loop();
+//	export();
 	return (0);
 }

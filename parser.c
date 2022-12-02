@@ -236,7 +236,9 @@ int	printcmd(t_cmd *cmd)
 	i = 0;
 	while (cmd->argv[i])
 		ft_printf("'%s' ", cmd->argv[i++]);
-	ft_printf("\n in: %s\n", cmd->in);
+	ft_printf(" args: ");
+	prints(cmd->args);
+	ft_printf(" in: %s\n", cmd->in);
 	ft_printf(" out: %s\n", cmd->out);
 	ft_printf(" here_quoted: %i\n", cmd->here_quoted);
 	return (i);

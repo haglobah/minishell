@@ -121,6 +121,38 @@ void	swap_in_vars(char **sp, int here_quoted)
 	}
 }
 
+char **cons_args(t_cmd *cmd)
+{
+	int	i;
+	int	j;
+	int	empty_count;
+	char	**args;
+
+	empty_count = 0;
+	i = -1;
+	while (++i < cmd->argc)
+	{
+		if (s_iseq(cmd->argv[i], ""))
+			empty_count += 1;
+	}
+	args = ft_calloc(sizeof(char *), (i - empty_count + 1));
+	if (args == NULL)
+		return (NULL);
+	i = -1;
+	j = 0;
+	while (++i < cmd->argc)
+	{
+		if (s_iseq(cmd->argv[i], ""))
+			continue ;
+		args[j] = ft_calloc(sizeof(char), ft_strlen(cmd->argv[i]) + 1);
+		if (args[j] == NULL)
+			return (NULL);
+		ft_strcpy(args[j], cmd->argv[i]);
+		j++;
+	}
+	return (args);
+}
+
 void	loop_through_cmds(t_msh *m)
 {
 	int	i;
@@ -138,6 +170,7 @@ void	loop_through_cmds(t_msh *m)
 		}
 		swap_in_vars(&cmds[i]->in, cmds[i]->here_quoted);
 		swap_in_vars(&cmds[i]->out, cmds[i]->here_quoted);
+		cmds[i]->args = cons_args(cmds[i]);
 		ft_printf("\n");
 		printcmd(m->ct->cmds[i]);
 	}

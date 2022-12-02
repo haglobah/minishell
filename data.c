@@ -25,7 +25,7 @@ t_ct	*mk_ct()
 }
 
 //malloc minishell-struct
-t_msh	*mk_msh(char **toks)
+t_msh	*mk_msh(char **toks, char **env)
 {
 	t_msh	*msh;
 
@@ -34,20 +34,14 @@ t_msh	*mk_msh(char **toks)
 		return (NULL);
 	msh->toks = toks;
 	msh->ct = mk_ct();
+	msh->env = env;
 	return (msh);
 }
 
 void	del_msh(t_msh *m)
 {
-	//free_toks(m->toks);
-	int	i;
-
-	i = 0;
-	while (m->toks[i])
-	{
-		free(m->toks[i]);
-		i++;
-	}
+	free_strs(m->toks);
 	//del_ct(m->ct)
+	//free_strs(m->env);
 	free(m);
 }

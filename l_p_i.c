@@ -234,8 +234,10 @@ void	msh_loop(void)
 	char	*t;
 	char	**toks;
 	t_msh	*m;
+	char	**env;
 //	extern char **environ;
 
+	env = clone_env();
 	while(1)
 	{ // is_atty ? readline : gnl
 		t = readline("φ ");
@@ -247,7 +249,7 @@ void	msh_loop(void)
 		add_history(t);
 		//	ft_printf("\n");
 		toks = list_to_arr(lex(t));
-		m = mk_msh(toks);
+		m = mk_msh(toks, env);
 		if (parse_msh(m))
 		{
 			evaluate(m);

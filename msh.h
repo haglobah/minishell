@@ -43,10 +43,24 @@ typedef struct s_execute
 	char	**env;
 }	t_exec;
 
+typedef struct s_builtins
+{
+	char	*echo;
+	char	*cd;
+	char	*pwd;
+	char	*export;
+	char	*unset;
+	char	*env;
+	char	*exit;
+}	t_builtin;
+
 typedef struct s_command
 {
 	int	argc;
 	char	**argv;
+
+//	NULL-terminated
+	char	**args;
 
 	char	*in;
 	char	*out;
@@ -70,9 +84,11 @@ typedef struct s_minishell
 {
 	char	**toks;
 	t_ct	*ct;
+	char	**env;
 }	t_msh;
 
-t_msh	*mk_msh(char **toks);
+//data.c
+t_msh	*mk_msh(char **toks, char **env);
 void	del_msh(t_msh *m);
 
 //utils.c
@@ -104,6 +120,7 @@ int	printcmd(t_cmd *cmd);
 int	evaluate(t_msh *m);
 
 //executor.c
+char	**cons_args(t_cmd *cmd);
 int	execute(t_msh *m);
 t_exec	*mk_exec(t_cmd *cmd);
 void	del_exec(t_exec *e);
@@ -111,6 +128,10 @@ void	del_exec(t_exec *e);
 
 //builtins.c
 int	export(void);
+
+//env
+char	**extend_env(char **old, char *to_add);
+char	**clone_env();
 
 int	run_tests(void);
 void	msh_loop(void);

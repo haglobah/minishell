@@ -78,3 +78,8 @@ int	export(/* char ***env */)
 	free_strs(env);
 	return (1);
 }
+
+int	unset(/* char ***env */)
+{
+	
+}

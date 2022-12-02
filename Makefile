@@ -45,14 +45,17 @@ $(LFT) :
 $(LFTLIB) : $(LFT)
 	$(MAKE) -C libft bonus
 
+LSAN = LeakSanitizer
 LSANLIB = /LeakSanitizer/liblsan.a
 lsan: CFLAGS += -ILeakSanitizer -Wno-gnu-include-next
 lsan: LINK_FLAGS += $(LSANLFLAGS)
 lsan: fclean $(LSANLIB)
 lsan: all
 
+$(LSAN) :
+	git clone https://github.com/mhahnFr/LeakSanitizer.git
+
 $(LSANLIB):
-	if [ ! -d "LeakSanitizer" ]; then git clone git@github.com:mhahnFr/LeakSanitizer.git; fi
 	$(MAKE) -C LeakSanitizer
 
 debug: CFLAGS += -g
@@ -80,7 +83,7 @@ run: all
 tools: $(LIBFTLIB)
 	gcc echo.c -o echo -Llibft -lft
 	gcc cat.c -o cat -Llibft -lft
-	gcc pwd.c -o cat -Llibft -lft
+	gcc pwd.c -o pwd -Llibft -lft
 
 
 .PHONY: lsan debug all clean fclean re test
