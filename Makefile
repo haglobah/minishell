@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/12/02 16:32:17 by tpeters          ###   ########.fr        #
+#    Updated: 2022/12/02 16:35:27 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ LINK_FLAGS = -Llibft -lft -lreadline
 CC = cc
 
 LFT = libft
-LFTLIB=/libft/libft.a
+LFTLIB=$(LFT)/libft.a
 
 ifeq ($(OS),Windows_NT)
 else
