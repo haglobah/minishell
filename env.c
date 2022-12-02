@@ -14,6 +14,7 @@
 
 char	**extend_env(char **old, char *to_add)
 {
+	char	*eqsign;
 	char	**new;
 	int	i;
 
@@ -37,6 +38,11 @@ char	**extend_env(char **old, char *to_add)
 		free_strs(new);
 		return (NULL);
 	}
+	if (to_add == NULL)
+		return (NULL);
+	eqsign = ft_strchr(to_add, '=');
+	if (eqsign == NULL)
+		return (NULL);
 	ft_strcpy(new[i], to_add);
 	free_strs(old);
 	return (new);
@@ -65,21 +71,57 @@ char	**clone_env()
 	return (new);
 }
 
-int	export(/* char ***env */)
+char	*ft_getenv(t_msh *m, char *varname)
 {
-	char	**env;
+	int	i;
+	char	*eqsignp;
+	int	eqpos;
+	char	*res;
 
-	env = clone_env();
-	if (env == NULL)
-		return (0);
-	prints(env);
-	env = extend_env(env, "BLAH=42");
-	prints(env);
-	free_strs(env);
-	return (1);
+	i = -1;
+	while (m->env[++i] != NULL)
+	{
+		eqsignp = ft_strchr(m->env[i], '=');
+		eqpos = eqsignp - m->env[i];
+		if (s_isneq(m->env[i], varname, eqpos))
+		{
+			res = ft_substr(m->env[i], eqpos + 1, ft_strlen(eqsignp + 1));
+			return (res);
+		}
+	}
+	return (NULL);
 }
 
-int	unset(/* char ***env */)
+void	strip_env(t_msh *m, int pos, int len)
 {
-	
+	free(m->env[pos]);
+	ft_memmove(&m->env[pos], &m->env[pos + 1], sizeof(char *) * len);
+}
+
+int	rm_entry(t_msh *m, char *varname)
+{
+	int	i;
+	int	to_rm;
+	char	*eqsignp;
+	int	eqpos;
+	int	res;
+
+	i = -1;
+	res = 0;
+	to_rm = 0;
+	while (m->env[++i] != NULL)
+	{
+		eqsignp = ft_strchr(m->env[i], '=');
+		eqpos = eqsignp - m->env[i];
+		if (s_isneq(m->env[i], varname, eqpos))
+		{
+			to_rm = i;
+			res = 1;
+		}
+	}
+	if (res == 1)
+	{
+		strip_env(m, to_rm, i - to_rm);
+	}
+	return (res);
 }

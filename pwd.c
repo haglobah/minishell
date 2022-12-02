@@ -14,7 +14,7 @@
 
 int	pwd()
 {
-	ft_printf("%s\n", getenv("PWD"));
+
 	return (0);
 }
 

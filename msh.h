@@ -83,7 +83,7 @@ void	del_msh(t_msh *m);
 //utils.c
 void	*ft_realloc(void *ptr, size_t size);
 int	s_iseq(char *s1, char *s2);
-int	s_isneq(char * s1, char *s2, int n);
+int	s_isneq(char *s1, char *s2, int n);
 int	s_in_s(char *s, char **slist);
 int	consists_of_only(char *token, char *chars);
 void	ft_strcpy(char *dst, char *src);
@@ -116,11 +116,18 @@ void	del_exec(t_exec *e);
 
 
 //builtins.c
-int	export(void);
+int	ft_echo(t_msh *m, char **args);
+int	ft_cd(t_msh *m, char **args);
+int	ft_pwd(t_msh *m, char **args);
+int	ft_export(t_msh *m, char **args);
+int	ft_unset(t_msh *m, char **args);
+int	ft_env(t_msh *m, char **args);
+int	ft_exit(t_msh *m, char **args);
 
-//env
+//env.c
 char	**extend_env(char **old, char *to_add);
 char	**clone_env();
+char	*ft_getenv(t_msh *m, char *varname);
 
 int	run_tests(void);
 void	msh_loop(void);

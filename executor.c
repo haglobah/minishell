@@ -69,7 +69,7 @@ void	close_fds(int pos, int *fd, int num_pipes)
 int	is_builtin(t_msh *m, int forks)
 {
 	char	*builtins[] = {"echo", "cd", "pwd",
-		"export", "unset", "env", "exit"};
+		"export", "unset", "env", "exit", NULL};
 	if (s_in_s(m->ct->cmds[forks]->args[0], builtins))
 		return (1);
 	return (0);
@@ -77,8 +77,26 @@ int	is_builtin(t_msh *m, int forks)
 
 int	exec_builtin(t_msh *m, int forks)
 {
+	char	*name;
+	char	**args;
+
 	ft_printf("Is a builtin!\n");
-	
+	args = m->ct->cmds[forks]->args;
+	name = args[0];
+	if (s_iseq(name, "echo"))
+		ft_echo(m, args);
+	else if (s_iseq(name, "cd"))
+		ft_cd(m, args);
+	else if (s_iseq(name, "pwd"))
+		ft_pwd(m, args);
+	else if (s_iseq(name, "export"))
+		ft_export(m, args);
+	else if (s_iseq(name, "unset"))
+		ft_unset(m, args);
+	else if (s_iseq(name, "env"))
+		ft_env(m, args);
+	else if (s_iseq(name, "exit"))
+		ft_exit(m, args);
 	return (0);
 }
 
@@ -135,11 +153,11 @@ int	execute_all_cmds(t_msh *m)
 		{
 			// child
 			close(fd[forks * 2 + 1]);
-			
 			char *infile = m->ct->cmds[forks]->in;
-			if (infile)
+			if (infile && !s_iseq(infile, ""))
 			{
 				int fd_open = open(infile, O_RDONLY);
+				//protect
 				dup2(fd_open, STDIN_FILENO);
 				close(fd_open);
 			}
@@ -148,9 +166,21 @@ int	execute_all_cmds(t_msh *m)
 				if (forks != 0)
 					dup2(fd[forks * 2 + 0], STDIN_FILENO);
 			}
+
 			close(fd[forks * 2 + 0]);
-			if (forks != m->ct->senc - 1)
-				dup2(fd[(forks + 1) * 2 + 1], STDOUT_FILENO);
+			char *outfile = m->ct->cmds[forks]->out;
+			if (outfile && !s_iseq(outfile, ""))
+			{
+				int fd_open = open(outfile, O_WRONLY);
+				//protect
+				dup2(fd_open, STDOUT_FILENO);
+				close(fd_open);
+			}
+			else
+			{
+				if (forks != m->ct->senc - 1)
+					dup2(fd[(forks + 1) * 2 + 1], STDOUT_FILENO);
+			}
 			close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
 			if (execute_cmd(m, forks) == 1)
 				return (1);

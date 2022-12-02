@@ -111,6 +111,17 @@ void	prints(char **slist)
 	i = -1;
 	while (slist[++i])
 	{
+		ft_printf("%s\n", slist[i]);
+	}
+}
+
+void	printns(char **slist)
+{
+	int	i;
+
+	i = -1;
+	while (slist[++i])
+	{
 		ft_printf("%i: %s\n", i, slist[i]);
 	}
 }

@@ -25,7 +25,7 @@ char	*get_var(char **sp, int dollar)
 	return (ft_substr(*sp, dollar + 1, i));
 }
 
-void	find_replace(char **sp, int dollar)
+void	find_replace(t_msh *m, char **sp, int dollar)
 {
 	int	i;
 	int	j;
@@ -43,7 +43,7 @@ void	find_replace(char **sp, int dollar)
 	if (varname != NULL)
 	{
 		vlen = ft_strlen(varname);
-		content = getenv(varname);
+		content = ft_getenv(m, varname);
 		if (content != NULL)
 		{
 			clen = ft_strlen(content);
@@ -100,7 +100,7 @@ int	rm_quotes(char **sp, int here_quoted)
 	return (is_quoted);
 }
 
-void	swap_in_vars(char **sp, int here_quoted)
+void	swap_in_vars(t_msh *m, char **sp, int here_quoted)
 {
 	int	i;
 
@@ -116,7 +116,7 @@ void	swap_in_vars(char **sp, int here_quoted)
 			if ((*sp)[i + 1] == '?')
 				insert_error(sp, i);
 			else
-				find_replace(sp, i);
+				find_replace(m, sp, i);
 		}
 	}
 }
@@ -166,10 +166,10 @@ void	loop_through_cmds(t_msh *m)
 		j = -1;
 		while (++j < cmds[i]->argc)
 		{
-			swap_in_vars(&cmds[i]->argv[j], cmds[i]->here_quoted);
+			swap_in_vars(m, &cmds[i]->argv[j], cmds[i]->here_quoted);
 		}
-		swap_in_vars(&cmds[i]->in, cmds[i]->here_quoted);
-		swap_in_vars(&cmds[i]->out, cmds[i]->here_quoted);
+		swap_in_vars(m, &cmds[i]->in, cmds[i]->here_quoted);
+		swap_in_vars(m, &cmds[i]->out, cmds[i]->here_quoted);
 		cmds[i]->args = cons_args(cmds[i]);
 		ft_printf("\n");
 		printcmd(m->ct->cmds[i]);
