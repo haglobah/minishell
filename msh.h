@@ -43,17 +43,6 @@ typedef struct s_execute
 	char	**env;
 }	t_exec;
 
-typedef struct s_builtins
-{
-	char	*echo;
-	char	*cd;
-	char	*pwd;
-	char	*export;
-	char	*unset;
-	char	*env;
-	char	*exit;
-}	t_builtin;
-
 typedef struct s_command
 {
 	int	argc;
