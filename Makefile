@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/11/29 21:21:34 by tpeters          ###   ########.fr        #
+#    Updated: 2022/12/02 16:32:17 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,13 +61,14 @@ $(LSANLIB):
 debug: CFLAGS += -g
 debug: all
 
-$(NAME): $(SRCS) $(MAIN)  $(LIBFT)
+$(NAME): $(SRCS) $(MAIN)  $(LFTLIB)
 	$(CC) $(SRCS) $(MAIN) $(LINK_FLAGS) -o $(NAME)
 
 clean:
 	rm -f $(OBJS) $(MO)
 
 fclean: clean
+	$(MAKE) fclean -C libft
 	rm -f $(NAME) cat echo
 
 re: fclean
@@ -80,7 +81,7 @@ test: $(TOBJS) $(OBJS)
 run: all
 	./$(NAME)
 
-tools: $(LIBFTLIB)
+tools: $(LFTLIB)
 	gcc echo.c -o echo -Llibft -lft
 	gcc cat.c -o cat -Llibft -lft
 	gcc pwd.c -o pwd -Llibft -lft
