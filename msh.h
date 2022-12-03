@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heil...>      +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/09/21 12:40:03 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 11:57:24 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,14 @@ void	del_msh(t_msh *m);
 
 //utils.c
 void	*ft_realloc(void *ptr, size_t size);
-int	s_iseq(char *s1, char *s2);
-int	s_isneq(char *s1, char *s2, int n);
-int	s_in_s(char *s, char **slist);
-int	consists_of_only(char *token, char *chars);
+int		s_iseq(char *s1, char *s2);
+int		s_isneq(char *s1, char *s2, int n);
+int		s_in_s(char *s, char **slist);
+int		consists_of_only(char *token, char *chars);
 void	ft_strcpy(char *dst, char *src);
 void	serror(char *token);
-int	strslen(char **strs);
-int	free_strs(char **sp);
+int		strslen(char **strs);
+int		free_strs(char **sp);
 void	prints(char **slist);
 
 //tokens.c
@@ -101,35 +101,35 @@ char	**list_to_arr(t_list *toks);
 t_list	*lex(char *in);
 
 //parser.c
-int	parse_msh(t_msh *m);
+int		parse_msh(t_msh *m);
 char	*parse_here(t_cmd *cmd, char *here);
-int	printcmd(t_cmd *cmd);
+int		printcmd(t_cmd *cmd);
 
 //evaluator.c
-int	evaluate(t_msh *m);
+int		evaluate(t_msh *m);
 
 //executor.c
 char	**cons_args(t_cmd *cmd);
-int	execute(t_msh *m);
+int		execute(t_msh *m);
 t_exec	*mk_exec(t_cmd *cmd);
 void	del_exec(t_exec *e);
 
 
 //builtins.c
-int	ft_echo(t_msh *m, char **args);
-int	ft_cd(t_msh *m, char **args);
-int	ft_pwd(t_msh *m, char **args);
-int	ft_export(t_msh *m, char **args);
-int	ft_unset(t_msh *m, char **args);
-int	ft_env(t_msh *m, char **args);
-int	ft_exit(t_msh *m, char **args);
+int		ft_echo(t_msh *m, char **args);
+int		ft_cd(t_msh *m, char **args);
+int		ft_pwd(t_msh *m, char **args);
+int		ft_export(t_msh *m, char **args);
+int		ft_unset(t_msh *m, char **args);
+int		ft_env(t_msh *m, char **args);
+int		ft_exit(t_msh *m, char **args);
 
 //env.c
 char	**extend_env(char **old, char *to_add);
 char	**clone_env();
 char	*ft_getenv(t_msh *m, char *varname);
 
-int	run_tests(void);
+int		run_tests(void);
 void	msh_loop(void);
 
 #endif

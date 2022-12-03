@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
+#    By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/12/02 16:35:27 by tpeters          ###   ########.fr        #
+#    Updated: 2022/12/03 12:00:24 by bhagenlo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = l_p_i.c parser.c evaluator.c tokens.c utils.c data.c executor.c builtins.c env.c
+SRCS = lexer.c parser.c evaluator.c tokens.c utils.c data.c executor.c builtins.c env.c
 MAIN = main.c
 OBJS = $(SRCS:.c=.o)
 MO = main.o

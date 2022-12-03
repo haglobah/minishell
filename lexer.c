@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   l_p_i.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/29 21:06:09 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/03 11:56:12 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,43 +227,3 @@ void	interpret(t_msh *m)
 	//run AST
 	(void)m;
 }
-
-// msh_loop = execute . evaluate . parse . tokenize
-void	msh_loop(void)
-{
-	char	*t;
-	char	**toks;
-	t_msh	*m;
-	char	**env;
-//	extern char **environ;
-
-	env = clone_env();
-	while(1)
-	{ // is_atty ? readline : gnl
-		t = readline("φ ");
-		if (!t)
-		{
-			ft_printf("Ctrl - D caught!\n");
-			return ;
-		}
-		add_history(t);
-		//	ft_printf("\n");
-		toks = list_to_arr(lex(t));
-		m = mk_msh(toks, env);
-		if (parse_msh(m))
-		{
-			evaluate(m);
-			execute(m);
-			//prints(environ);
-			//print_tokens(parse_tree);
-			//interpret();
-		}
-		else
-		{
-			/* ft_printf("Bad Command!\n"); */
-		}
-		free(t);
-		del_msh(m);
-	}
-}
-

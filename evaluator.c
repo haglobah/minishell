@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heil...>      +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/22 11:26:40 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 11:54:02 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 		z++;
 	}
 	free(varname);
-	//free(content) -> better not – "You must not modify this string".
+	free(content);
 	free(*sp);
 	*sp = new_arg;
 }
