@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heil...>      +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/21 20:11:20 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:19:20 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,25 @@ void	printns(char **slist)
 	{
 		ft_printf("%i: %s\n", i, slist[i]);
 	}
+}
+
+bool	ft_parse_int(const char *s, int *loc)
+{
+	int			i;
+	long long	num;
+	int			neg;
+
+	num = 0;
+	i = 0;
+	neg = (s[i] == '-');
+	i += neg;
+	while (s[i] != '\0' && ft_isdigit(s[i]))
+	{
+		num = (num * 10) + (s[i] - '0');
+		if (num > (((long long)INT_MAX) + neg))
+			return (false);
+		i++;
+	}
+	*loc = (int)(num * -((2 * neg) - 1));
+	return (i > neg && s[i] == '\0');
 }

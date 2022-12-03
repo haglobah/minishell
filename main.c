@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/03 17:26:48 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/03 18:29:01 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	msh_loop(void)
 		}
 		add_history(t);
 		toks = list_to_arr(lex(t));
-		m = mk_msh(toks, env);
+		m = mk_msh(toks, env, t);
 		if (parse_msh(m))
 		{
 			evaluate(m);
@@ -67,7 +67,6 @@ void	msh_loop(void)
 		{
 			/* ft_printf("Bad Command!\n"); */
 		}
-		free(t);
 		del_msh(m);
 	}
 	free_strs(*env);
