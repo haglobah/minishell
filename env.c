@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 11:54:10 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 13:52:16 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**clone_env()
 	i = -1;
 	while (environ[++i])
 	{
-		new[i] = ft_calloc(ft_strlen(environ[i]), sizeof(char));
+		new[i] = ft_calloc(ft_strlen(environ[i]) + 1, sizeof(char));
 		if (new[i] == NULL)
 		{
 			free_strs(new);
