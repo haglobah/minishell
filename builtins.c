@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 15:04:12 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 16:16:49 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,21 @@ int	ft_echo(t_msh *m, char **args)
 }
 int	ft_cd(t_msh *m, char **args)
 {
-	//arg handling
+	if (strslen(args) != 2)
+		ft_printf("cd: wrong number of arguments\n");
+	else
+	{
+		if (chdir(args[1]) != 0)
+		{
+			ft_printf("cd: No such file or directory\n");
+		}
+		else
+		{
+			char *argums[] = {"env", NULL};
+			ft_env(m, argums);
+			
+		}
+	}
 	return (0);
 }
 int	ft_pwd(t_msh *m, char **args)
@@ -50,7 +64,14 @@ int	ft_pwd(t_msh *m, char **args)
 }
 int	ft_unset(t_msh *m, char **args)
 {
-	//arg handling
+	int	i;
+
+	i = -1;
+	while (args[++i])
+	{
+		rm_entry(m, args[i]);
+		// or rather a sane version of it? With _feedback_!?
+	}
 	return (0);
 }
 int	ft_env(t_msh *m, char **args)
