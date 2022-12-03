@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 17:40:16 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:27:34 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,14 @@ void	del_ct(t_ct *ct);
 
 typedef struct s_minishell
 {
+	char	*t;
 	char	**toks;
 	t_ct	*ct;
 	char	***env;
 }	t_msh;
 
 //data.c
-t_msh	*mk_msh(char **toks, char ***env);
+t_msh	*mk_msh(char **toks, char ***env, char *t);
 void	del_msh(t_msh *m);
 
 //utils.c
@@ -96,6 +97,7 @@ int		strslen(char **strs);
 int		free_strs(char **sp);
 void	prints(char **slist);
 void	printns(char **slist);
+bool	ft_parse_int(const char *s, int *loc);
 
 //tokens.c
 void	print_tokens(t_list *tokens);

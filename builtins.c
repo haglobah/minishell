@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 17:37:09 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:33:53 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,61 +37,44 @@ int	ft_echo(t_msh *m, char **args)
 	return (0);
 }
 
-char	*compute_rel_path(char *old, char *to_add)
-{
-	ft_printf("the rel path.");
-	return (NULL);
-}
-
-char	*get_new_wd(t_msh *m, char *old, char *change)
-{
-	if (change[0] == '/')
-	{
-		return (change);
-	}
-	else
-	{
-		return (compute_rel_path(old, change));
-	}
-}
-
 int	ft_cd(t_msh *m, char **args)
 {
-	char	*new_wd;
+	char	new_wd[PATH_MAX];
 	char	old_wd[PATH_MAX];
 
-	new_wd = NULL;
 	if (strslen(args) != 2)
+	{
 		ft_printf("cd: wrong number of arguments\n");
+		return (1);
+	}
 	else
 	{
 		if (getcwd(old_wd, sizeof(old_wd)) == NULL)
 		{
 			ft_printf("You don't have a wd. Interesting.");
-			return (0);
+			return (1);
 		}
 		if (chdir(args[1]) != 0)
 		{
 			ft_printf("cd: No such file or directory\n");
+			return (1);
 		}
 		else
 		{
-			char *argums[] = {"env", NULL};
-			ft_env(m, argums);
-			new_wd = get_new_wd(m, old_wd, args[1]);
+			getcwd(new_wd, sizeof(new_wd));
 			ft_setenv(m, "OLDPWD", old_wd);
 			ft_setenv(m, "PWD", new_wd);
-			ft_env(m, argums);
 		}
 	}
-	free(new_wd);
-	//free(old_wd);
 	return (0);
 }
 int	ft_pwd(t_msh *m, char **args)
 {
 	if (strslen(args) >= 2)
+	{
 		ft_printf("pwd: too many arguments\n");
+		return (1);
+	}
 	else
 		ft_printf("%s\n", ft_getenv(m, "PWD"));
 	return (0);
@@ -111,16 +94,43 @@ int	ft_unset(t_msh *m, char **args)
 int	ft_env(t_msh *m, char **args)
 {
 	if (strslen(args) >= 2)
+	{
 		ft_printf("env: too many arguments\n");
+		return (1);
+	}
 	else
 		prints(*m->env);
 	return (0);
 }
+
+void	free_all(t_msh *m)
+{
+	free_strs(*m->env);
+	free(m->env);
+	del_msh(m);
+}
+
 int	ft_exit(t_msh *m, char **args)
 {
-	//arg handling
-	ft_printf("Should exit the shell.\n");
-	return (0);
+	int	code;
+
+	code = 0;
+	if (strslen(args) >= 3)
+	{
+		ft_printf("exit: too many arguments\n");
+		return (1);
+	}
+	if (strslen(args) == 2)
+	{
+		if (!ft_parse_int(args[1], &code))
+		{
+			ft_printf("exit: non-numerical argument: %s\n", args[1]);
+			return (1);
+		}
+	}
+	ft_printf("code: %i\n", code);
+	free_all(m);
+	exit(code);
 }
 
 int	ft_export(t_msh *m, char **args)
@@ -129,18 +139,18 @@ int	ft_export(t_msh *m, char **args)
 
 	extend_worked = true;
 	if (strslen(args) != 2)
+	{
 		ft_printf("export: wrong number of arguments\n");
+		return (1);
+	}
 	else
 	{
-		// prints(m->env);
-		//some bug in it on double export.
 		extend_worked = extend_env(m->env, args[1]);
 		if (extend_worked == false)
 		{
 			ft_printf("export: not valid in this context\n");
-			return (0);
+			return (1);
 		}
-		// prints(m->env);
 	}
-	return (1);
+	return (0);
 }
