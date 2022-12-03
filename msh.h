@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 11:57:24 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 12:36:58 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ typedef struct s_lexer
 	current_token_type	ctt;
 }	t_lex;
 
-typedef struct s_execute
+typedef struct s_execute_vector
 {
 	char	*pathname;
 	char	**args;
 	char	**env;
-}	t_exec;
+}	t_execve;
 
 typedef struct s_command
 {
@@ -97,7 +97,7 @@ void	print_tokens(t_list *tokens);
 void	print_tokarr(char **toks);
 char	**list_to_arr(t_list *toks);
 
-//lexer
+//lexer.c
 t_list	*lex(char *in);
 
 //parser.c
@@ -111,8 +111,8 @@ int		evaluate(t_msh *m);
 //executor.c
 char	**cons_args(t_cmd *cmd);
 int		execute(t_msh *m);
-t_exec	*mk_exec(t_cmd *cmd);
-void	del_exec(t_exec *e);
+t_execve	*mk_execve(t_cmd *cmd);
+void	del_execve(t_execve *ev);
 
 
 //builtins.c
