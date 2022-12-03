@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/25 15:36:35 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/03 15:08:43 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_ct	*mk_ct()
 }
 
 //malloc minishell-struct
-t_msh	*mk_msh(char **toks, char **env)
+t_msh	*mk_msh(char **toks, char ***env)
 {
 	t_msh	*msh;
 

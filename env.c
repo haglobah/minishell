@@ -6,46 +6,47 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 13:52:16 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 15:12:57 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-char	**extend_env(char **old, char *to_add)
+bool	extend_env(char ***env, char *to_add)
 {
 	char	*eqsign;
 	char	**new;
 	int	i;
 
-	new = ft_calloc(strslen(old) + 2, sizeof(char *));
+	new = ft_calloc(strslen(*env) + 2, sizeof(char *));
 	if (new == NULL)
-		return (0);
+		return (false);
 	i = -1;
-	while (old[++i])
+	while ((*env)[++i])
 	{
-		new[i] = ft_calloc(ft_strlen(old[i]) + 1, sizeof(char));
+		new[i] = ft_calloc(ft_strlen((*env)[i]) + 1, sizeof(char));
 		if (new[i] == NULL)
 		{
 			free_strs(new);
-			return (NULL);
+			return (false);
 		}
-		ft_strcpy(new[i], old[i]);
+		ft_strcpy(new[i], (*env)[i]);
 	}
 	new[i] = ft_calloc(ft_strlen(to_add) + 1, sizeof(char));
 	if (new[i] == NULL)
 	{
 		free_strs(new);
-		return (NULL);
+		return (false);
 	}
 	if (to_add == NULL)
-		return (NULL);
+		return (false);
 	eqsign = ft_strchr(to_add, '=');
 	if (eqsign == NULL)
-		return (NULL);
+		return (false);
 	ft_strcpy(new[i], to_add);
-	free_strs(old);
-	return (new);
+	free_strs((*env));
+	*env = new;
+	return (true);
 }
 
 char	**clone_env()
@@ -77,15 +78,17 @@ char	*ft_getenv(t_msh *m, char *varname)
 	char	*eqsignp;
 	int	eqpos;
 	char	*res;
+	char	**env;
 
 	i = -1;
-	while (m->env[++i] != NULL)
+	env = *m->env;
+	while (env[++i] != NULL)
 	{
-		eqsignp = ft_strchr(m->env[i], '=');
-		eqpos = eqsignp - m->env[i];
-		if (s_isneq(m->env[i], varname, eqpos))
+		eqsignp = ft_strchr(env[i], '=');
+		eqpos = eqsignp - env[i];
+		if (s_isneq(env[i], varname, eqpos))
 		{
-			res = ft_substr(m->env[i], eqpos + 1, ft_strlen(eqsignp + 1));
+			res = ft_substr(env[i], eqpos + 1, ft_strlen(eqsignp + 1));
 			return (res);
 		}
 	}
@@ -94,8 +97,8 @@ char	*ft_getenv(t_msh *m, char *varname)
 
 void	strip_env(t_msh *m, int pos, int len)
 {
-	free(m->env[pos]);
-	ft_memmove(&m->env[pos], &m->env[pos + 1], sizeof(char *) * len);
+	free(*m->env[pos]);
+	ft_memmove(m->env[pos], m->env[pos + 1], sizeof(char *) * len);
 }
 
 int	rm_entry(t_msh *m, char *varname)
@@ -103,17 +106,19 @@ int	rm_entry(t_msh *m, char *varname)
 	int	i;
 	int	to_rm;
 	char	*eqsignp;
+	char	**env;
 	int	eqpos;
 	int	res;
 
 	i = -1;
 	res = 0;
 	to_rm = 0;
-	while (m->env[++i] != NULL)
+	env = *m->env;
+	while (env[++i] != NULL)
 	{
-		eqsignp = ft_strchr(m->env[i], '=');
-		eqpos = eqsignp - m->env[i];
-		if (s_isneq(m->env[i], varname, eqpos))
+		eqsignp = ft_strchr(env[i], '=');
+		eqpos = eqsignp - env[i];
+		if (s_isneq(env[i], varname, eqpos))
 		{
 			to_rm = i;
 			res = 1;

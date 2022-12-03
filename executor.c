@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 14:16:57 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 14:59:30 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,10 @@ int	exec_builtin(t_msh *m, int forks)
 	else if (s_iseq(name, "pwd"))
 		ft_pwd(m, args);
 	else if (s_iseq(name, "export"))
+	{
 		ft_export(m, args);
+		// printns(m->env);
+	}
 	else if (s_iseq(name, "unset"))
 		ft_unset(m, args);
 	else if (s_iseq(name, "env"))

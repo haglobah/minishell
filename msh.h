@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 12:36:58 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 15:12:22 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
@@ -73,11 +74,11 @@ typedef struct s_minishell
 {
 	char	**toks;
 	t_ct	*ct;
-	char	**env;
+	char	***env;
 }	t_msh;
 
 //data.c
-t_msh	*mk_msh(char **toks, char **env);
+t_msh	*mk_msh(char **toks, char ***env);
 void	del_msh(t_msh *m);
 
 //utils.c
@@ -91,6 +92,7 @@ void	serror(char *token);
 int		strslen(char **strs);
 int		free_strs(char **sp);
 void	prints(char **slist);
+void	printns(char **slist);
 
 //tokens.c
 void	print_tokens(t_list *tokens);
@@ -125,7 +127,7 @@ int		ft_env(t_msh *m, char **args);
 int		ft_exit(t_msh *m, char **args);
 
 //env.c
-char	**extend_env(char **old, char *to_add);
+bool	extend_env(char ***env, char *to_add);
 char	**clone_env();
 char	*ft_getenv(t_msh *m, char *varname);
 

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/03 11:59:46 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 15:13:45 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,11 @@ void	msh_loop(void)
 	char	*t;
 	char	**toks;
 	t_msh	*m;
-	char	**env;
+	char	***env;
 //	extern char **environ;
 
-	env = clone_env();
+	env = ft_calloc(1, sizeof(char **));
+	*env = clone_env();
 	while(1)
 	{ // is_atty ? readline : gnl
 		t = readline("φ ");
@@ -55,7 +56,7 @@ void	msh_loop(void)
 		{
 			evaluate(m);
 			execute(m);
-			//prints(environ);
+			// printns(m->env);
 			//print_tokens(parse_tree);
 			//interpret();
 		}
