@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 16:48:56 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:40:16 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <sys/wait.h>
 
 # define NUM_PIPES 50
+
+int g_our_global;
 
 typedef int current_token_start;
 typedef int current_token_type;

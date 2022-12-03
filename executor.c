@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 16:59:21 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:40:43 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,8 @@ int	setup_out(t_msh *m, int *fd, int forks)
 
 int	run_child(t_msh *m, int *fd, int forks)
 {
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	setup_in(m, fd, forks);
 	setup_out(m, fd, forks);
 	close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
@@ -326,6 +328,7 @@ int	is_last_builtin(t_msh *m)
 
 int	execute(t_msh *m)
 {
+	g_our_global = 1;
 	if (is_last_builtin(m))
 	{
 		exec_cmds_builtin(m);
@@ -334,5 +337,6 @@ int	execute(t_msh *m)
 	{
 		execute_only_cmds(m);
 	}
+	g_our_global = 0;
 	return (1);
 }
