@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 11:54:02 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:37:31 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,36 @@ char	*get_var(char **sp, int dollar)
 	if (i == 1)
 		return (NULL);
 	return (ft_substr(*sp, dollar + 1, i));
+}
+
+void	replace_string_at(char **sp, int dollar, char *content, int vlen)
+{
+	int	i;
+	int	j;
+	int	k;
+	int	z;
+	int newlen = ft_strlen(*sp) + ft_strlen(content) - (vlen + 1);
+	char *new_arg = ft_calloc(sizeof(char), newlen + 1);
+	i = -1;
+	while (++i < dollar)
+	{
+		new_arg[i] = (*sp)[i];
+	}
+	j = -1;
+	while (++j < ft_strlen(content))
+	{
+		new_arg[i + j] = content[j];
+	}
+	k = i + j;
+	z = i + vlen + 1;
+	while ((*sp)[z])
+	{
+		new_arg[k] = (*sp)[z];
+		k++;
+		z++;
+	}
+	free(*sp);
+	*sp = new_arg;
 }
 
 void	find_replace(t_msh *m, char **sp, int dollar)
@@ -48,38 +78,19 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 		{
 			clen = ft_strlen(content);
 		}
+		replace_string_at(sp, dollar, content, vlen);
+		free(varname);
+		free(content);
 	}
-	newlen = ft_strlen(*sp) + clen - (vlen + 1);
-	new_arg = ft_calloc(sizeof(char), newlen + 1);
-	i = -1;
-	while (++i < dollar)
-	{
-		new_arg[i] = (*sp)[i];
-	}
-	j = -1;
-	while (++j < clen)
-	{
-		new_arg[i + j] = content[j];
-	}
-	k = i + j;
-	z = i + vlen + 1;
-	while ((*sp)[z])
-	{
-		new_arg[k] = (*sp)[z];
-		k++;
-		z++;
-	}
-	free(varname);
-	free(content);
-	free(*sp);
-	*sp = new_arg;
 }
 
-void	insert_error(char **sp, int dollar)
+void	insert_rv(t_msh *m, char **sp, int dollar)
 {
-	(void)sp;
-	(void)dollar;
-	ft_printf("\n  Should store the val of the last execution.\n  Not yet implemented.\n");
+	char	*str;
+
+	str = ft_itoa(m->rv);
+	ft_printf("exitcode: %d\n", m->rv);
+	replace_string_at(sp, dollar, str, 1);
 }
 
 int	rm_quotes(char **sp, int here_quoted)
@@ -114,7 +125,7 @@ void	swap_in_vars(t_msh *m, char **sp, int here_quoted)
 		if ((*sp)[i] == '$')
 		{
 			if ((*sp)[i + 1] == '?')
-				insert_error(sp, i);
+				insert_rv(m, sp, i);
 			else
 				find_replace(m, sp, i);
 		}

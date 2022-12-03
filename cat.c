@@ -25,4 +25,5 @@ int	main(int argc, char *argv[], char *envp[])
 	ft_printf("\n----------------\n");
 	printstdin(fd);
 	ft_printf("\n----------------\n");
+	return(12);
 }

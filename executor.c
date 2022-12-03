@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 17:40:43 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:41:25 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,22 +93,22 @@ int	exec_builtin(t_msh *m, int forks)
 	args = m->ct->cmds[forks]->args;
 	name = args[0];
 	if (s_iseq(name, "echo"))
-		ft_echo(m, args);
+		return (ft_echo(m, args));
 	else if (s_iseq(name, "cd"))
-		ft_cd(m, args);
+		return (ft_cd(m, args));
 	else if (s_iseq(name, "pwd"))
-		ft_pwd(m, args);
+		return (ft_pwd(m, args));
 	else if (s_iseq(name, "export"))
 	{
-		ft_export(m, args);
+		return (ft_export(m, args));
 		// printns(m->env);
 	}
 	else if (s_iseq(name, "unset"))
-		ft_unset(m, args);
+		return (ft_unset(m, args));
 	else if (s_iseq(name, "env"))
-		ft_env(m, args);
+		return (ft_env(m, args));
 	else if (s_iseq(name, "exit"))
-		ft_exit(m, args);
+		return (ft_exit(m, args));
 	return (0);
 }
 
@@ -261,9 +261,19 @@ int	execute_only_cmds(t_msh *m)
 		{
 			// parent
 			run_parent(m, fd, forks);
-			waitpid(pid, NULL, 0);
+			if (forks == m->ct->senc - 1)
+			{
+				int	status;
+				waitpid(pid, &status, 0);
+				m->rv = WEXITSTATUS(status);
+			}
 		}
 		forks++;
+	}
+	while (1)
+	{
+		if (wait(NULL) <= 0)
+			break ;
 	}
 	free(fd);
 	return (0);
@@ -273,8 +283,7 @@ int	run_builtin(t_msh *m, int *fd, int forks)
 {
 	(void)fd;
 	ft_printf("Executed builtin as parent.\n");
-	exec_builtin(m, forks);
-	return (0);
+	return (exec_builtin(m, forks));
 }
 
 int	exec_cmds_builtin(t_msh *m)
@@ -305,11 +314,15 @@ int	exec_cmds_builtin(t_msh *m)
 		{
 			// parent
 			run_parent(m, fd, forks);
-			waitpid(pid, NULL, 0);
 		}
 		forks++;
 	}
-	run_builtin(m, fd, forks);
+	m->rv = run_builtin(m, fd, forks);
+	while (1)
+	{
+		if (wait(NULL) <= 0)
+			break ;
+	}
 	free(fd);
 	return (0);
 }
@@ -338,5 +351,6 @@ int	execute(t_msh *m)
 		execute_only_cmds(m);
 	}
 	g_our_global = 0;
+	ft_printf("last exit Code: %d\n", m->rv);
 	return (1);
 }
