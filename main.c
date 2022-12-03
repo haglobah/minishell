@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/03 18:29:01 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 18:47:16 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ void	msh_loop(void)
 	char	**toks;
 	t_msh	*m;
 	char	***env;
+	int		rv;
 
+	rv = 0;
 	env = ft_calloc(1, sizeof(char **));
 	*env = clone_env();
 	while(1)
@@ -54,7 +56,7 @@ void	msh_loop(void)
 		}
 		add_history(t);
 		toks = list_to_arr(lex(t));
-		m = mk_msh(toks, env, t);
+		m = mk_msh(toks, env, t, &rv);
 		if (parse_msh(m))
 		{
 			evaluate(m);

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 19:18:32 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 19:19:51 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,7 +300,7 @@ int	execute_only_cmds(t_msh *m)
 			{
 				int	status;
 				waitpid(pid, &status, 0);
-				m->rv = WEXITSTATUS(status);
+				*(m->rv) = WEXITSTATUS(status);
 			}
 		}
 		forks++;
@@ -352,7 +352,7 @@ int	exec_cmds_builtin(t_msh *m)
 		}
 		forks++;
 	}
-	m->rv = run_builtin(m, fd, forks);
+	*(m->rv) = run_builtin(m, fd, forks);
 	while (1)
 	{
 		if (wait(NULL) <= 0)
@@ -386,6 +386,5 @@ int	execute(t_msh *m)
 		execute_only_cmds(m);
 	}
 	g_our_global = 0;
-	ft_printf("last exit Code: %d\n", m->rv);
 	return (1);
 }
