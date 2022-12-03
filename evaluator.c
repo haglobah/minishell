@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 18:37:31 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/03 18:50:08 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ void	insert_rv(t_msh *m, char **sp, int dollar)
 {
 	char	*str;
 
-	str = ft_itoa(m->rv);
-	ft_printf("exitcode: %d\n", m->rv);
+	str = ft_itoa(*(m->rv));
 	replace_string_at(sp, dollar, str, 1);
 }
 
