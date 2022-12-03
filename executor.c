@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 12:36:22 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 13:46:26 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ t_execve	*mk_execve(t_cmd *cmd)
 	if (ev == NULL)
 		return (NULL);
 	ev->args = cmd->args;
-	// ft_printf("here\n");
 	ev->pathname = find_path(ev->args);
-	// ft_printf("%s\n", e->pathname);
 	ev->env = clone_env();
 	return (ev);
 }
@@ -57,12 +55,29 @@ void	close_fds(int pos, int *fd, int num_pipes)
 	}
 }
 
-int	is_builtin(t_msh *m, int forks)
+int	is_builtin(t_cmd *cmd)
 {
 	char	*builtins[] = {"echo", "cd", "pwd",
 		"export", "unset", "env", "exit", NULL};
-	if (s_in_s(m->ct->cmds[forks]->args[0], builtins))
+	if (s_in_s(cmd->args[0], builtins))
 		return (1);
+	return (0);
+}
+
+int	exec_builtin_from_child(t_msh *m, int forks)
+{
+	char	*name;
+	char	**args;
+
+	ft_printf("Called from child!\n");
+	args = m->ct->cmds[forks]->args;
+	name = args[0];
+	if (s_iseq(name, "echo"))
+		ft_echo(m, args);
+	else 
+	{
+		ft_printf("%s did not execute. It was called from child.\n", name);
+	}
 	return (0);
 }
 
@@ -71,7 +86,6 @@ int	exec_builtin(t_msh *m, int forks)
 	char	*name;
 	char	**args;
 
-	ft_printf("Is a builtin!\n");
 	args = m->ct->cmds[forks]->args;
 	name = args[0];
 	if (s_iseq(name, "echo"))
@@ -94,11 +108,13 @@ int	exec_builtin(t_msh *m, int forks)
 int	execute_cmd(t_msh *m, int forks)
 {
 	t_execve	*ev;
+	t_cmd		*cmd;
 
 	ft_printf("I exist: pid %i\n", getpid());
-	if (is_builtin(m, forks))
+	cmd = m->ct->cmds[forks];
+	if (is_builtin(cmd))
 	{
-		exec_builtin(m, forks);
+		exec_builtin_from_child(m, forks);
 	}
 	else
 	{
@@ -208,7 +224,7 @@ int	run_parent(t_msh *m, int *fd, int forks)
 	return (0);
 }
 
-int	execute_all_cmds(t_msh *m)
+int	execute_only_cmds(t_msh *m)
 {
 	int	*fd;
 	int	pid;
@@ -228,6 +244,7 @@ int	execute_all_cmds(t_msh *m)
 		}
 		else if (pid == 0)
 		{
+			//child
 			if(run_child(m, fd, forks) == 1)
 				return (1);
 		}
@@ -240,11 +257,74 @@ int	execute_all_cmds(t_msh *m)
 		forks++;
 	}
 	free(fd);
-	return 0;
+	return (0);
+}
+
+int	run_builtin(t_msh *m, int *fd, int forks)
+{
+	ft_printf("Executed builtin as parent.\n");
+	exec_builtin(m, forks);
+	return (0);
+}
+
+int	exec_cmds_builtin(t_msh *m)
+{
+	int	*fd;
+	int	pid;
+	int	forks;
+
+	fd = mk_pipes(m);
+	if (fd == NULL)
+		return (0);
+	forks = 0;
+	while (forks < m->ct->senc - 1)
+	{
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			return -1;
+		}
+		else if (pid == 0)
+		{
+			//child
+			if(run_child(m, fd, forks) == 1)
+				return (1);
+		}
+		else
+		{
+			// parent
+			run_parent(m, fd, forks);
+			waitpid(pid, NULL, 0);
+		}
+		forks++;
+	}
+	run_builtin(m, fd, forks);
+	free(fd);
+	return (0);
+}
+
+int	is_last_builtin(t_msh *m)
+{
+	int	i;
+	t_cmd	*last;
+
+	i += -1;
+	while (m->ct->cmds[++i])
+		;
+	last = m->ct->cmds[i - 1];
+	return (is_builtin(last));
 }
 
 int	execute(t_msh *m)
 {
-	execute_all_cmds(m);
+	if (is_last_builtin(m))
+	{
+		exec_cmds_builtin(m);
+	}
+	else
+	{
+		execute_only_cmds(m);
+	}
 	return (1);
 }
