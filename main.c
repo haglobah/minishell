@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/03 15:29:01 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:26:48 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,22 @@
 
 void	handle_signal(int sig)
 {
-	ft_printf("sig caught: %d\n", sig);
 	if (sig == SIGINT)
 	{
-		//show prompt again
-		//(kill all subsequent processes?)
+		printf("\n"); // Move to a new line
+		if (!g_our_global)
+		{
+			rl_on_new_line(); // Regenerate the prompt on a newline
+			rl_replace_line("", 0); // Clear the previous text
+			rl_redisplay();
+		}
 	}
 }
 
 int	main(void)
 {
 	signal(SIGINT, handle_signal);
-	signal(SIGQUIT, handle_signal);
+	signal(SIGQUIT, SIG_IGN);
 	msh_loop();
 	return (0);
 }

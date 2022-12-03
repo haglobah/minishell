@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/12/03 12:00:24 by bhagenlo         ###   ########.fr        #
+#    Updated: 2022/12/03 16:53:19 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,10 @@ TOBJS = $(TESTS:.c=.o)
 TEST = msh_test
 NAME = minishell
 
-CFLAGS = -Wall -Wextra #-Werror
-LINK_FLAGS = -Llibft -lft -lreadline
+DOWNLOADFOLDER=dwnlds
+
+CFLAGS = -Wall -Wextra -I$(DOWNLOADFOLDER)/readline_out/include #-Werror
+LINK_FLAGS = -Llibft -lft -L$(DOWNLOADFOLDER)/readline_out/lib -lreadline
 CC = cc
 
 LFT = libft
@@ -38,6 +40,14 @@ else
 endif
 
 all: $(NAME)
+
+$(DOWNLOADFOLDER):
+	mkdir -p $(DOWNLOADFOLDER)
+	curl -s https://ftp.gnu.org/gnu/readline/readline-8.1.2.tar.gz --output $(DOWNLOADFOLDER)/readline-8.1.2.tar.gz
+	tar xfz $(DOWNLOADFOLDER)/readline-8.1.2.tar.gz -C $(DOWNLOADFOLDER)
+	cd $(DOWNLOADFOLDER)/readline-8.1.2; ./configure --prefix=$(PWD)/dwnlds/readline_out; cd ../../
+	$(MAKE) -C $(DOWNLOADFOLDER)/readline-8.1.2
+	$(MAKE) install -C $(DOWNLOADFOLDER)/readline-8.1.2
 
 $(LFT) :
 	git clone git@github.com:Ludmuterol/libft.git
@@ -61,8 +71,8 @@ $(LSANLIB):
 debug: CFLAGS += -g
 debug: all
 
-$(NAME): $(SRCS) $(MAIN)  $(LFTLIB)
-	$(CC) $(SRCS) $(MAIN) $(LINK_FLAGS) -o $(NAME)
+$(NAME): $(SRCS) $(MAIN)  $(LFTLIB) $(DOWNLOADFOLDER)
+	$(CC) $(CFLAGS) $(SRCS) $(MAIN) $(LINK_FLAGS) -o $(NAME)
 
 clean:
 	rm -f $(OBJS) $(MO)
