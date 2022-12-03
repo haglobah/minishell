@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 14:59:30 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 16:59:21 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,6 +269,7 @@ int	execute_only_cmds(t_msh *m)
 
 int	run_builtin(t_msh *m, int *fd, int forks)
 {
+	(void)fd;
 	ft_printf("Executed builtin as parent.\n");
 	exec_builtin(m, forks);
 	return (0);
@@ -316,7 +317,7 @@ int	is_last_builtin(t_msh *m)
 	int	i;
 	t_cmd	*last;
 
-	i += -1;
+	i = -1;
 	while (m->ct->cmds[++i])
 		;
 	last = m->ct->cmds[i - 1];

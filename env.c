@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 15:12:57 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:37:12 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,31 @@ char	**clone_env()
 		ft_strcpy(new[i], environ[i]);
 	}
 	return (new);
+}
+
+bool	ft_setenv(t_msh *m, char *name, char *value)
+{
+	int	i;
+	char	*eqsignp;
+	int	eqpos;
+	char	*res;
+	char	**env;
+
+	i = -1;
+	env = *m->env;
+	while (env[++i] != NULL)
+	{
+		eqsignp = ft_strchr(env[i], '=');
+		eqpos = eqsignp - env[i];
+		if (s_isneq(env[i], name, eqpos))
+		{
+			res = ft_calloc(sizeof(char), (eqpos + 1) + ft_strlen(value) + 1);
+			ft_strlcpy(res, env[i], eqpos + 2);
+			ft_strlcpy(&res[eqpos + 1], value, ft_strlen(value) + 1);
+			env[i] = res;
+		}
+	}
+	return (NULL);
 }
 
 char	*ft_getenv(t_msh *m, char *varname)

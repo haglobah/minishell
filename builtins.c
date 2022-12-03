@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 16:16:49 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 17:37:09 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	ft_echo(t_msh *m, char **args)
 	int	i;
 	int	n_flag;
 
+	(void)m;
 	n_flag = 0;
 	i = 1;
 	argc = strslen(args);
@@ -35,12 +36,40 @@ int	ft_echo(t_msh *m, char **args)
 	}
 	return (0);
 }
+
+char	*compute_rel_path(char *old, char *to_add)
+{
+	ft_printf("the rel path.");
+	return (NULL);
+}
+
+char	*get_new_wd(t_msh *m, char *old, char *change)
+{
+	if (change[0] == '/')
+	{
+		return (change);
+	}
+	else
+	{
+		return (compute_rel_path(old, change));
+	}
+}
+
 int	ft_cd(t_msh *m, char **args)
 {
+	char	*new_wd;
+	char	old_wd[PATH_MAX];
+
+	new_wd = NULL;
 	if (strslen(args) != 2)
 		ft_printf("cd: wrong number of arguments\n");
 	else
 	{
+		if (getcwd(old_wd, sizeof(old_wd)) == NULL)
+		{
+			ft_printf("You don't have a wd. Interesting.");
+			return (0);
+		}
 		if (chdir(args[1]) != 0)
 		{
 			ft_printf("cd: No such file or directory\n");
@@ -49,9 +78,14 @@ int	ft_cd(t_msh *m, char **args)
 		{
 			char *argums[] = {"env", NULL};
 			ft_env(m, argums);
-			
+			new_wd = get_new_wd(m, old_wd, args[1]);
+			ft_setenv(m, "OLDPWD", old_wd);
+			ft_setenv(m, "PWD", new_wd);
+			ft_env(m, argums);
 		}
 	}
+	free(new_wd);
+	//free(old_wd);
 	return (0);
 }
 int	ft_pwd(t_msh *m, char **args)

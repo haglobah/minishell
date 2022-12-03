@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 15:12:22 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/03 16:48:56 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdbool.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
@@ -129,7 +130,9 @@ int		ft_exit(t_msh *m, char **args);
 //env.c
 bool	extend_env(char ***env, char *to_add);
 char	**clone_env();
+bool	ft_setenv(t_msh *m, char *name, char *value);
 char	*ft_getenv(t_msh *m, char *varname);
+int		rm_entry(t_msh *m, char *varname);
 
 int		run_tests(void);
 void	msh_loop(void);
