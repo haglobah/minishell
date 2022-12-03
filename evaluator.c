@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 18:50:08 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/03 19:22:38 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	replace_string_at(char **sp, int dollar, char *content, int vlen)
 		new_arg[i] = (*sp)[i];
 	}
 	j = -1;
-	while (++j < ft_strlen(content))
+	while (++j < (int)ft_strlen(content))
 	{
 		new_arg[i + j] = content[j];
 	}
@@ -57,18 +57,13 @@ void	replace_string_at(char **sp, int dollar, char *content, int vlen)
 
 void	find_replace(t_msh *m, char **sp, int dollar)
 {
-	int	i;
-	int	j;
-	int	k;
-	int	z;
-	int	newlen;
 	int	clen;
 	int	vlen;
-	char	*new_arg;
-	char	*content = NULL;
+	char	*content;
 
 	clen = 0;
 	vlen = 0;
+	content = NULL;
 	char *varname = get_var(sp, dollar);
 	if (varname != NULL)
 	{
