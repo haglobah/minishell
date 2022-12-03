@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 18:48:12 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/03 19:39:58 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,13 @@ int		printcmd(t_cmd *cmd);
 //evaluator.c
 int		evaluate(t_msh *m);
 
+//execve.c
+t_execve	*mk_execve(t_msh *m, t_cmd *cmd);
+void	del_execve(t_execve *ev);
+
 //executor.c
 char	**cons_args(t_cmd *cmd);
 int		execute(t_msh *m);
-t_execve	*mk_execve(t_cmd *cmd);
-void	del_execve(t_execve *ev);
-
 
 //builtins.c
 int		ft_echo(t_msh *m, char **args);
