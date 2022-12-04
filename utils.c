@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:06:01 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:19:08 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ void	*ft_realloc(void *ptr, size_t size)
 int	s_isneq(char *s1, char *s2, int n)
 {
 	if (!s1)
+	{
 		ft_printf("There is no token.\n");
+		return (0);
+	}
 	return (!ft_strncmp(s1, s2, n));
 }
 
