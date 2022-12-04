@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:57:54 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:11:08 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,12 +102,11 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	return (ev);
 }
 
+// CAUTION: We don't want to ever free ev->args. Otherwise we free twice.
 void	del_execve(t_execve *ev)
 {
 	if (ev)
 	{
-		if (ev->args)
-			free_strs(ev->args);
 		if (ev->pathname)
 			free(ev->pathname);
 		if (ev->env)
