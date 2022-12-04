@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:45:47 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:58:51 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ int			s_in_s(char *s, char **slist);
 int			consists_of_only(char *token, char *chars);
 void		ft_strcpy(char *dst, char *src);
 void		serror(char *token);
+int			serrorm1(char *token);
 int			strslen(char **strs);
 int			free_strs(char **sp);
 void		*free_strsv(char **sp);

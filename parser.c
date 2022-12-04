@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:46:18 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:58:05 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,15 +135,9 @@ int	check_redirs(t_msh *m, char **sen)
 		if (s_in_s(sen[i], redirs))
 		{
 			if (!sen[i + 1])
-			{
-				serror(sen[i]);
-				return (-1);
-			}
+				return (serrorm1(sen[i]));
 			if (s_in_s(sen[i + 1], redirs))
-			{
-				serror(sen[i + 1]);
-				return (-1);
-			}
+				return (serrorm1(sen[i + 1]));
 			rc += 2;
 		}
 		i++;
@@ -178,48 +172,39 @@ char	*parse_here(t_cmd *cmd, char *here)
 	return (ft_substr(here, i, j - i));
 }
 
+void	fill_io(char **sen, t_cmd *cmd, int *i, int *j)
+{
+	if (s_iseq(sen[(*i)], "<"))
+		cmd->in = ft_strdup(sen[++(*i)]);
+	else if (s_iseq(sen[(*i)], ">"))
+		cmd->out = ft_strdup(sen[++(*i)]);
+	else if (s_iseq(sen[(*i)], "<<"))
+		cmd->here = parse_here(cmd, sen[++(*i)]);
+	else if (s_iseq(sen[(*i)], ">>"))
+	{
+		cmd->out = ft_strdup(sen[++(*i)]);
+		cmd->appp = 1;
+	}
+	else
+		cmd->argv[++(*j)] = ft_strdup(sen[(*i)]);
+}
+
 int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 {
 	int	i;
 	int	j;
 
 	cmd->argc = check_redirs(m, sen);
-	if(cmd->argc == -1)
+	if (cmd->argc == -1)
 		return (0);
 	cmd->appp = 0;
 	cmd->argv = (char **)ft_calloc(cmd->argc + 1, sizeof(char *));
 	cmd->args = NULL;
-	i = 0;
-	j = 0;
-	while (sen[i])
+	i = -1;
+	j = -1;
+	while (sen[++i])
 	{
-		if (s_iseq(sen[i], "<"))
-		{
-			cmd->in = ft_strdup(sen[i + 1]);
-			i++;
-		}
-		else if (s_iseq(sen[i], ">"))
-		{
-			cmd->out = ft_strdup(sen[i + 1]);
-			i++;
-		}
-		else if (s_iseq(sen[i], "<<"))
-		{
-			cmd->here = parse_here(cmd, sen[i + 1]);
-			i++;
-		}
-		else if (s_iseq(sen[i], ">>"))
-		{
-			cmd->out = ft_strdup(sen[i + 1]);
-			cmd->appp = 1;
-			i++;
-		}
-		else
-		{
-			cmd->argv[j] = ft_strdup(sen[i]);
-			j++;
-		}
-		i++;
+		fill_io(sen, cmd, &i, &j);
 	}
 	return (1);
 }
@@ -239,6 +224,7 @@ int	printcmd(t_cmd *cmd)
 	else
 		ft_printf("(null)");
 	ft_printf(" in: %s\n", cmd->in);
+	ft_printf(" here: %s\n", cmd->here);
 	ft_printf(" out: %s\n", cmd->out);
 	ft_printf(" here_quoted: %i\n", cmd->here_quoted);
 	return (i);
@@ -296,7 +282,7 @@ int	sens2cmds(t_msh *m)
 	i = 0;
 	while (m->ct->sentences[i])
 	{
-		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
+		m->ct->cmds[i] = (t_cmd *)ft_calloc(1, sizeof(t_cmd));
 		if (!check_for_quotes(m->ct->sentences[i]))
 			return (0);
 		if (is_only_dollar(m->ct->sentences[i]))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:27:44 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 20:04:04 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,12 @@ int	s_in_s(char *s, char **slist)
 void	serror(char *token)
 {
 	ft_printf("bash: syntax error near unexpected token '%s'\n", token);
+}
+
+int	serrorm1(char *token)
+{
+	ft_printf("bash: syntax error near unexpected token '%s'\n", token);
+	return (-1);
 }
 
 int	strslen(char **strs)
