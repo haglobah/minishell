@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 18:12:59 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 19:27:33 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,22 @@ typedef struct s_mk_strlist
 	char	**lst;
 	char	*str_to_add;
 }	t_strlst;
+
+
+typedef struct s_main_loop
+{
+	char	*t;
+	char	***env;
+	int		rv;
+}	t_loop;
+
+typedef struct s_env_helper
+{
+	int		i;
+	char	*eqsignp;
+	int		eqpos;
+	char	**env;
+}	t_env;
 
 typedef struct s_replace
 {
@@ -114,6 +130,8 @@ void		ft_strcpy(char *dst, char *src);
 void		serror(char *token);
 int			strslen(char **strs);
 int			free_strs(char **sp);
+void		*free_strsv(char **sp);
+bool		free_strsb(char **sp);
 void		prints(char **slist);
 void		printns(char **slist);
 bool		ft_parse_int(const char *s, int *loc);

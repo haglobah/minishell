@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 18:13:33 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 19:27:44 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,18 @@ int	free_strs(char **sp)
 	}
 	free(sp);
 	return (0);
+}
+
+void	*free_strsv(char **sp)
+{
+	free_strs(sp);
+	return (NULL);
+}
+
+bool	free_strsb(char **sp)
+{
+	free_strs(sp);
+	return (false);
 }
 
 void	prints(char **slist)
