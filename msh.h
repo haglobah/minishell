@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 13:02:36 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:06:02 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ int			ft_export(t_msh *m, char **args);
 int			ft_unset(t_msh *m, char **args);
 int			ft_env(t_msh *m, char **args);
 int			ft_exit(t_msh *m, char **args);
+void		free_all(t_msh *m);
 
 //env.c
 bool		extend_env(char ***env, char *to_add);

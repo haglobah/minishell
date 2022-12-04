@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 13:04:57 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:18:04 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,12 @@ int	ft_env(t_msh *m, char **args)
 
 void	free_all(t_msh *m)
 {
-	free_strs(*m->env);
-	free(m->env);
+	if (m->env)
+	{
+		if (*m->env)
+			free_strs(*m->env);
+		free(m->env);
+	}
 	del_msh(m);
 }
 

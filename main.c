@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 13:33:21 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:10:21 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	msh_loop(void)
 		{
 			/* ft_printf("Bad Command!\n"); */
 		}
-		// del_msh(m);
+		del_msh(m);
 	}
 	free_strs(*env);
 	free(env);

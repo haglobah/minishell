@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 13:04:02 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:14:52 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,13 @@ char	*search_PATH(t_msh *m, char *exec_name)
 	char	*slash_name;
 	char	**paths;
 	int		i;
+	char	*pathstr;
 
 	exec_path = NULL;
-	paths = ft_split(ft_getenv(m->env, "PATH"), ':');
+	pathstr = ft_getenv(m->env, "PATH");
+	if (!pathstr)
+		return (NULL);
+	paths = ft_split(pathstr, ':');
 	if (paths == NULL)
 		return (NULL);
 	printns(paths);
@@ -76,6 +80,11 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 		return (NULL);
 	ev->args = cmd->args;
 	ev->pathname = find_path(m, ev->args);
+	if (!ev->pathname)
+	{
+		free(ev);
+		return (NULL);
+	}
 	ev->env = clone_env();
 	return (ev);
 }
