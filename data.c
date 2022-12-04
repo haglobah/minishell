@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 12:53:21 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:11:07 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,11 @@ void	del_msh(t_msh *m)
 	free_strs(m->toks);
 	del_ct(m->ct);
 	free(m);
+}
+
+void	free_all(t_msh *m)
+{
+	free_strs(*m->env);
+	free(m->env);
+	del_msh(m);
 }

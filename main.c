@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 13:33:21 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:16:47 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,13 @@ void	msh_loop(void)
 	env = ft_calloc(1, sizeof(char **));
 	*env = clone_env();
 	while (1)
-	{ // is_atty ? readline : gnl
+	{
+		if (!isatty(STDIN_FILENO))
+		{
+			ft_printf("Please use φshell from a terminal. Thanks :)\n");
+			// free_all(m);
+			return ;
+		}
 		prompt = mk_readline(env);
 		t = readline(prompt);
 		free(prompt);
@@ -78,9 +84,6 @@ void	msh_loop(void)
 		{
 			evaluate(m);
 			execute(m);
-			// printns(m->env);
-			//print_tokens(parse_tree);
-			//interpret();
 		}
 		else
 		{

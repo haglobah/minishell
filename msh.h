@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 13:02:36 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:11:50 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_minishell
 //data.c
 t_msh		*mk_msh(char **toks, char ***env, char *t, int *rv);
 void		del_msh(t_msh *m);
+void		free_all(t_msh *m);
 
 //utils.c
 void		*ft_realloc(void *ptr, size_t size);
