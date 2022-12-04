@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:53:30 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 18:22:16 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,14 @@ int	pipe_checkup(t_msh *m)
 
 int	check_redirs(t_msh *m, char **sen)
 {
-	int	i;
-	int	rc;
-	char	*redirs[] = {"<", ">", "<<", ">>", NULL};
+	int		i;
+	int		rc;
+	char	**redirs;
 
 	(void)m;
+	redirs = mk_strlist(4, "<", ">", "<<", ">>");
+	if (!redirs)
+		return (0);
 	i = 0;
 	rc = 0;
 	while (sen[i])

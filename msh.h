@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:46:35 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 18:12:59 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <stdarg.h>
 
 # define NUM_PIPES 50
 
@@ -32,6 +33,14 @@ extern int	g_our_global;
 
 typedef int	t_curr_token_start;
 typedef int	t_curr_token_type;
+
+typedef struct s_mk_strlist
+{
+	va_list	argp;
+	int		i;
+	char	**lst;
+	char	*str_to_add;
+}	t_strlst;
 
 typedef struct s_replace
 {
@@ -108,6 +117,7 @@ int			free_strs(char **sp);
 void		prints(char **slist);
 void		printns(char **slist);
 bool		ft_parse_int(const char *s, int *loc);
+char		**mk_strlist(int argc, ...);
 
 //tokens.c
 void		print_tokens(t_list *tokens);
