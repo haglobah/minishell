@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 15:38:57 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 16:56:50 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ int	is_builtin(t_cmd *cmd)
 {
 	char	*builtins[] = {"echo", "cd", "pwd",
 		"export", "unset", "env", "exit", NULL};
-	if (s_in_s(cmd->args[0], builtins))
+	if (cmd->args == NULL)
+		return (0);
+	else if (s_in_s(cmd->args[0], builtins))
 		return (1);
 	return (0);
 }

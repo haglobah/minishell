@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:17:57 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 16:49:56 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ char **cons_args(t_cmd *cmd)
 		if (s_iseq(cmd->argv[i], ""))
 			empty_count += 1;
 	}
+	if (i == 0)
+		return (NULL);
 	args = ft_calloc(sizeof(char *), (i - empty_count + 1));
 	if (args == NULL)
 		return (NULL);
@@ -183,6 +185,7 @@ void	loop_through_cmds(t_msh *m)
 
 int	evaluate(t_msh *m)
 {
+	
 	loop_through_cmds(m);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 12:48:38 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 16:53:30 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 		return (0);
 	cmd->appp = 0;
 	cmd->argv = (char **)ft_calloc(cmd->argc + 1, sizeof(char *));
+	cmd->args = NULL;
 	i = 0;
 	j = 0;
 	while (sen[i])
@@ -233,7 +234,10 @@ int	printcmd(t_cmd *cmd)
 	while (cmd->argv[i])
 		ft_printf("'%s' ", cmd->argv[i++]);
 	ft_printf(" args: ");
-	prints(cmd->args);
+	if (cmd->args != NULL)
+		prints(cmd->args);
+	else
+		ft_printf("(null)");
 	ft_printf(" in: %s\n", cmd->in);
 	ft_printf(" out: %s\n", cmd->out);
 	ft_printf(" here_quoted: %i\n", cmd->here_quoted);

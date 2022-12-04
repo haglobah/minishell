@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:14:46 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 16:42:59 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,18 @@ void	del_cmd(t_cmd *cmd)
 	{
 		if (cmd->argv)
 			free_strs(cmd->argv);
-		//if (cmd->args)
-			//free_strs(cmd->args); //TODO: Why hasn't this been allocated?
+		if (cmd->args)
+		{
+			ft_printf("lala\n");
+			int	i;
+
+			i = -1;
+			while (cmd->args[++i] != NULL)
+			{
+				free(cmd->args[i]);
+			}
+			free(cmd->args);
+		} //TODO: Why hasn't this been allocated?
 		if (cmd->in)
 			free(cmd->in);
 		if (cmd->out)

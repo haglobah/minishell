@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 12:58:45 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 16:09:16 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
 	{
 		add_tok(res, in, l, "heredoc");
 	}
-	//free(line);
+	free(line);
 }
 
 char	*read_delim(char *in, t_lex *l)

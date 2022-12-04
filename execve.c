@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 15:40:51 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 16:57:54 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,11 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	if (ev == NULL)
 		return (NULL);
 	ev->args = cmd->args;
+	if (ev->args == NULL)
+	{
+		del_execve(ev);
+		return (NULL);
+	}
 	ev->pathname = find_path(m, ev->args);
 	if (!ev->pathname)
 	{

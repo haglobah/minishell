@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:17:26 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 15:04:22 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 16:22:47 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,12 @@ char	**list_to_arr(t_list *toks)
 		llen++;
 		cpy = cpy->next;
 	}
-//	ft_printf("toks: %i\n", llen);
 	tok_arr = (char **)ft_calloc(llen + 1, sizeof(char *));
 	if (!tok_arr)
+	{
+		ft_lstclear(&toks, del_toks);
 		return (NULL);
+	}
 	slen = 0;
 	i = 0;
 	while (toks)
@@ -66,9 +68,11 @@ char	**list_to_arr(t_list *toks)
 		slen = ft_strlen(toks->content);
 		tok_arr[i] = (char *)ft_calloc(slen + 1, sizeof(char));
 		if (!(*tok_arr))
+		{
+			ft_lstclear(&toks, del_toks);
 			return (NULL);
+		}
 		ft_strcpy(tok_arr[i], toks->content);
-//		ft_printf("Copied %s\n", tok_arr[i]);
 		toks = toks->next;
 		i++;
 	}
