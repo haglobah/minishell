@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:09:44 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 20:55:21 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,16 @@ void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
 {
 	char	*line;
 
-	read_n_app(&line, &in);
-	l->n += ft_strlen(line);
-	while (!s_iseq(line, delim))
+	while (true)
 	{
 		read_n_app(&line, &in);
 		l->n += ft_strlen(line);
-	}
-	if (s_iseq(line, delim))
-	{
-		add_tok(res, in, l, "heredoc");
+		if (s_iseq(line, delim))
+			break ;
+		free(line);
 	}
 	free(line);
+	add_tok(res, in, l, "heredoc");
 }
 
 char	*read_delim(char *in, t_lex *l)
@@ -112,6 +110,7 @@ void	handle_pipered(t_list **res, char *in, t_lex *l)
 			l->cst = l->n;
 			delim = read_delim(in, l);
 			handle_nlenv(res, in, l, delim);
+			free(delim);
 		}
 		l->cst = l->n;
 		l->ctt = 0;

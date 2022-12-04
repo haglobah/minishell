@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:34:25 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 20:39:31 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	del_cmd(t_cmd *cmd)
 		}
 		if (cmd->in)
 			free(cmd->in);
+		if (cmd->here)
+			free(cmd->here);
 		if (cmd->out)
 			free(cmd->out);
 		free(cmd);

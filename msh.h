@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:58:51 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 21:16:02 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ typedef struct s_execute_vector
 {
 	char	*pathname;
 	char	**args;
-	char	**env;
 }	t_execve;
 
 typedef struct s_command

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 20:05:49 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 21:20:51 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,17 @@ int	execute_cmd(t_msh *m, int forks)
 	else
 	{
 		ev = mk_execve(m, m->ct->cmds[forks]);
-		if ((ev != NULL) && (execve(ev->pathname, ev->args, ev->env) == -1))
-			ft_printf("execve failed.\n");
-		del_execve(ev);
+		ft_printf("ev: %p\n", ev);
+		if ((ev != NULL)) 
+		{
+			if (execve(ev->pathname, ev->args, *m->env) == -1)
+			{
+				ft_printf("execve failed.\n");
+				del_execve(ev);
+				exit(1);
+			}
+			ft_printf("here2\n");
+		}
 		free_all(m);
 		exit(1);
 	}

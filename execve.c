@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:11:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 21:16:16 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ char	*find_path(t_msh *m, char **args)
 		if (path == NULL)
 			return (NULL);
 		ft_strcpy(path, args[0]);
-		ft_printf("path: %s\n", path);
 	}
 	else
 	{
@@ -84,19 +83,13 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	ev->args = cmd->args;
 	if (ev->args == NULL)
 	{
-		del_execve(ev);
+		free(ev);
 		return (NULL);
 	}
 	ev->pathname = find_path(m, ev->args);
 	if (!ev->pathname)
 	{
-		del_execve(ev);
-		return (NULL);
-	}
-	ev->env = clone_env();
-	if (!ev->env)
-	{
-		del_execve(ev);
+		free(ev);
 		return (NULL);
 	}
 	return (ev);
@@ -109,8 +102,6 @@ void	del_execve(t_execve *ev)
 	{
 		if (ev->pathname)
 			free(ev->pathname);
-		if (ev->env)
-			free_strs(ev->env);
 		free(ev);
 	}
 }
