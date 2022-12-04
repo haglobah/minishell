@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:06:17 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:46:35 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@ extern int	g_our_global;
 
 typedef int	t_curr_token_start;
 typedef int	t_curr_token_type;
+
+typedef struct s_replace
+{
+	int		i;
+	int		j;
+	int		k;
+	int		z;
+	int		newlen;
+	char	*new_arg;
+}	t_rep;
 
 typedef struct s_lexer
 {
