@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:02:07 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:09:44 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,8 @@ void	read_n_app(char **line, char **in)
 {
 	ft_printf("heredoc>");
 	*line = get_next_line(0);
-	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1); //NOT PROTECTED
+	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1);
 	ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
-//	ft_printf("content: '%s'\n", *in);
-	// ft_printf("linelen: %i\n", ft_strlen(*line));
 }
 
 void	insert_nl(char **in)
@@ -57,7 +55,6 @@ void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
 {
 	char	*line;
 
-//	insert_nl(&in);
 	read_n_app(&line, &in);
 	l->n += ft_strlen(line);
 	while (!s_iseq(line, delim))
@@ -65,7 +62,7 @@ void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
 		read_n_app(&line, &in);
 		l->n += ft_strlen(line);
 	}
-	if(s_iseq(line, delim))
+	if (s_iseq(line, delim))
 	{
 		add_tok(res, in, l, "heredoc");
 	}
@@ -86,7 +83,11 @@ char	*read_delim(char *in, t_lex *l)
 		(l->n)++;
 	}
 	delim = ft_substr(in, l->cst, l->n - l->cst);
-	delim = ft_realloc(delim, ft_strlen(delim) + 2); //NOT PROTECTED
+	if (!delim)
+		return (NULL);
+	delim = ft_realloc(delim, ft_strlen(delim) + 2);
+	if (!delim)
+		return (NULL);
 	delim[ft_strlen(delim)] = '\n';
 	delim[ft_strlen(delim) + 1] = '\0';
 	if (char_in_set(in[l->cst - 1], "'\""))
@@ -110,7 +111,6 @@ void	handle_pipered(t_list **res, char *in, t_lex *l)
 		{
 			l->cst = l->n;
 			delim = read_delim(in, l);
-			// ft_printf("'%s'\n", delim);
 			handle_nlenv(res, in, l, delim);
 		}
 		l->cst = l->n;
