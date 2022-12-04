@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:17:26 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:22:47 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:01:57 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,6 @@ void	print_tokarr(char **toks)
 	ft_printf("\n");
 }
 
-void	del_toks(void *content)
-{
-	free(content);
-}
-
 //returns NULL terminated array of strings
 char	**list_to_arr(t_list *toks)
 {
@@ -57,10 +52,7 @@ char	**list_to_arr(t_list *toks)
 	}
 	tok_arr = (char **)ft_calloc(llen + 1, sizeof(char *));
 	if (!tok_arr)
-	{
-		ft_lstclear(&toks, del_toks);
 		return (NULL);
-	}
 	slen = 0;
 	i = 0;
 	while (toks)
@@ -68,14 +60,10 @@ char	**list_to_arr(t_list *toks)
 		slen = ft_strlen(toks->content);
 		tok_arr[i] = (char *)ft_calloc(slen + 1, sizeof(char));
 		if (!(*tok_arr))
-		{
-			ft_lstclear(&toks, del_toks);
 			return (NULL);
-		}
 		ft_strcpy(tok_arr[i], toks->content);
 		toks = toks->next;
 		i++;
 	}
-	ft_lstclear(&toks, del_toks);
 	return (tok_arr);
 }

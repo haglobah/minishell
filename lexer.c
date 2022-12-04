@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:09:16 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:02:07 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,13 @@
 
 void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 {
+	char	*substr;
+
 	(void)place;
-	ft_lstadd_back(res, ft_lstnew(ft_substr(in, l->cst, l->n - l->cst))); //NOT PROTECTED
+	substr = ft_substr(in, l->cst, l->n - l->cst);
+	if (!substr)
+		return ;
+	ft_lstadd_back(res, ft_lstnew(substr));
 }
 
 int	handle_nullchar(t_list **res, char *in, t_lex *l)

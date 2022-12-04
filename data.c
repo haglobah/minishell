@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:42:59 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:00:21 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,12 @@ void	del_ct(t_ct *ct)
 			if (ct->sentences != NULL)
 				free_strs(ct->sentences[i]);
 		}
-		free(ct->cmds);
-		free(ct->sentences);
+		if (ct->cmds != NULL)
+			free(ct->cmds);
+		if (ct->sentences != NULL)
+			free(ct->sentences);
+		free(ct);
 	}
-	free(ct);
 }
 
 //malloc minishell-struct

@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 16:13:46 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 16:54:33 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ char	*mk_readline(char ***env)
 	return (prompt);
 }
 
+
+void	del_toks(void *content)
+{
+	free(content);
+}
+
 // msh_loop = execute . evaluate . parse . tokenize
 void	msh_loop(void)
 {
@@ -62,6 +68,7 @@ void	msh_loop(void)
 	char	***env;
 	char	*prompt;
 	int		rv;
+	t_list	*lex_lst;
 
 	rv = 0;
 	env = ft_calloc(1, sizeof(char **));
@@ -85,7 +92,9 @@ void	msh_loop(void)
 			break ;
 		}
 		add_history(t);
-		toks = list_to_arr(lex(t));
+		lex_lst = lex(t);
+		toks = list_to_arr(lex_lst);
+		ft_lstclear(&lex_lst, del_toks);
 		m = mk_msh(toks, env, t, &rv);
 		if (parse_msh(m))
 		{
