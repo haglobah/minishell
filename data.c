@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:07:24 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:34:25 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,21 @@ t_ct	*mk_ct(void)
 
 void	del_cmd(t_cmd *cmd)
 {
+	int	i;
+
 	if (cmd)
 	{
 		if (cmd->argv)
 			free_strs(cmd->argv);
 		if (cmd->args)
 		{
-			ft_printf("lala\n");
-			int	i;
-
 			i = -1;
 			while (cmd->args[++i] != NULL)
 			{
 				free(cmd->args[i]);
 			}
 			free(cmd->args);
-		} //TODO: Why hasn't this been allocated?
+		}
 		if (cmd->in)
 			free(cmd->in);
 		if (cmd->out)
@@ -108,5 +107,4 @@ void	free_all(t_msh *m)
 	free_strs(*m->env);
 	free(m->env);
 	del_msh(m);
-	//rl_clear_history();
 }
