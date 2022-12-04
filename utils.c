@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 18:03:30 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:27:44 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,4 +160,33 @@ bool	ft_parse_int(const char *s, int *loc)
 	}
 	*loc = (int)(num * -((2 * neg) - 1));
 	return (i > neg && s[i] == '\0');
+}
+
+char	**mk_strlist(int argc, ...)
+{
+	t_strlst	t;
+
+	t.lst = ft_calloc(argc + 1, sizeof(char *));
+	if (!t.lst)
+		return (NULL);
+	va_start(t.argp, argc);
+	t.i = 0;
+	while (t.i < argc)
+	{
+		t.str_to_add = va_arg(t.argp, char *);
+		t.lst[t.i] = ft_strdup(t.str_to_add);
+		if (!t.lst[t.i])
+		{
+			while (t.i)
+			{
+				t.i--;
+				free(t.lst[t.i]);
+				free(t.lst);
+				return (NULL);
+			}
+		}
+		t.i++;
+	}
+	va_end(t.argp);
+	return (t.lst);
 }

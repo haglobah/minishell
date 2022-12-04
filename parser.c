@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:41:49 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:46:18 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,14 @@ int	pipe_checkup(t_msh *m)
 
 int	check_redirs(t_msh *m, char **sen)
 {
-	int	i;
-	int	rc;
-	char	*redirs[] = {"<", ">", "<<", ">>", NULL};
+	int		i;
+	int		rc;
+	char	**redirs;
 
 	(void)m;
+	redirs = mk_strlist(4, "<", ">", "<<", ">>");
+	if (!redirs)
+		return (0);
 	i = 0;
 	rc = 0;
 	while (sen[i])
@@ -145,6 +148,7 @@ int	check_redirs(t_msh *m, char **sen)
 		}
 		i++;
 	}
+	free_strs(redirs);
 	return (i - rc);
 }
 
