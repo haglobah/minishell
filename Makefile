@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/12/04 01:12:52 by tpeters          ###   ########.fr        #
+#    Updated: 2022/12/04 01:22:39 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,10 +64,10 @@ lsan: LINK_FLAGS += $(LSANLFLAGS)
 lsan: fclean $(LSANLIB)
 lsan: all
 
-$(LSAN) :
+$(LSAN):
 	git clone https://github.com/mhahnFr/LeakSanitizer.git
 
-$(LSANLIB):
+$(LSANLIB): $(LSAN)
 	$(MAKE) -C LeakSanitizer
 
 debug: CFLAGS += -g
