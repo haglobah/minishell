@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 18:33:53 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 01:29:31 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int	ft_cd(t_msh *m, char **args)
 	}
 	return (0);
 }
+
 int	ft_pwd(t_msh *m, char **args)
 {
 	if (strslen(args) >= 2)
@@ -79,6 +80,7 @@ int	ft_pwd(t_msh *m, char **args)
 		ft_printf("%s\n", ft_getenv(m, "PWD"));
 	return (0);
 }
+
 int	ft_unset(t_msh *m, char **args)
 {
 	int	i;
@@ -91,6 +93,7 @@ int	ft_unset(t_msh *m, char **args)
 	}
 	return (0);
 }
+
 int	ft_env(t_msh *m, char **args)
 {
 	if (strslen(args) >= 2)

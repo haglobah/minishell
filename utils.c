@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 18:19:20 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 01:41:58 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	*ft_realloc(void *ptr, size_t size)
 		return (malloc(size));
 	if (!size)
 		return (ptr);
-	new_ptr = malloc(size);
+	new_ptr = malloc(size); //NOT PROTECTED
 	ft_memcpy(new_ptr, ptr, size);
 	free(ptr);
 	return (new_ptr);

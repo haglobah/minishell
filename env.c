@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 17:37:12 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 01:38:44 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	extend_env(char ***env, char *to_add)
 {
 	char	*eqsign;
 	char	**new;
-	int	i;
+	int		i;
 
 	new = ft_calloc(strslen(*env) + 2, sizeof(char *));
 	if (new == NULL)
@@ -49,11 +49,11 @@ bool	extend_env(char ***env, char *to_add)
 	return (true);
 }
 
-char	**clone_env()
+char	**clone_env(void)
 {
 	extern char	**environ;
-	char	**new;
-	int	i;
+	char		**new;
+	int			i;
 
 	new = ft_calloc(strslen(environ) + 1, sizeof(char *));
 	if (new == NULL)
@@ -74,9 +74,9 @@ char	**clone_env()
 
 bool	ft_setenv(t_msh *m, char *name, char *value)
 {
-	int	i;
+	int		i;
 	char	*eqsignp;
-	int	eqpos;
+	int		eqpos;
 	char	*res;
 	char	**env;
 
@@ -99,9 +99,9 @@ bool	ft_setenv(t_msh *m, char *name, char *value)
 
 char	*ft_getenv(t_msh *m, char *varname)
 {
-	int	i;
+	int		i;
 	char	*eqsignp;
-	int	eqpos;
+	int		eqpos;
 	char	*res;
 	char	**env;
 
@@ -128,12 +128,12 @@ void	strip_env(t_msh *m, int pos, int len)
 
 int	rm_entry(t_msh *m, char *varname)
 {
-	int	i;
-	int	to_rm;
+	int		i;
+	int		to_rm;
 	char	*eqsignp;
 	char	**env;
-	int	eqpos;
-	int	res;
+	int		eqpos;
+	int		res;
 
 	i = -1;
 	res = 0;

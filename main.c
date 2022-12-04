@@ -6,22 +6,23 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 01:10:26 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 01:58:34 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
 int	g_our_global;
+
 void	handle_signal(int sig)
 {
 	if (sig == SIGINT)
 	{
-		printf("\n"); // Move to a new line
+		printf("\n");
 		if (!g_our_global)
 		{
-			rl_on_new_line(); // Regenerate the prompt on a newline
-			rl_replace_line("", 0); // Clear the previous text
+			rl_on_new_line();
+			rl_replace_line("", 0);
 			rl_redisplay();
 		}
 	}
@@ -47,7 +48,7 @@ void	msh_loop(void)
 	rv = 0;
 	env = ft_calloc(1, sizeof(char **));
 	*env = clone_env();
-	while(1)
+	while (1)
 	{ // is_atty ? readline : gnl
 		t = readline("φ ");
 		if (!t)

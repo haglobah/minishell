@@ -6,13 +6,13 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 18:48:13 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 01:29:49 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-t_ct	*mk_ct()
+t_ct	*mk_ct(void)
 {
 	t_ct	*ct;
 
