@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:14:57 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 15:38:57 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,13 @@ int	exec_builtin_from_child(t_msh *m, int forks)
 	if (s_iseq(name, "echo"))
 	{
 		ft_echo(m, args);
+		free_all(m);
 		exit(0);
 	}
 	else 
 	{
 		ft_printf("%s did not execute. It was called from child.\n", name);
+		free_all(m);
 		exit(0);
 	}
 	return (0);
@@ -67,7 +69,6 @@ int	exec_builtin(t_msh *m, int forks)
 	else if (s_iseq(name, "export"))
 	{
 		return (ft_export(m, args));
-		// printns(m->env);
 	}
 	else if (s_iseq(name, "unset"))
 		return (ft_unset(m, args));
@@ -92,9 +93,7 @@ int	execute_cmd(t_msh *m, int forks)
 	else
 	{
 		ev = mk_execve(m, m->ct->cmds[forks]);
-		if (ev == NULL)
-			return (1);
-		if (execve(ev->pathname, ev->args, ev->env) == -1)
+		if ((ev != NULL) && (execve(ev->pathname, ev->args, ev->env) == -1))
 			ft_printf("execve failed.\n");
 		del_execve(ev);
 		free_all(m);
@@ -108,7 +107,7 @@ int	*mk_pipes(t_msh *m)
 	int	*fd;
 	int i;
 
-	fd = (int *)calloc(sizeof(int), (m->ct->senc + 1) * 2);
+	fd = (int *)ft_calloc(sizeof(int), (m->ct->senc + 1) * 2);
 	if (!fd)
 		return (NULL);
 	i = -1;
@@ -175,6 +174,7 @@ int	run_child(t_msh *m, int *fd, int forks)
 	setup_in(m, fd, forks);
 	setup_out(m, fd, forks);
 	close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
+	free(fd);
 	if (execute_cmd(m, forks) == 1)
 		return (1);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:54:52 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 15:40:51 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char	*find_path(t_msh *m, char **args)
 		if (path == NULL)
 			return (NULL);
 		ft_strcpy(path, args[0]);
+		ft_printf("path: %s\n", path);
 	}
 	else
 	{
@@ -84,10 +85,15 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	ev->pathname = find_path(m, ev->args);
 	if (!ev->pathname)
 	{
-		free(ev);
+		del_execve(ev);
 		return (NULL);
 	}
 	ev->env = clone_env();
+	if (!ev->env)
+	{
+		del_execve(ev);
+		return (NULL);
+	}
 	return (ev);
 }
 

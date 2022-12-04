@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:39:57 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 15:36:52 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	del_cmd(t_cmd *cmd)
 		if (cmd->argv)
 			free_strs(cmd->argv);
 		//if (cmd->args)
-		//	free_strs(cmd->args); //TODO: Why hasn't this been allocated?
+			//free_strs(cmd->args); //TODO: Why hasn't this been allocated?
 		if (cmd->in)
 			free(cmd->in);
 		if (cmd->out)
@@ -45,14 +45,19 @@ void	del_ct(t_ct *ct)
 {
 	int	i;
 
-	i = -1;
-	while (++i < ct->senc)
+	if (ct != NULL)
 	{
-		del_cmd(ct->cmds[i]);
-		free_strs(ct->sentences[i]);
+		i = -1;
+		while (++i < ct->senc)
+		{
+			if (ct->cmds != NULL)
+				del_cmd(ct->cmds[i]);
+			if (ct->sentences != NULL)
+				free_strs(ct->sentences[i]);
+		}
+		free(ct->cmds);
+		free(ct->sentences);
 	}
-	free(ct->cmds);
-	free(ct->sentences);
 	free(ct);
 }
 

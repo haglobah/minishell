@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 14:57:43 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 15:41:34 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	msh_loop(void)
 		if (!t)
 		{
 			ft_printf("Ctrl - D caught!\n");
-			return ;
+			break ;
 		}
 		add_history(t);
 		toks = list_to_arr(lex(t));
