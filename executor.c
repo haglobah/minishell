@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:25:06 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 19:43:30 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,19 @@ void	close_fds(int pos, int *fd, int num_pipes)
 
 int	is_builtin(t_cmd *cmd)
 {
-	char	*builtins[] = {"echo", "cd", "pwd",
-		"export", "unset", "env", "exit", NULL};
+	char	**builtins;
+
 	if (cmd->args == NULL)
 		return (0);
-	else if (s_in_s(cmd->args[0], builtins))
+	builtins = mk_strlist(7, "echo", "cd", "pwd",
+			"export", "unset", "env", "exit");
+	if (!builtins)
+		return (0);
+	if (s_in_s(cmd->args[0], builtins))
+	{
+		free_strs(builtins);
 		return (1);
+	}
 	return (0);
 }
 
@@ -210,6 +217,7 @@ int	execute_only_cmds(t_msh *m)
 	int	*fd;
 	int	pid;
 	int	forks;
+	int	status;
 
 	fd = mk_pipes(m);
 	if (fd == NULL)
@@ -221,21 +229,18 @@ int	execute_only_cmds(t_msh *m)
 		if (pid == -1)
 		{
 			perror("fork");
-			return -1;
+			return (-1);
 		}
 		else if (pid == 0)
 		{
-			//child
-			if(run_child(m, fd, forks) == 1)
+			if (run_child(m, fd, forks) == 1)
 				return (1);
 		}
 		else
 		{
-			// parent
 			run_parent(m, fd, forks);
 			if (forks == m->ct->senc - 1)
 			{
-				int	status;
 				waitpid(pid, &status, 0);
 				*(m->rv) = WEXITSTATUS(status);
 			}
@@ -263,6 +268,8 @@ int	exec_cmds_builtin(t_msh *m)
 	int	*fd;
 	int	pid;
 	int	forks;
+	int	fd_open;
+	int	tmpfd;
 
 	fd = mk_pipes(m);
 	if (fd == NULL)
@@ -274,25 +281,21 @@ int	exec_cmds_builtin(t_msh *m)
 		if (pid == -1)
 		{
 			perror("fork");
-			return -1;
+			return (-1);
 		}
 		else if (pid == 0)
 		{
-			//child
-			if(run_child(m, fd, forks) == 1)
+			if (run_child(m, fd, forks) == 1)
 				return (1);
 		}
 		else
-		{
-			// parent
 			run_parent(m, fd, forks);
-		}
 		forks++;
 	}
 	if (!(m->ct->cmds[forks]->appp))
 		unlink(m->ct->cmds[forks]->out);
-	int fd_open = open(m->ct->cmds[forks]->out, O_WRONLY | O_CREAT | O_APPEND * (m->ct->cmds[forks]->appp), 0666);
-	int tmpfd = dup(STDOUT_FILENO);
+	fd_open = open(m->ct->cmds[forks]->out, O_WRONLY | O_CREAT | O_APPEND * (m->ct->cmds[forks]->appp), 0666);
+	tmpfd = dup(STDOUT_FILENO);
 	dup2(fd_open, STDOUT_FILENO);
 	close(fd_open);
 	*(m->rv) = run_builtin(m, fd, forks);

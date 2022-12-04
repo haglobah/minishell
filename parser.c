@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 18:22:16 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 19:43:56 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ int	check_redirs(t_msh *m, char **sen)
 		}
 		i++;
 	}
+	free_strs(redirs);
 	return (i - rc);
 }
 
