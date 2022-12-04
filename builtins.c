@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:20:01 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:20:49 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,20 +106,6 @@ int	ft_env(t_msh *m, char **args)
 	return (0);
 }
 
-<<<<<<< HEAD
-=======
-void	free_all(t_msh *m)
-{
-	if (m->env)
-	{
-		if (*m->env)
-			free_strs(*m->env);
-		free(m->env);
-	}
-	del_msh(m);
-}
-
->>>>>>> cd89346acf8abf10f0f04596587c007ad45a5bef
 int	ft_exit(t_msh *m, char **args)
 {
 	int	code;
