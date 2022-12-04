@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/12/03 19:42:10 by bhagenlo         ###   ########.fr        #
+#    Updated: 2022/12/04 01:12:52 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ ifeq ($(OS),Windows_NT)
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
+		LINK_FLAGS += -ltinfo
 		LSANLFLAGS := -rdynamic -LLeakSanitizer -llsan -ldl -lstdc++
 	endif
 	ifeq ($(UNAME_S),Darwin)

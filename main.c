@@ -6,12 +6,13 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/03 18:47:16 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 01:10:26 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
+int	g_our_global;
 void	handle_signal(int sig)
 {
 	if (sig == SIGINT)

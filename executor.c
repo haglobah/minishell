@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 19:40:14 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 01:18:24 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int	execute_cmd(t_msh *m, int forks)
 		if (execve(ev->pathname, ev->args, ev->env) == -1)
 			ft_printf("execve failed.\n");
 		del_execve(ev);
+		exit(1);
 	}
 	return (0);
 }
