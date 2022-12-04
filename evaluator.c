@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 13:04:19 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 16:17:57 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,10 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 		if (content != NULL)
 		{
 			clen = ft_strlen(content);
+			replace_string_at(sp, dollar, content, vlen);
+			free(content);
 		}
-		replace_string_at(sp, dollar, content, vlen);
 		free(varname);
-		free(content);
 	}
 }
 
