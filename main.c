@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 16:54:33 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 19:24:37 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,25 @@ char	*mk_readline(char ***env)
 	return (prompt);
 }
 
+bool	ft_readline(t_loop *l)
+{
+	char	*prompt;
+
+	if (!isatty(STDIN_FILENO))
+	{
+		ft_printf("Please use φshell from a terminal. Thanks :)\n");
+		return (false);
+	}
+	prompt = mk_readline(l->env);
+	if (!prompt)
+		return (false);
+	l->t = readline(prompt);
+	free(prompt);
+	if (!l->t)
+		return (0);
+	add_history(l->t);
+	return (1);
+}
 
 void	del_toks(void *content)
 {
@@ -62,51 +81,29 @@ void	del_toks(void *content)
 // msh_loop = execute . evaluate . parse . tokenize
 void	msh_loop(void)
 {
-	char	*t;
 	char	**toks;
 	t_msh	*m;
-	char	***env;
-	char	*prompt;
-	int		rv;
 	t_list	*lex_lst;
+	t_loop	l;
 
-	rv = 0;
-	env = ft_calloc(1, sizeof(char **));
-	*env = clone_env();
+	l = (t_loop){.t = NULL, .rv = 0, .env = NULL};
+	l.env = ft_calloc(1, sizeof(char **));
+	*l.env = clone_env();
 	while (1)
 	{
-		if (!isatty(STDIN_FILENO))
-		{
-			ft_printf("Please use φshell from a terminal. Thanks :)\n");
-			// free_all(m);
-			return ;
-		}
-		prompt = mk_readline(env);
-		if (!prompt)
+		if (ft_readline(&l) == 0)
 			break ;
-		t = readline(prompt);
-		free(prompt);
-		if (!t)
-		{
-			ft_printf("Ctrl - D caught!\n");
-			break ;
-		}
-		add_history(t);
-		lex_lst = lex(t);
+		lex_lst = lex(l.t);
 		toks = list_to_arr(lex_lst);
 		ft_lstclear(&lex_lst, del_toks);
-		m = mk_msh(toks, env, t, &rv);
+		m = mk_msh(toks, l.env, l.t, &l.rv);
 		if (parse_msh(m))
 		{
 			evaluate(m);
 			execute(m);
 		}
-		else
-		{
-			/* ft_printf("Bad Command!\n"); */
-		}
 		del_msh(m);
 	}
-	free_strs(*env);
-	free(env);
+	free_strs(*l.env);
+	free(l.env);
 }

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 18:23:34 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:15:30 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ extern int	g_our_global;
 
 typedef int	t_curr_token_start;
 typedef int	t_curr_token_type;
+
+
+typedef struct s_main_loop
+{
+	char	*t;
+	char	***env;
+	int		rv;
+}	t_loop;
 
 typedef struct s_env_helper
 {
