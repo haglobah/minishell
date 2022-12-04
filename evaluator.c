@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:49:56 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:55:02 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_var(char **sp, int dollar)
 
 	i = 0;
 	while (char_in_set((*sp)[++i + dollar],
-					   "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"))
+		"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"))
 		;
 	if (i == 1)
 		return (NULL);
@@ -27,44 +27,42 @@ char	*get_var(char **sp, int dollar)
 
 void	replace_string_at(char **sp, int dollar, char *content, int vlen)
 {
-	int	i;
-	int	j;
-	int	k;
-	int	z;
-	int newlen = ft_strlen(*sp) + ft_strlen(content) - (vlen + 1);
-	char *new_arg = ft_calloc(sizeof(char), newlen + 1);
-	i = -1;
-	while (++i < dollar)
+	t_rep	t;
+
+	t = (t_rep){-1, -1, 0, 0, 0, NULL};
+	t.newlen = ft_strlen(*sp) + ft_strlen(content) - (vlen + 1);
+	t.new_arg = ft_calloc(sizeof(char), t.newlen + 1);
+	while (++t.i < dollar)
 	{
-		new_arg[i] = (*sp)[i];
+		t.new_arg[t.i] = (*sp)[t.i];
 	}
-	j = -1;
-	while (++j < (int)ft_strlen(content))
+	while (++t.j < (int)ft_strlen(content))
 	{
-		new_arg[i + j] = content[j];
+		t.new_arg[t.i + t.j] = content[t.j];
 	}
-	k = i + j;
-	z = i + vlen + 1;
-	while ((*sp)[z])
+	t.k = t.i + t.j;
+	t.z = t.i + vlen + 1;
+	while ((*sp)[t.z])
 	{
-		new_arg[k] = (*sp)[z];
-		k++;
-		z++;
+		t.new_arg[t.k] = (*sp)[t.z];
+		t.k++;
+		t.z++;
 	}
 	free(*sp);
-	*sp = new_arg;
+	*sp = t.new_arg;
 }
 
 void	find_replace(t_msh *m, char **sp, int dollar)
 {
-	int	clen;
-	int	vlen;
+	int		clen;
+	int		vlen;
 	char	*content;
+	char	*varname;
 
 	clen = 0;
 	vlen = 0;
 	content = NULL;
-	char *varname = get_var(sp, dollar);
+	varname = get_var(sp, dollar);
 	if (varname != NULL)
 	{
 		vlen = ft_strlen(varname);
@@ -89,7 +87,7 @@ void	insert_rv(t_msh *m, char **sp, int dollar)
 
 int	rm_quotes(char **sp, int here_quoted)
 {
-	int	is_quoted;
+	int		is_quoted;
 	char	*tmp;
 
 	if (here_quoted)
@@ -126,25 +124,11 @@ void	swap_in_vars(t_msh *m, char **sp, int here_quoted)
 	}
 }
 
-char **cons_args(t_cmd *cmd)
+char	**con_args_wrapped(t_cmd *cmd, char **args)
 {
-	int	i;
-	int	j;
-	int	empty_count;
-	char	**args;
+	int		i;
+	int		j;
 
-	empty_count = 0;
-	i = -1;
-	while (++i < cmd->argc)
-	{
-		if (s_iseq(cmd->argv[i], ""))
-			empty_count += 1;
-	}
-	if (i == 0)
-		return (NULL);
-	args = ft_calloc(sizeof(char *), (i - empty_count + 1));
-	if (args == NULL)
-		return (NULL);
 	i = -1;
 	j = 0;
 	while (++i < cmd->argc)
@@ -160,10 +144,31 @@ char **cons_args(t_cmd *cmd)
 	return (args);
 }
 
+char	**cons_args(t_cmd *cmd)
+{
+	int		i;
+	int		empty_count;
+	char	**args;
+
+	empty_count = 0;
+	i = -1;
+	while (++i < cmd->argc)
+	{
+		if (s_iseq(cmd->argv[i], ""))
+			empty_count += 1;
+	}
+	if (i == 0)
+		return (NULL);
+	args = ft_calloc(sizeof(char *), (i - empty_count + 1));
+	if (args == NULL)
+		return (NULL);
+	return (con_args_wrapped(cmd, args));
+}
+
 void	loop_through_cmds(t_msh *m)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	t_cmd	**cmds;
 
 	cmds = m->ct->cmds;
@@ -185,7 +190,6 @@ void	loop_through_cmds(t_msh *m)
 
 int	evaluate(t_msh *m)
 {
-	
 	loop_through_cmds(m);
 	return (0);
 }
