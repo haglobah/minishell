@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:39:58 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:41:49 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,10 +159,8 @@ char	*parse_here(t_cmd *cmd, char *here)
 		j--;
 	}
 	i = 0;
-	//is_quoted
 	if (char_in_set(here[i], "'\""))
 	{
-		//del_delim
 		i++;
 		while (!char_in_set(here[i], "'\""))
 			i++;
