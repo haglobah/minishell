@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:11:50 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:19:32 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int			ft_export(t_msh *m, char **args);
 int			ft_unset(t_msh *m, char **args);
 int			ft_env(t_msh *m, char **args);
 int			ft_exit(t_msh *m, char **args);
+void		free_all(t_msh *m);
 
 //env.c
 bool		extend_env(char ***env, char *to_add);

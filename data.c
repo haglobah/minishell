@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:11:07 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:19:46 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,16 @@ t_msh	*mk_msh(char **toks, char ***env, char *t, int *rv)
 
 void	del_msh(t_msh *m)
 {
-	free(m->t);
-	free_strs(m->toks);
-	del_ct(m->ct);
-	free(m);
+	if (m)
+	{
+		if (m->t)
+			free(m->t);
+		if (m->toks)
+			free_strs(m->toks);
+		if (m->ct)
+			del_ct(m->ct);
+		free(m);
+	}
 }
 
 void	free_all(t_msh *m)

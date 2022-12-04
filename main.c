@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 14:16:47 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:19:38 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	msh_loop(void)
 		{
 			/* ft_printf("Bad Command!\n"); */
 		}
-		// del_msh(m);
+		del_msh(m);
 	}
 	free_strs(*env);
 	free(env);
