@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:53:31 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:55:42 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ bool	extend_env(char ***env, char *to_add)
 	char	**new;
 	int		i;
 
+	if (to_add == NULL)
+		return (false);
 	new = ft_calloc(strslen(*env) + 2, sizeof(char *));
 	if (new == NULL)
 		return (false);
@@ -38,11 +40,12 @@ bool	extend_env(char ***env, char *to_add)
 		free_strs(new);
 		return (false);
 	}
-	if (to_add == NULL)
-		return (false);
 	eqsign = ft_strchr(to_add, '=');
 	if (eqsign == NULL)
+	{
+		free_strs(new);
 		return (false);
+	}
 	ft_strcpy(new[i], to_add);
 	free_strs((*env));
 	*env = new;
