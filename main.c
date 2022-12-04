@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 14:19:38 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:27:39 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,14 @@ void	handle_signal(int sig)
 	}
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
+	(void)argv;
+	if (argc >= 2)
+	{
+		ft_printf("φsh: too many arguments\n");
+		return (1);
+	}
 	signal(SIGINT, handle_signal);
 	signal(SIGQUIT, SIG_IGN);
 	msh_loop();
