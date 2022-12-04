@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:17:26 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/25 15:34:49 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 15:04:22 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ void	print_tokarr(char **toks)
 		toks++;
 	}
 	ft_printf("\n");
+}
+
+void	del_toks(void *content)
+{
+	free(content);
 }
 
 //returns NULL terminated array of strings
@@ -67,5 +72,6 @@ char	**list_to_arr(t_list *toks)
 		toks = toks->next;
 		i++;
 	}
+	ft_lstclear(&toks, del_toks);
 	return (tok_arr);
 }

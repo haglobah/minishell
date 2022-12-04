@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:36:38 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 14:54:52 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char	*search_PATH(t_msh *m, char *exec_name)
 		slash_name = ft_strjoin("/", exec_name);
 		tmppath = ft_strjoin(paths[i], slash_name);
 		ft_printf("'%s'\n", tmppath);
+		free(slash_name);
 		if (access(tmppath, F_OK) == 0)
 		{
 			exec_path = tmppath;
@@ -47,6 +48,7 @@ char	*search_PATH(t_msh *m, char *exec_name)
 		ft_printf("%s: command not found\n", exec_name);
 	}
 	free_strs(paths);
+	free(pathstr);
 	return (exec_path);
 }
 

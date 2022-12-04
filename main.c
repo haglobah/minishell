@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 14:27:39 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:57:43 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ char	*mk_readline(char ***env)
 
 	wd = ft_getenv(env, "PWD");
 	prompt = ft_calloc(sizeof(char), ft_strlen(wd) + 4);
+	if (!prompt)
+		return (NULL);
 	prompt = ft_strjoin(wd, " φ ");
 	free(wd);
 	return (prompt);
@@ -76,6 +78,8 @@ void	msh_loop(void)
 			return ;
 		}
 		prompt = mk_readline(env);
+		if (!prompt)
+			break ;
 		t = readline(prompt);
 		free(prompt);
 		if (!t)
