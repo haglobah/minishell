@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:15:30 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:38:13 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_command
 	char	**args;
 
 	char	*in;
+	char	*here;
 	char	*out;
 	int		appp;
 	int		here_quoted;

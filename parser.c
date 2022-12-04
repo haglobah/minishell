@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:53:30 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:39:58 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	put_split_to_table(t_msh *m, int pi, int *pipe_places)
 		if (m->toks[tok_place])
 		{
 			m->ct->sentences[pi][sen_i] = ft_strdup(m->toks[tok_place]);
-			//ft_printf("%s, pi: %d \n", m->ct->sentences[pi][sen_i], pi);
 		}
 		sen_i++;
 	}
@@ -204,8 +203,7 @@ int	compute_io(t_msh *m, char **sen, t_cmd *cmd)
 		}
 		else if (s_iseq(sen[i], "<<"))
 		{
-			//HERE
-			cmd->in = parse_here(cmd, sen[i + 1]);
+			cmd->here = parse_here(cmd, sen[i + 1]);
 			i++;
 		}
 		else if (s_iseq(sen[i], ">>"))
@@ -297,14 +295,12 @@ int	sens2cmds(t_msh *m)
 	while (m->ct->sentences[i])
 	{
 		m->ct->cmds[i] = (t_cmd *)ft_calloc(1 , sizeof(t_cmd));
-		// ft_printf("here");
 		if (!check_for_quotes(m->ct->sentences[i]))
 			return (0);
 		if (is_only_dollar(m->ct->sentences[i]))
 			return (0);
 		if (!compute_io(m, m->ct->sentences[i], m->ct->cmds[i]))
 			return (0);
-		// printcmd(m->ct->cmds[i]);
 		i++;
 	}
 	return (1);
@@ -315,7 +311,7 @@ int	parse_msh(t_msh *m)
 	int	pc;
 
 	pc = split_by_pipes(m);
-	if (pc > 1 && !pipe_checkup(m)) //short-circuit if
+	if (pc > 1 && !pipe_checkup(m))
 		return (0);
 	if (!sens2cmds(m))
 		return (0);
