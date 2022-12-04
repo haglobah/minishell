@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 01:38:44 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 13:03:36 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ bool	ft_setenv(t_msh *m, char *name, char *value)
 	return (NULL);
 }
 
-char	*ft_getenv(t_msh *m, char *varname)
+char	*ft_getenv(char ***msh_env, char *varname)
 {
 	int		i;
 	char	*eqsignp;
@@ -106,7 +106,7 @@ char	*ft_getenv(t_msh *m, char *varname)
 	char	**env;
 
 	i = -1;
-	env = *m->env;
+	env = *msh_env;
 	while (env[++i] != NULL)
 	{
 		eqsignp = ft_strchr(env[i], '=');

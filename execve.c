@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 19:41:04 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 13:04:02 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*search_PATH(t_msh *m, char *exec_name)
 	int		i;
 
 	exec_path = NULL;
-	paths = ft_split(ft_getenv(m, "PATH"), ':');
+	paths = ft_split(ft_getenv(m->env, "PATH"), ':');
 	if (paths == NULL)
 		return (NULL);
 	printns(paths);

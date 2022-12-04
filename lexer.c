@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 01:57:51 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 12:58:45 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ int	handle_nullchar(t_list **res, char *in, t_lex *l)
 
 void	read_n_app(char **line, char **in)
 {
+	ft_printf("heredoc>");
 	*line = get_next_line(0);
 	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1); //NOT PROTECTED
 	ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
 //	ft_printf("content: '%s'\n", *in);
-	ft_printf("linelen: %i\n", ft_strlen(*line));
+	// ft_printf("linelen: %i\n", ft_strlen(*line));
 }
 
 void	insert_nl(char **in)
@@ -104,7 +105,7 @@ void	handle_pipered(t_list **res, char *in, t_lex *l)
 		{
 			l->cst = l->n;
 			delim = read_delim(in, l);
-			ft_printf("'%s'\n", delim);
+			// ft_printf("'%s'\n", delim);
 			handle_nlenv(res, in, l, delim);
 		}
 		l->cst = l->n;

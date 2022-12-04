@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/03 19:22:38 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 13:04:19 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 	if (varname != NULL)
 	{
 		vlen = ft_strlen(varname);
-		content = ft_getenv(m, varname);
+		content = ft_getenv(m->env, varname);
 		if (content != NULL)
 		{
 			clen = ft_strlen(content);

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/11/29 21:50:06 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 12:48:38 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,20 +88,16 @@ int	split_by_pipes(t_msh *m)
 	if (!pipe_places)
 		return (-2);
 	pipecount = count_pipes(m->toks, pipe_places);
-//	ft_printf("# of pipes: %i\n", pipecount);
 	m->ct->sentences = (char ***)ft_calloc(pipecount + 1, sizeof(char **));
 	m->ct->senc = pipecount;
-//	ft_printf("%i", m->ct->senc);
 	if (!m->ct->sentences)
 		return (-3);
 	i = 0;
 	while (i < pipecount)
 	{
-		//one precommand (only split by pipe per table row.
 		put_split_to_table(m, i, pipe_places);
 		i++;
 	}
-//	print_sens(m);
 	free(pipe_places);
 	return (pipecount);
 }

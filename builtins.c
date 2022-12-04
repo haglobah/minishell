@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 01:29:31 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 13:04:57 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	ft_pwd(t_msh *m, char **args)
 		return (1);
 	}
 	else
-		ft_printf("%s\n", ft_getenv(m, "PWD"));
+		ft_printf("%s\n", ft_getenv(m->env, "PWD"));
 	return (0);
 }
 

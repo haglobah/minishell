@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 02:01:23 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 13:02:36 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@
 
 extern int	g_our_global;
 
-typedef int	current_token_start;
-typedef int	current_token_type;
+typedef int	t_curr_token_start;
+typedef int	t_curr_token_type;
 
 typedef struct s_lexer
 {
-	current_token_start	cst;
+	t_curr_token_start	cst;
 	int					n;
-	current_token_type	ctt;
+	t_curr_token_type	ctt;
 }	t_lex;
 
 typedef struct s_execute_vector
@@ -52,7 +52,6 @@ typedef struct s_command
 	int		argc;
 	char	**argv;
 
-//	NULL-terminated
 	char	**args;
 
 	char	*in;
@@ -136,7 +135,7 @@ int			ft_exit(t_msh *m, char **args);
 bool		extend_env(char ***env, char *to_add);
 char		**clone_env(void);
 bool		ft_setenv(t_msh *m, char *name, char *value);
-char		*ft_getenv(t_msh *m, char *varname);
+char		*ft_getenv(char ***msh_env, char *varname);
 int			rm_entry(t_msh *m, char *varname);
 
 int			run_tests(void);

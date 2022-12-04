@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 01:58:34 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 13:33:21 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ int	main(void)
 	return (0);
 }
 
+char	*mk_readline(char ***env)
+{
+	char	*wd;
+	char	*prompt;
+
+	wd = ft_getenv(env, "PWD");
+	prompt = ft_calloc(sizeof(char), ft_strlen(wd) + 4);
+	prompt = ft_strjoin(wd, " φ ");
+	free(wd);
+	return (prompt);
+}
+
 // msh_loop = execute . evaluate . parse . tokenize
 void	msh_loop(void)
 {
@@ -43,6 +55,7 @@ void	msh_loop(void)
 	char	**toks;
 	t_msh	*m;
 	char	***env;
+	char	*prompt;
 	int		rv;
 
 	rv = 0;
@@ -50,7 +63,9 @@ void	msh_loop(void)
 	*env = clone_env();
 	while (1)
 	{ // is_atty ? readline : gnl
-		t = readline("φ ");
+		prompt = mk_readline(env);
+		t = readline(prompt);
+		free(prompt);
 		if (!t)
 		{
 			ft_printf("Ctrl - D caught!\n");
@@ -71,7 +86,7 @@ void	msh_loop(void)
 		{
 			/* ft_printf("Bad Command!\n"); */
 		}
-		del_msh(m);
+		// del_msh(m);
 	}
 	free_strs(*env);
 	free(env);
