@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:19:46 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:39:57 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,18 @@ t_ct	*mk_ct(void)
 
 void	del_cmd(t_cmd *cmd)
 {
-	free_strs(cmd->argv);
-	// free_strs(cmd->args); TODO: Why hasn't this been allocated?
-	free(cmd->in);
-	free(cmd->out);
-	free(cmd);
+	if (cmd)
+	{
+		if (cmd->argv)
+			free_strs(cmd->argv);
+		//if (cmd->args)
+		//	free_strs(cmd->args); //TODO: Why hasn't this been allocated?
+		if (cmd->in)
+			free(cmd->in);
+		if (cmd->out)
+			free(cmd->out);
+		free(cmd);
+	}
 }
 
 void	del_ct(t_ct *ct)

@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 14:14:52 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 14:36:38 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,14 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 
 void	del_execve(t_execve *ev)
 {
-	free_strs(ev->args);
-	free(ev->pathname);
-	free_strs(ev->env);
-	free(ev);
+	if (ev)
+	{
+		if (ev->args)
+			free_strs(ev->args);
+		if (ev->pathname)
+			free(ev->pathname);
+		if (ev->env)
+			free_strs(ev->env);
+		free(ev);
+	}
 }
