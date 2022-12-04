@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:08:45 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 19:25:06 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,9 @@ int	setup_out(t_msh *m, int *fd, int forks)
 	outfile = m->ct->cmds[forks]->out;
 	if (outfile && !s_iseq(outfile, ""))
 	{
-		fd_open = open(outfile, O_WRONLY);
+		if (!(m->ct->cmds[forks]->appp))
+			unlink(outfile);
+		fd_open = open(outfile, O_WRONLY | O_CREAT | O_APPEND * (m->ct->cmds[forks]->appp), 0666);
 		if (fd_open == -1)
 			return (1);
 		dup2(fd_open, STDOUT_FILENO);
@@ -287,7 +289,15 @@ int	exec_cmds_builtin(t_msh *m)
 		}
 		forks++;
 	}
+	if (!(m->ct->cmds[forks]->appp))
+		unlink(m->ct->cmds[forks]->out);
+	int fd_open = open(m->ct->cmds[forks]->out, O_WRONLY | O_CREAT | O_APPEND * (m->ct->cmds[forks]->appp), 0666);
+	int tmpfd = dup(STDOUT_FILENO);
+	dup2(fd_open, STDOUT_FILENO);
+	close(fd_open);
 	*(m->rv) = run_builtin(m, fd, forks);
+	dup2(tmpfd, STDOUT_FILENO);
+	close(tmpfd);
 	while (1)
 	{
 		if (wait(NULL) <= 0)
