@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:46:35 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/04 18:23:34 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ extern int	g_our_global;
 
 typedef int	t_curr_token_start;
 typedef int	t_curr_token_type;
+
+typedef struct s_env_helper
+{
+	int		i;
+	char	*eqsignp;
+	int		eqpos;
+	char	**env;
+}	t_env;
 
 typedef struct s_replace
 {
@@ -105,6 +113,8 @@ void		ft_strcpy(char *dst, char *src);
 void		serror(char *token);
 int			strslen(char **strs);
 int			free_strs(char **sp);
+void		*free_strsv(char **sp);
+bool		free_strsb(char **sp);
 void		prints(char **slist);
 void		printns(char **slist);
 bool		ft_parse_int(const char *s, int *loc);

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 16:33:06 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 18:03:30 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,18 @@ int	free_strs(char **sp)
 	}
 	free(sp);
 	return (0);
+}
+
+void	*free_strsv(char **sp)
+{
+	free_strs(sp);
+	return (NULL);
+}
+
+bool	free_strsb(char **sp)
+{
+	free_strs(sp);
+	return (false);
 }
 
 void	prints(char **slist)

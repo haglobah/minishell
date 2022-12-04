@@ -6,47 +6,51 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:55:42 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/04 18:27:19 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
+int	copy_env(char **new, char **old)
+{
+	int	i;
+
+	i = -1;
+	while (old[++i] != NULL)
+	{
+		new[i] = ft_calloc(ft_strlen(old[i]) + 1, sizeof(char));
+		if (new[i] == NULL)
+		{
+			free_strs(new);
+			return (-1);
+		}
+		ft_strcpy(new[i], old[i]);
+	}
+	return (i);
+}
+
 bool	extend_env(char ***env, char *to_add)
 {
 	char	*eqsign;
 	char	**new;
-	int		i;
+	int		envlen;
 
 	if (to_add == NULL)
 		return (false);
 	new = ft_calloc(strslen(*env) + 2, sizeof(char *));
 	if (new == NULL)
 		return (false);
-	i = -1;
-	while ((*env)[++i])
-	{
-		new[i] = ft_calloc(ft_strlen((*env)[i]) + 1, sizeof(char));
-		if (new[i] == NULL)
-		{
-			free_strs(new);
-			return (false);
-		}
-		ft_strcpy(new[i], (*env)[i]);
-	}
-	new[i] = ft_calloc(ft_strlen(to_add) + 1, sizeof(char));
-	if (new[i] == NULL)
-	{
-		free_strs(new);
+	envlen = copy_env(new, *env);
+	if (envlen == -1)
 		return (false);
-	}
+	new[envlen] = ft_calloc(ft_strlen(to_add) + 1, sizeof(char));
+	if (new[envlen] == NULL)
+		return (free_strsb(new));
 	eqsign = ft_strchr(to_add, '=');
 	if (eqsign == NULL)
-	{
-		free_strs(new);
-		return (false);
-	}
-	ft_strcpy(new[i], to_add);
+		return (free_strsb(new));
+	ft_strcpy(new[envlen], to_add);
 	free_strs((*env));
 	*env = new;
 	return (true);
@@ -94,6 +98,7 @@ bool	ft_setenv(t_msh *m, char *name, char *value)
 			res = ft_calloc(sizeof(char), (eqpos + 1) + ft_strlen(value) + 1);
 			ft_strlcpy(res, env[i], eqpos + 2);
 			ft_strlcpy(&res[eqpos + 1], value, ft_strlen(value) + 1);
+			free(env[i]);
 			env[i] = res;
 		}
 	}
@@ -131,30 +136,26 @@ void	strip_env(t_msh *m, int pos, int len)
 
 int	rm_entry(t_msh *m, char *varname)
 {
-	int		i;
 	int		to_rm;
-	char	*eqsignp;
-	char	**env;
-	int		eqpos;
 	int		res;
+	t_env	e;
 
-	i = -1;
+	e = (t_env){.i = -1, .eqsignp = NULL, .eqpos = 0, .env = *m->env};
 	res = 0;
 	to_rm = 0;
-	env = *m->env;
-	while (env[++i] != NULL)
+	while (e.env[++e.i] != NULL)
 	{
-		eqsignp = ft_strchr(env[i], '=');
-		eqpos = eqsignp - env[i];
-		if (s_isneq(env[i], varname, eqpos))
+		e.eqsignp = ft_strchr(e.env[e.i], '=');
+		e.eqpos = e.eqsignp - e.env[e.i];
+		if (s_isneq(e.env[e.i], varname, e.eqpos))
 		{
-			to_rm = i;
+			to_rm = e.i;
 			res = 1;
 		}
 	}
 	if (res == 1)
 	{
-		strip_env(m, to_rm, i - to_rm);
+		strip_env(m, to_rm, e.i - to_rm);
 	}
 	return (res);
 }
