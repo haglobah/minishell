@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 13:37:04 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ void	del_ct(t_ct *ct)
 }
 
 //malloc minishell-struct
-t_msh	*mk_msh(char **toks, char ***env, char *t, int *rv)
+t_msh	*mk_msh(char **toks, char ***env, t_in *in, int *rv)
 {
 	t_msh	*msh;
 
 	msh = (t_msh *)ft_calloc(1, sizeof(t_msh));
 	if (!msh)
 		return (NULL);
-	msh->t = t;
+	msh->in = in;
 	msh->toks = toks;
 	msh->ct = mk_ct();
 	msh->env = env;
@@ -94,10 +94,9 @@ void	del_msh(t_msh *m)
 {
 	if (m)
 	{
-		if (m->t)
-			ft_free(m->t);
-		if (m->toks)
-			free_strs(m->toks);
+		if (m->in->here_did_realloc)
+			ft_freepl(m->in->t, "t");
+		free_strspl(m->toks, "toks");
 		if (m->ct)
 			del_ct(m->ct);
 		ft_free(m);

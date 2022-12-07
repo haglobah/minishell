@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 12:38:54 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 13:32:06 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,14 @@ int		read_n_app(char **line, char **in)
 		ft_printf("^D\n");
 		return (0);
 	}
-	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1);
-	ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
+	int	herelen = ft_strlen(*line) + ft_strlen(*in) + 1;
+	*in = (char *)ft_reallocpl(*in, herelen + 1, "in");
+	if (!(*in))
+		return (0);
+	(*in)[herelen] = '\n';
+	(*in)[herelen + 1] = '\0';
+	ft_printf("readline: '%s' \n", (*in));
+	// ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
 	return (1);
 }
 
@@ -56,23 +62,24 @@ void	insert_nl(char **in)
 	ft_printf("in: %s", *in);
 }
 
-void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
+void	handle_nlenv(t_list **res, t_in *in, t_lex *l, char *delim)
 {
 	char	*line;
 
 	while (true)
 	{
-		if (read_n_app(&line, &in) == 0)
+		if (read_n_app(&line, &(in->t)) == 0)
 		{
 			return ;
 		}
+		in->here_did_realloc = true;
 		l->n += ft_strlen(line);
 		if (s_iseq(line, delim))
 			break ;
 		ft_free(line);
 	}
 	ft_free(line);
-	add_tok(res, in, l, "heredoc");
+	add_tok(res, in->t, l, "heredoc");
 }
 
 char	*read_delim(char *in, t_lex *l)
@@ -103,20 +110,20 @@ char	*read_delim(char *in, t_lex *l)
 	return (delim);
 }
 
-void	handle_pipered(t_list **res, char *in, t_lex *l)
+void	handle_pipered(t_list **res, t_in *in, t_lex *l)
 {
 	char	*delim;
 
 	if (l->ctt == 1
-		&& (in[l->cst] == '|'
+		&& (in->t[l->cst] == '|'
 			|| l->n - l->cst > 1
-			|| in[l->cst] != in[l->n]))
+			|| (in->t)[l->cst] != (in->t)[l->n]))
 	{
-		add_tok(res, in, l, "pipe&red");
-		if (s_isneq(&in[l->cst], "<<", 2))
+		add_tok(res, (in->t), l, "pipe&red");
+		if (s_isneq(&(in->t)[l->cst], "<<", 2))
 		{
 			l->cst = l->n;
-			delim = read_delim(in, l);
+			delim = read_delim((in->t), l);
 			handle_nlenv(res, in, l, delim);
 			ft_free(delim);
 		}
@@ -219,7 +226,7 @@ void	handle_rest(t_list **res, char *in, t_lex *l)
 		l->n++;
 }
 
-t_list	*lex(char *in)
+t_list	*lex(t_in *in)
 {
 	t_list	*res;
 	t_lex	l;
@@ -228,21 +235,21 @@ t_list	*lex(char *in)
 	l = (t_lex){.cst = 0, .n = 0, .ctt = 0};
 	while (1)
 	{
-		if (handle_nullchar(&res, in, &l))
+		if (handle_nullchar(&res, in->t, &l))
 			break ;
 		handle_pipered(&res, in, &l);
-		handle_quotes(&res, in, &l);
-		if (handle_vars(&res, in, &l))
+		handle_quotes(&res, in->t, &l);
+		if (handle_vars(&res, in->t, &l))
 			continue ;
-		if (handle_prn(&res, in, &l))
+		if (handle_prn(&res, in->t, &l))
 			continue ;
-		if (char_in_set(in[l.n], " \v\t\f\r"))
+		if (char_in_set(in->t[l.n], " \v\t\f\r"))
 		{
-			if (handle_whitespace(&res, in, &l))
+			if (handle_whitespace(&res, in->t, &l))
 				continue ;
 			break ;
 		}
-		handle_rest(&res, in, &l);
+		handle_rest(&res, in->t, &l);
 	}
 	return (res);
 }

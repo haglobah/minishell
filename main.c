@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/07 11:54:59 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 13:35:27 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ bool	ft_readline(t_loop *l)
 	prompt = mk_readline(l->env);
 	if (!prompt)
 		return (false);
-	l->t = readline(prompt);
+	l->in->t = readline(prompt);
 	ft_free(prompt);
-	if (!l->t)
+	if (!l->in->t)
 		return (0);
-	add_history(l->t);
+	add_history(l->in->t);
 	return (1);
 }
 
@@ -84,19 +84,21 @@ void	msh_loop(void)
 	char	**toks;
 	t_msh	*m;
 	t_list	*lex_lst;
+	t_in	in;
 	t_loop	l;
 
-	l = (t_loop){.t = NULL, .rv = 0, .env = NULL};
+	in = (t_in){.t = NULL, .here_did_realloc = false};
+	l = (t_loop){.in = &in, .rv = 0, .env = NULL};
 	l.env = ft_calloc(1, sizeof(char **));
 	*l.env = clone_env();
 	while (1)
 	{
 		if (ft_readline(&l) == 0)
 			break ;
-		lex_lst = lex(l.t);
+		lex_lst = lex(l.in);
 		toks = list_to_arr(lex_lst);
 		ft_lstclear(&lex_lst, del_toks);
-		m = mk_msh(toks, l.env, l.t, &l.rv);
+		m = mk_msh(toks, l.env, l.in, &l.rv);
 		if (parse_msh(m))
 		{
 			evaluate(m);

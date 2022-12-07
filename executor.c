@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 12:54:37 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ int	run_child(t_msh *m, int *fd, int forks)
 	setup_in(m, fd, forks);
 	setup_out(m, fd, forks);
 	close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
-	ft_free(fd);
+	ft_freepl(fd, "fd at child");
 	if (execute_cmd(m, forks) == 1)
 		return (1);
 	return (0);
@@ -261,7 +261,7 @@ int	execute_only_cmds(t_msh *m)
 		if (wait(NULL) <= 0)
 			break ;
 	}
-	ft_free(fd);
+	ft_freepl(fd, "fd at parent");
 	return (0);
 }
 
