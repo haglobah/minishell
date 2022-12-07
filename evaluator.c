@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 14:10:43 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,10 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 			clen = ft_strlen(content);
 			replace_string_at(sp, dollar, content, vlen);
 			ft_free(content);
+		}
+		else
+		{
+			replace_string_at(sp, dollar, "", vlen);
 		}
 		ft_free(varname);
 	}
