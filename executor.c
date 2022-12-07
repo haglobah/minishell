@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 12:54:37 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 14:05:56 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	execute_cmd(t_msh *m, int forks)
 	t_execve	*ev;
 	t_cmd		*cmd;
 
-	ft_printf("I exist: pid %i\n", getpid());
+	// ft_printf("I exist: pid %i\n", getpid());
 	cmd = m->ct->cmds[forks];
 	if (is_builtin(cmd))
 	{
@@ -103,7 +103,7 @@ int	execute_cmd(t_msh *m, int forks)
 	else
 	{
 		ev = mk_execve(m, m->ct->cmds[forks]);
-		ft_printf("ev: %p\n", ev);
+		// ft_printf("ev: %p\n", ev);
 		if ((ev != NULL)) 
 		{
 			if (execve(ev->pathname, ev->args, *m->env) == -1)
@@ -112,7 +112,6 @@ int	execute_cmd(t_msh *m, int forks)
 				del_execve(ev);
 				exit(1);
 			}
-			ft_printf("here2\n");
 		}
 		free_all(m);
 		exit(1);
@@ -268,7 +267,7 @@ int	execute_only_cmds(t_msh *m)
 int	run_builtin(t_msh *m, int *fd, int forks)
 {
 	(void)fd;
-	ft_printf("Executed builtin as parent.\n");
+	// ft_printf("Executed builtin as parent.\n");
 	return (exec_builtin(m, forks));
 }
 

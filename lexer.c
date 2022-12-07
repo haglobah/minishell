@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 13:32:06 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 13:54:12 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ int		read_n_app(char **line, char **in)
 		return (0);
 	(*in)[herelen] = '\n';
 	(*in)[herelen + 1] = '\0';
-	ft_printf("readline: '%s' \n", (*in));
-	// ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
 	return (1);
 }
 
@@ -98,11 +96,6 @@ char	*read_delim(char *in, t_lex *l)
 	delim = ft_substr(in, l->cst, l->n - l->cst);
 	if (!delim)
 		return (NULL);
-	// delim = ft_realloc(delim, ft_strlen(delim) + 2);
-	// if (!delim)
-	// 	return (NULL);
-	// delim[ft_strlen(delim)] = '\n';
-	// delim[ft_strlen(delim) + 1] = '\0';
 	if (char_in_set(in[l->cst - 1], "'\""))
 		l->cst += -1;
 	while (in[l->n] && char_in_set(in[l->n], "'\" \v\t\f\r"))

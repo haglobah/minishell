@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 14:01:43 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ char	*search_PATH(t_msh *m, char *exec_name)
 	paths = ft_split(pathstr, ':');
 	if (paths == NULL)
 		return (NULL);
-	printns(paths);
+	// printns(paths);
 	i = -1;
 	while (paths[++i] != NULL)
 	{
 		slash_name = ft_strjoin("/", exec_name);
 		tmppath = ft_strjoin(paths[i], slash_name);
-		ft_printf("'%s'\n", tmppath);
+		// ft_printf("'%s'\n", tmppath);
 		ft_free(slash_name);
 		if (access(tmppath, F_OK) == 0)
 		{
@@ -69,7 +69,7 @@ char	*find_path(t_msh *m, char **args)
 	{
 		path = search_PATH(m, args[0]);
 	}
-	ft_printf("path: %s\n", path);
+	// ft_printf("path: %s\n", path);
 	return (path);
 }
 

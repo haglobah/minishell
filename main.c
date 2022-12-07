@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/07 13:35:27 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 13:55:34 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,7 @@ void	msh_loop(void)
 		if (parse_msh(m))
 		{
 			evaluate(m);
-			ft_printf("here1\n");
 			execute(m);
-			ft_printf("here4\n");
 		}
 		del_msh(m);
 	}

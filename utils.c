@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 13:17:00 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 14:13:02 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,29 +51,26 @@ void	ft_freepl(void *ptr, char *place)
 {
 	if (ptr != NULL)
 	{
-		ft_printf("Freeing non-NULL %p at %s\n", ptr, place);
-		ft_printf("'%s' \n", ptr);
+		(void)place;
 		free(ptr);
 		ptr = NULL;
 	}
 	else
 	{
-		ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
+		// ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
 	}
 }
 
-void	ft_free(void *ptr /*, char *place*/)
+void	ft_free(void *ptr)
 {
 	if (ptr != NULL)
 	{
-		ft_printf("Freeing non-NULL %p \n", ptr);
-		ft_printf("'%s' \n", ptr);
 		free(ptr);
 		ptr = NULL;
 	}
 	else
 	{
-		ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
+		// ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
 	}
 }
 
@@ -188,7 +185,7 @@ void	prints(char **slist)
 	i = -1;
 	while (slist[++i])
 	{
-		ft_printf("%s\n", slist[i]);
+		ft_printf("'%s'\n", slist[i]);
 	}
 }
 
