@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 20:55:21 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:25:32 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,17 @@ int	handle_nullchar(t_list **res, char *in, t_lex *l)
 	return (0);
 }
 
-void	read_n_app(char **line, char **in)
+int		read_n_app(char **line, char **in)
 {
-	ft_printf("heredoc>");
-	*line = get_next_line(0);
+	*line = readline("heredoc>");
+	if (*line == NULL)
+	{
+		ft_printf("^D\n");
+		return (0);
+	}
 	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1);
 	ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
+	return (1);
 }
 
 void	insert_nl(char **in)
@@ -57,7 +62,10 @@ void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
 
 	while (true)
 	{
-		read_n_app(&line, &in);
+		if (read_n_app(&line, &in) == 0)
+		{
+			return ;
+		}
 		l->n += ft_strlen(line);
 		if (s_iseq(line, delim))
 			break ;
@@ -83,11 +91,11 @@ char	*read_delim(char *in, t_lex *l)
 	delim = ft_substr(in, l->cst, l->n - l->cst);
 	if (!delim)
 		return (NULL);
-	delim = ft_realloc(delim, ft_strlen(delim) + 2);
-	if (!delim)
-		return (NULL);
-	delim[ft_strlen(delim)] = '\n';
-	delim[ft_strlen(delim) + 1] = '\0';
+	// delim = ft_realloc(delim, ft_strlen(delim) + 2);
+	// if (!delim)
+	// 	return (NULL);
+	// delim[ft_strlen(delim)] = '\n';
+	// delim[ft_strlen(delim) + 1] = '\0';
 	if (char_in_set(in[l->cst - 1], "'\""))
 		l->cst += -1;
 	while (in[l->n] && char_in_set(in[l->n], "'\" \v\t\f\r"))

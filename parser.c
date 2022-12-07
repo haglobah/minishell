@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:58:05 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:31:36 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,10 @@ char	*parse_here(t_cmd *cmd, char *here)
 	int	i;
 	int	j;
 
+	if (here == NULL)
+	{
+		return (NULL);
+	}
 	j = ft_strlen(here) - 2;
 	while (here[j] != '\n')
 	{
