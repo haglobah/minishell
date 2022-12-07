@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 20:55:21 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
 		l->n += ft_strlen(line);
 		if (s_iseq(line, delim))
 			break ;
-		free(line);
+		ft_free(line);
 	}
-	free(line);
+	ft_free(line);
 	add_tok(res, in, l, "heredoc");
 }
 
@@ -110,7 +110,7 @@ void	handle_pipered(t_list **res, char *in, t_lex *l)
 			l->cst = l->n;
 			delim = read_delim(in, l);
 			handle_nlenv(res, in, l, delim);
-			free(delim);
+			ft_free(delim);
 		}
 		l->cst = l->n;
 		l->ctt = 0;

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 21:16:02 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:49:51 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void		free_all(t_msh *m);
 
 //utils.c
 void		*ft_realloc(void *ptr, size_t size);
+void		ft_free(void *ptr /*, char *place*/);
 int			s_iseq(char *s1, char *s2);
 int			s_isneq(char *s1, char *s2, int n);
 int			s_in_s(char *s, char **slist);
