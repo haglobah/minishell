@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/04 21:03:30 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:54:59 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*mk_readline(char ***env)
 
 	wd = ft_getenv(env, "PWD");
 	prompt = ft_strjoin(wd, " φ ");
-	free(wd);
+	ft_free(wd);
 	return (prompt);
 }
 
@@ -66,7 +66,7 @@ bool	ft_readline(t_loop *l)
 	if (!prompt)
 		return (false);
 	l->t = readline(prompt);
-	free(prompt);
+	ft_free(prompt);
 	if (!l->t)
 		return (0);
 	add_history(l->t);
@@ -75,7 +75,7 @@ bool	ft_readline(t_loop *l)
 
 void	del_toks(void *content)
 {
-	free(content);
+	ft_free(content);
 }
 
 // msh_loop = execute . evaluate . parse . tokenize
@@ -107,5 +107,5 @@ void	msh_loop(void)
 		del_msh(m);
 	}
 	free_strs(*l.env);
-	free(l.env);
+	ft_free(l.env);
 }

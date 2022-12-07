@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 18:27:19 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ bool	ft_setenv(t_msh *m, char *name, char *value)
 			res = ft_calloc(sizeof(char), (eqpos + 1) + ft_strlen(value) + 1);
 			ft_strlcpy(res, env[i], eqpos + 2);
 			ft_strlcpy(&res[eqpos + 1], value, ft_strlen(value) + 1);
-			free(env[i]);
+			ft_free(env[i]);
 			env[i] = res;
 		}
 	}
@@ -130,7 +130,7 @@ char	*ft_getenv(char ***msh_env, char *varname)
 
 void	strip_env(t_msh *m, int pos, int len)
 {
-	free((*m->env)[pos]);
+	ft_free((*m->env)[pos]);
 	ft_memmove((*m->env)[pos], (*m->env)[pos + 1], sizeof(char *) * len);
 }
 

@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 21:16:16 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,20 @@ char	*search_PATH(t_msh *m, char *exec_name)
 		slash_name = ft_strjoin("/", exec_name);
 		tmppath = ft_strjoin(paths[i], slash_name);
 		ft_printf("'%s'\n", tmppath);
-		free(slash_name);
+		ft_free(slash_name);
 		if (access(tmppath, F_OK) == 0)
 		{
 			exec_path = tmppath;
 			break ;
 		}
-		free(tmppath);
+		ft_free(tmppath);
 	}
 	if (exec_path == NULL)
 	{
 		ft_printf("%s: command not found\n", exec_name);
 	}
 	free_strs(paths);
-	free(pathstr);
+	ft_free(pathstr);
 	return (exec_path);
 }
 
@@ -83,13 +83,13 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	ev->args = cmd->args;
 	if (ev->args == NULL)
 	{
-		free(ev);
+		ft_free(ev);
 		return (NULL);
 	}
 	ev->pathname = find_path(m, ev->args);
 	if (!ev->pathname)
 	{
-		free(ev);
+		ft_free(ev);
 		return (NULL);
 	}
 	return (ev);
@@ -101,7 +101,7 @@ void	del_execve(t_execve *ev)
 	if (ev)
 	{
 		if (ev->pathname)
-			free(ev->pathname);
-		free(ev);
+			ft_free(ev->pathname);
+		ft_free(ev);
 	}
 }

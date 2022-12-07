@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:31:36 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 12:38:55 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	count_pipes(char **toks, int *places)
 		if (s_iseq(toks[i], "|"))
 		{
 			places[c] = i + 1;
-			free(toks[i]);
+			ft_free(toks[i]);
 			toks[i] = NULL;
 			c++;
 		}
@@ -97,7 +97,7 @@ int	split_by_pipes(t_msh *m)
 		put_split_to_table(m, i, pipe_places);
 		i++;
 	}
-	free(pipe_places);
+	ft_free(pipe_places);
 	return (pipecount);
 }
 

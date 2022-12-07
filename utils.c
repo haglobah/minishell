@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 20:04:04 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:57:25 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,23 @@ void	*ft_realloc(void *ptr, size_t size)
 		return (ptr);
 	new_ptr = malloc(size); //NOT PROTECTED
 	ft_memcpy(new_ptr, ptr, size);
-	free(ptr);
+	ft_free(ptr);
 	return (new_ptr);
+}
+
+void	ft_free(void *ptr /*, char *place*/)
+{
+	if (ptr != NULL)
+	{
+		ft_printf("Freeing non-NULL %p \n", ptr);
+		ft_printf("%s \n", ptr);
+		free(ptr);
+		ptr = NULL;
+	}
+	else
+	{
+		ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
+	}
 }
 
 int	s_isneq(char *s1, char *s2, int n)
@@ -107,9 +122,9 @@ int	free_strs(char **sp)
 	i = -1;
 	while (sp[++i] != NULL)
 	{
-		free(sp[i]);
+		ft_free(sp[i]);
 	}
-	free(sp);
+	ft_free(sp);
 	return (0);
 }
 
@@ -186,8 +201,8 @@ char	**mk_strlist(int argc, ...)
 			while (t.i)
 			{
 				t.i--;
-				free(t.lst[t.i]);
-				free(t.lst);
+				ft_free(t.lst[t.i]);
+				ft_free(t.lst);
 				return (NULL);
 			}
 		}

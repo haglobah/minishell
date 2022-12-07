@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 20:39:31 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,17 @@ void	del_cmd(t_cmd *cmd)
 			i = -1;
 			while (cmd->args[++i] != NULL)
 			{
-				free(cmd->args[i]);
+				ft_free(cmd->args[i]);
 			}
-			free(cmd->args);
+			ft_free(cmd->args);
 		}
 		if (cmd->in)
-			free(cmd->in);
+			ft_free(cmd->in);
 		if (cmd->here)
-			free(cmd->here);
+			ft_free(cmd->here);
 		if (cmd->out)
-			free(cmd->out);
-		free(cmd);
+			ft_free(cmd->out);
+		ft_free(cmd);
 	}
 }
 
@@ -67,10 +67,10 @@ void	del_ct(t_ct *ct)
 				free_strs(ct->sentences[i]);
 		}
 		if (ct->cmds != NULL)
-			free(ct->cmds);
+			ft_free(ct->cmds);
 		if (ct->sentences != NULL)
-			free(ct->sentences);
-		free(ct);
+			ft_free(ct->sentences);
+		ft_free(ct);
 	}
 }
 
@@ -95,18 +95,18 @@ void	del_msh(t_msh *m)
 	if (m)
 	{
 		if (m->t)
-			free(m->t);
+			ft_free(m->t);
 		if (m->toks)
 			free_strs(m->toks);
 		if (m->ct)
 			del_ct(m->ct);
-		free(m);
+		ft_free(m);
 	}
 }
 
 void	free_all(t_msh *m)
 {
 	free_strs(*m->env);
-	free(m->env);
+	ft_free(m->env);
 	del_msh(m);
 }

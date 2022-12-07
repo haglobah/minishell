@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
+/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:55:02 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	replace_string_at(char **sp, int dollar, char *content, int vlen)
 		t.k++;
 		t.z++;
 	}
-	free(*sp);
+	ft_free(*sp);
 	*sp = t.new_arg;
 }
 
@@ -71,9 +71,9 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 		{
 			clen = ft_strlen(content);
 			replace_string_at(sp, dollar, content, vlen);
-			free(content);
+			ft_free(content);
 		}
-		free(varname);
+		ft_free(varname);
 	}
 }
 
@@ -99,7 +99,7 @@ int	rm_quotes(char **sp, int here_quoted)
 		is_quoted = 1;
 	tmp = *sp;
 	*sp = ft_substr(*sp, 1, ft_strlen(*sp) - 2);
-	free(tmp);
+	ft_free(tmp);
 	return (is_quoted);
 }
 
