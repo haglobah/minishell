@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 14:05:56 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/15 00:50:47 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ int	setup_in(t_msh *m, int *fd, int forks)
 
 	close(fd[forks * 2 + 1]);
 	infile = m->ct->cmds[forks]->in;
-	if (infile && !s_iseq(infile, ""))
+	if (infile && !s_iseq(infile, ""))	//WATCHOUT FOR THE RIGHT ORDER!!! Currently file > heredoc
 	{
 		fd_open = open(infile, O_RDONLY);
 		if (fd_open == -1)
@@ -215,6 +215,11 @@ int	run_parent(t_msh *m, int *fd, int forks)
 		if (fdin)
 			close(fdin);
 	}
+	//if (m->ct->cmds[forks]->here) (should be this easy but doesnt work?!)
+	// {
+		// ft_printf("in parent:'%s' in fd %d\n", m->ct->cmds[forks]->here, fd[forks * 2 + 0]);
+		// ft_putstr_fd(m->ct->cmds[forks]->here, fd[forks * 2 + 1]);
+	// }
 	close(fd[forks * 2 + 0]);
 	close(fd[forks * 2 + 1]);
 	return (0);

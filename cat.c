@@ -9,7 +9,7 @@ void	printstdin(int fd)
 	while (i)
 	{
 		ft_printf("%s", i);
-		ft_free(i);
+		free(i);
 		i = get_next_line(fd);
 	}
 }

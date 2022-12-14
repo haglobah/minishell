@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/15 00:25:15 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/15 00:33:32 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int		read_n_app(char **line, char **in)
 		return (0);
 	(*in)[old_in_len] = '\n';
 	(*in)[herelen] = '\0';
+	//nur für HEREDOCS am ende der zeile (weil appended nur und added nicht in der mitte)
 	char *tmp = ft_strjoin(*in, *line);
 	ft_free(*in);
 	*in = tmp;
