@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 13:54:12 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/15 00:25:15 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 	substr = ft_substr(in, l->cst, l->n - l->cst);
 	if (!substr)
 		return ;
+	//ft_printf("Token added in %s: '%s'\n", place, substr);
 	ft_lstadd_back(res, ft_lstnew(substr));
 }
 
@@ -42,12 +43,18 @@ int		read_n_app(char **line, char **in)
 		ft_printf("^D\n");
 		return (0);
 	}
-	int	herelen = ft_strlen(*line) + ft_strlen(*in) + 1;
+	int old_in_len = ft_strlen(*in);
+	int	herelen = ft_strlen(*line) + old_in_len + 1;
 	*in = (char *)ft_reallocpl(*in, herelen + 1, "in");
 	if (!(*in))
 		return (0);
-	(*in)[herelen] = '\n';
-	(*in)[herelen + 1] = '\0';
+	(*in)[old_in_len] = '\n';
+	(*in)[herelen] = '\0';
+	char *tmp = ft_strjoin(*in, *line);
+	ft_free(*in);
+	*in = tmp;
+	if (!(*in))
+		return (0);
 	return (1);
 }
 
@@ -71,7 +78,7 @@ void	handle_nlenv(t_list **res, t_in *in, t_lex *l, char *delim)
 			return ;
 		}
 		in->here_did_realloc = true;
-		l->n += ft_strlen(line);
+		l->n += ft_strlen(line) + 1;
 		if (s_iseq(line, delim))
 			break ;
 		ft_free(line);
