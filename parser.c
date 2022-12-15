@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 14:03:00 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/15 22:34:31 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ char	*parse_here(t_cmd *cmd, char *here)
 	{
 		return (NULL);
 	}
-	// ft_printf("Our here: '%s' \n", here);
+	//ft_printf("Our here: '%s' \n", here);
 	j = ft_strlen(here) - 2;
 	while (here[j] != '\n')
 	{
@@ -172,8 +172,11 @@ char	*parse_here(t_cmd *cmd, char *here)
 	}
 	else
 	{
-		i += ft_strlen(here) - 2 - j;
+		while (here[i] != '\n')
+			i++;
+		i++;
 	}
+	//ft_printf("Result: '%s'\n", ft_substr(here, i, j - i));
 	return (ft_substr(here, i, j - i));
 }
 
