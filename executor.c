@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/15 22:11:03 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/15 22:40:36 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,13 +215,9 @@ int	run_parent(t_msh *m, int *fd, int forks)
 		if (fdin)
 			close(fdin);
 	}
-	if (m->ct->cmds[forks]->here) // PROBLEM WITH EMPTY HEREDOC
+	if (m->ct->cmds[forks]->here)
 	{
-		int	i = 0;
-		while (m->ct->cmds[forks]->here[i] != '\n')
-			i++;
-		i++;
-		ft_putstr_fd(m->ct->cmds[forks]->here + i, fd[forks * 2 + 1]);
+		ft_putstr_fd(m->ct->cmds[forks]->here, fd[forks * 2 + 1]);
 	}
 	close(fd[forks * 2 + 0]);
 	close(fd[forks * 2 + 1]);
