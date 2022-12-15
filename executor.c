@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/15 00:50:47 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/15 22:11:03 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int	setup_in(t_msh *m, int *fd, int forks)
 	}
 	else
 	{
-		if (forks != 0)
+		if (forks != 0 || m->ct->cmds[forks]->here)
 			dup2(fd[forks * 2 + 0], STDIN_FILENO);
 	}
 	return (0);
@@ -215,11 +215,14 @@ int	run_parent(t_msh *m, int *fd, int forks)
 		if (fdin)
 			close(fdin);
 	}
-	//if (m->ct->cmds[forks]->here) (should be this easy but doesnt work?!)
-	// {
-		// ft_printf("in parent:'%s' in fd %d\n", m->ct->cmds[forks]->here, fd[forks * 2 + 0]);
-		// ft_putstr_fd(m->ct->cmds[forks]->here, fd[forks * 2 + 1]);
-	// }
+	if (m->ct->cmds[forks]->here) // PROBLEM WITH EMPTY HEREDOC
+	{
+		int	i = 0;
+		while (m->ct->cmds[forks]->here[i] != '\n')
+			i++;
+		i++;
+		ft_putstr_fd(m->ct->cmds[forks]->here + i, fd[forks * 2 + 1]);
+	}
 	close(fd[forks * 2 + 0]);
 	close(fd[forks * 2 + 1]);
 	return (0);

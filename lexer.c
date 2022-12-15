@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/15 00:33:32 by tpeters          ###   ########.fr       */
+/*   Updated: 2022/12/15 21:55:37 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	handle_nullchar(t_list **res, char *in, t_lex *l)
 	return (0);
 }
 
-int		read_n_app(char **line, char **in)
+int		read_n_app(char **line, char **in, t_lex *l)
 {
 	*line = readline("heredoc>");
 	if (*line == NULL)
@@ -43,19 +43,22 @@ int		read_n_app(char **line, char **in)
 		ft_printf("^D\n");
 		return (0);
 	}
-	int old_in_len = ft_strlen(*in);
-	int	herelen = ft_strlen(*line) + old_in_len + 1;
-	*in = (char *)ft_reallocpl(*in, herelen + 1, "in");
-	if (!(*in))
+	int	herelen = ft_strlen(*line) + ft_strlen(*in) + 1;
+	char *tmp = (char *)ft_calloc(herelen + 1, sizeof(char));
+	if (!tmp)
 		return (0);
-	(*in)[old_in_len] = '\n';
-	(*in)[herelen] = '\0';
-	//nur für HEREDOCS am ende der zeile (weil appended nur und added nicht in der mitte)
-	char *tmp = ft_strjoin(*in, *line);
+	int	offset = 0; //IS 'a<<D        | b<<F' => TEST2:'a<<D        ' a problem?
+	// ft_printf("TEST1:'%s'\n", tmp);
+	ft_memcpy(tmp, *in, l->n - offset);
+	// ft_printf("TEST2:'%s'\n", tmp);
+	tmp[ft_strlen(tmp)] = '\n';
+	// ft_printf("TEST3:'%s'\n", tmp);
+	ft_memcpy(tmp + ft_strlen(tmp), *line, ft_strlen(*line));
+	// ft_printf("TEST4:'%s'\n", tmp);
+	ft_memcpy(tmp + ft_strlen(tmp), *in + l->n - offset, ft_strlen(*in) - (l->n - offset));
+	// ft_printf("TEST5:'%s'\n", tmp);
 	ft_free(*in);
 	*in = tmp;
-	if (!(*in))
-		return (0);
 	return (1);
 }
 
@@ -74,7 +77,7 @@ void	handle_nlenv(t_list **res, t_in *in, t_lex *l, char *delim)
 
 	while (true)
 	{
-		if (read_n_app(&line, &(in->t)) == 0)
+		if (read_n_app(&line, &(in->t), l) == 0)
 		{
 			return ;
 		}
