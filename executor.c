@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/15 22:40:36 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 18:37:47 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	exec_builtin_from_child(t_msh *m, int forks)
 	char	*name;
 	char	**args;
 
-	ft_printf("Called from child!\n");
+	//ft_printf("Called from child!\n");
 	args = m->ct->cmds[forks]->args;
 	name = args[0];
 	if (s_iseq(name, "echo"))
@@ -56,7 +56,7 @@ int	exec_builtin_from_child(t_msh *m, int forks)
 	}
 	else 
 	{
-		ft_printf("%s did not execute. It was called from child.\n", name);
+		//ft_printf("%s did not execute. It was called from child.\n", name);
 		free_all(m);
 		exit(0);
 	}

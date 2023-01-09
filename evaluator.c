@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 14:10:43 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 17:55:22 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,8 @@ void	loop_through_cmds(t_msh *m)
 		swap_in_vars(m, &cmds[i]->in, cmds[i]->here_quoted);
 		swap_in_vars(m, &cmds[i]->out, cmds[i]->here_quoted);
 		cmds[i]->args = cons_args(cmds[i]);
-		ft_printf("\n");
-		printcmd(m->ct->cmds[i]);
+		//ft_printf("\n");
+		//printcmd(m->ct->cmds[i]);
 	}
 }
 
