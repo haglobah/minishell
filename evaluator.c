@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 22:29:39 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 22:36:40 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,8 +184,6 @@ void	loop_through_cmds(t_msh *m)
 		swap_in_vars(m, &cmds[i]->in, cmds[i]->here_quoted);
 		swap_in_vars(m, &cmds[i]->out, cmds[i]->here_quoted);
 		cmds[i]->args = cons_args(cmds[i]);
-		//ft_printf("\n");
-		//printcmd(m->ct->cmds[i]);
 	}
 }
 
