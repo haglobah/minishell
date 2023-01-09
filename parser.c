@@ -6,14 +6,14 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/15 22:34:31 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 19:10:23 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
 //Beware: c = 1! (pipecount one 'too high')
-int	count_pipes(char **toks, int *places)
+void	index_pipes(char **toks, int *places)
 {
 	int	c;
 	int	i;
@@ -32,6 +32,23 @@ int	count_pipes(char **toks, int *places)
 		i++;
 	}
 	places[c] = i;
+}
+
+static int	count_pipes(char **toks)
+{
+	int	c;
+	int	i;
+
+	i = 0;
+	c = 1;
+	while (toks[i])
+	{
+		if (s_iseq(toks[i], "|"))
+		{
+			c++;
+		}
+		i++;
+	}
 	return (c);
 }
 
@@ -83,10 +100,11 @@ int	split_by_pipes(t_msh *m)
 	int	pipecount;
 	int	*pipe_places;
 
-	pipe_places = (int *)ft_calloc(NUM_PIPES + 1, sizeof(int));
+	pipecount = count_pipes(m->toks);
+	pipe_places = (int *)ft_calloc(pipecount + 1, sizeof(int));
 	if (!pipe_places)
 		return (-2);
-	pipecount = count_pipes(m->toks, pipe_places);
+	index_pipes(m->toks, pipe_places);
 	m->ct->sentences = (char ***)ft_calloc(pipecount + 1, sizeof(char **));
 	m->ct->senc = pipecount;
 	if (!m->ct->sentences)
