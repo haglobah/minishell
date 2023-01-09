@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 18:54:45 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*search_PATH(t_msh *m, char *exec_name)
 	paths = ft_split(pathstr, ':');
 	if (paths == NULL)
 	{
-		ft_free(pathstr);
+		ft_free((void **)&pathstr);
 		return (NULL);
 	}
 	// printns(paths);
@@ -38,16 +38,16 @@ char	*search_PATH(t_msh *m, char *exec_name)
 		slash_name = ft_strjoin("/", exec_name);
 		tmppath = ft_strjoin(paths[i], slash_name);
 		// ft_printf("'%s'\n", tmppath);
-		ft_free(slash_name);
+		ft_free((void **)&slash_name);
 		if (access(tmppath, F_OK) == 0)
 		{
 			exec_path = tmppath;
 			break ;
 		}
-		ft_free(tmppath);
+		ft_free((void **)&tmppath);
 	}
 	free_strs(paths);
-	ft_free(pathstr);
+	ft_free((void **)&pathstr);
 	return (exec_path);
 }
 
@@ -82,14 +82,14 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	ev->args = cmd->args;
 	if (ev->args == NULL)
 	{
-		ft_free(ev);
+		ft_free((void **)&ev);
 		return (NULL);
 	}
 	ev->pathname = find_path(m, ev->args);
 	if (!ev->pathname)
 	{
 		ft_printf("%s: command not found\n", ev->args[0]);
-		ft_free(ev);
+		ft_free((void **)&ev);
 		return (NULL);
 	}
 	return (ev);
@@ -101,7 +101,7 @@ void	del_execve(t_execve *ev)
 	if (ev)
 	{
 		if (ev->pathname)
-			ft_free(ev->pathname);
-		ft_free(ev);
+			ft_free((void **)&ev->pathname);
+		ft_free((void **)&ev);
 	}
 }

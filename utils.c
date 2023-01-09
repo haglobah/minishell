@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 14:13:02 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	*ft_realloc(void *ptr, size_t size)
 		return (ptr);
 	new_ptr = malloc(size); //NOT PROTECTED
 	ft_memcpy(new_ptr, ptr, size);
-	ft_free(ptr);
+	ft_free((void **)&ptr);
 	return (new_ptr);
 }
 
@@ -61,12 +61,12 @@ void	ft_freepl(void *ptr, char *place)
 	}
 }
 
-void	ft_free(void *ptr)
+void	ft_free(void **ptr)
 {
-	if (ptr != NULL)
+	if (*ptr != NULL)
 	{
-		free(ptr);
-		ptr = NULL;
+		free(*ptr);
+		*ptr = NULL;
 	}
 	else
 	{
@@ -147,9 +147,9 @@ int	free_strs(char **sp)
 	i = -1;
 	while (sp[++i] != NULL)
 	{
-		ft_free(sp[i]);
+		ft_free((void **)&sp[i]);
 	}
-	ft_free(sp);
+	ft_free((void **)&sp);
 	return (0);
 }
 
@@ -239,8 +239,8 @@ char	**mk_strlist(int argc, ...)
 			while (t.i)
 			{
 				t.i--;
-				ft_free(t.lst[t.i]);
-				ft_free(t.lst);
+				ft_free((void **)&t.lst[t.i]);
+				ft_free((void **)&t.lst);
 				return (NULL);
 			}
 		}

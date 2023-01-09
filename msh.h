@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/14 23:30:27 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 19:52:21 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void		free_all(t_msh *m);
 //utils.c
 void		*ft_realloc(void *ptr, size_t size);
 void		*ft_reallocpl(void *ptr, size_t size, char *place);
-void		ft_free(void *ptr);
+void		ft_free(void **ptr);
 void		ft_freepl(void *ptr, char *place);
 int			s_iseq(char *s1, char *s2);
 int			s_isneq(char *s1, char *s2, int n);
@@ -182,7 +182,7 @@ int			ft_env(t_msh *m, char **args);
 int			ft_exit(t_msh *m, char **args);
 
 //env.c
-bool		extend_env(char ***env, char *to_add);
+bool		extend_env(t_msh *m, char *to_add);
 char		**clone_env(void);
 bool		ft_setenv(t_msh *m, char *name, char *value);
 char		*ft_getenv(char ***msh_env, char *varname);

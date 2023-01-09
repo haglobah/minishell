@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 17:20:23 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 19:23:13 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ int	ft_export(t_msh *m, char **args)
 	}
 	else
 	{
-		extend_worked = extend_env(m->env, args[1]);
+		extend_worked = extend_env(m, args[1]);
 		if (extend_worked == false)
 		{
 			ft_printf("export: not valid in this context\n");

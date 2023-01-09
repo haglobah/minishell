@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 18:37:47 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ int	run_parent(t_msh *m, int *fd, int forks)
 		char *tmp = get_next_line(fdin);
 		while (tmp)
 		{
-			ft_free(tmp);
+			ft_free((void **)&tmp);
 			write(fd[forks * 2 + 1], tmp, ft_strlen(tmp));
 			tmp = get_next_line(fdin);
 		}
@@ -318,7 +318,7 @@ int	exec_cmds_builtin(t_msh *m)
 		if (wait(NULL) <= 0)
 			break ;
 	}
-	ft_free(fd);
+	ft_free((void **)&fd);
 	return (0);
 }
 

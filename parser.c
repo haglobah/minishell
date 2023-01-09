@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 19:10:23 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	index_pipes(char **toks, int *places)
 		if (s_iseq(toks[i], "|"))
 		{
 			places[c] = i + 1;
-			ft_free(toks[i]);
+			ft_free((void **)&toks[i]);
 			toks[i] = NULL;
 			c++;
 		}
@@ -115,7 +115,7 @@ int	split_by_pipes(t_msh *m)
 		put_split_to_table(m, i, pipe_places);
 		i++;
 	}
-	ft_free(pipe_places);
+	ft_free((void **)&pipe_places);
 	return (pipecount);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/15 21:55:37 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		read_n_app(char **line, char **in, t_lex *l)
 	// ft_printf("TEST4:'%s'\n", tmp);
 	ft_memcpy(tmp + ft_strlen(tmp), *in + l->n - offset, ft_strlen(*in) - (l->n - offset));
 	// ft_printf("TEST5:'%s'\n", tmp);
-	ft_free(*in);
+	ft_free((void **)&(*in));
 	*in = tmp;
 	return (1);
 }
@@ -85,9 +85,9 @@ void	handle_nlenv(t_list **res, t_in *in, t_lex *l, char *delim)
 		l->n += ft_strlen(line) + 1;
 		if (s_iseq(line, delim))
 			break ;
-		ft_free(line);
+		ft_free((void **)&line);
 	}
-	ft_free(line);
+	ft_free((void **)&line);
 	add_tok(res, in->t, l, "heredoc");
 }
 
@@ -129,7 +129,7 @@ void	handle_pipered(t_list **res, t_in *in, t_lex *l)
 			l->cst = l->n;
 			delim = read_delim((in->t), l);
 			handle_nlenv(res, in, l, delim);
-			ft_free(delim);
+			ft_free((void **)&delim);
 		}
 		l->cst = l->n;
 		l->ctt = 0;

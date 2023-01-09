@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2022/12/15 00:52:20 by tpeters          ###   ########.fr        #
+#    Updated: 2023/01/09 20:01:57 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ NAME = minishell
 
 DOWNLOADFOLDER=dwnlds
 
-CFLAGS = -Wall -Wextra -I$(DOWNLOADFOLDER)/readline_out/include #-Werror
+CFLAGS = -Wall -Wextra -I$(DOWNLOADFOLDER)/readline_out/include -Werror
 LINK_FLAGS = -Llibft -lft -L$(DOWNLOADFOLDER)/readline_out/lib -lreadline
 CC = cc
 

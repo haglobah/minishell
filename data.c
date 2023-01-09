@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   data.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 13:37:04 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,17 @@ void	del_cmd(t_cmd *cmd)
 			i = -1;
 			while (cmd->args[++i] != NULL)
 			{
-				ft_free(cmd->args[i]);
+				ft_free((void **)&cmd->args[i]);
 			}
-			ft_free(cmd->args);
+			ft_free((void **)&cmd->args);
 		}
 		if (cmd->in)
-			ft_free(cmd->in);
+			ft_free((void **)&cmd->in);
 		if (cmd->here)
-			ft_free(cmd->here);
+			ft_free((void **)&cmd->here);
 		if (cmd->out)
-			ft_free(cmd->out);
-		ft_free(cmd);
+			ft_free((void **)&cmd->out);
+		ft_free((void **)&cmd);
 	}
 }
 
@@ -67,10 +67,10 @@ void	del_ct(t_ct *ct)
 				free_strs(ct->sentences[i]);
 		}
 		if (ct->cmds != NULL)
-			ft_free(ct->cmds);
+			ft_free((void **)&ct->cmds);
 		if (ct->sentences != NULL)
-			ft_free(ct->sentences);
-		ft_free(ct);
+			ft_free((void **)&ct->sentences);
+		ft_free((void **)&ct);
 	}
 }
 
@@ -99,13 +99,13 @@ void	del_msh(t_msh *m)
 		free_strspl(m->toks, "toks");
 		if (m->ct)
 			del_ct(m->ct);
-		ft_free(m);
+		ft_free((void **)&m);
 	}
 }
 
 void	free_all(t_msh *m)
 {
 	free_strs(*m->env);
-	ft_free(m->env);
+	ft_free((void **)&m->env);
 	del_msh(m);
 }

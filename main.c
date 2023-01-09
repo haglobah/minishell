@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2022/12/07 13:55:34 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*mk_readline(char ***env)
 
 	wd = ft_getenv(env, "PWD");
 	prompt = ft_strjoin(wd, " φ ");
-	ft_free(wd);
+	ft_free((void **)&wd);
 	return (prompt);
 }
 
@@ -66,7 +66,7 @@ bool	ft_readline(t_loop *l)
 	if (!prompt)
 		return (false);
 	l->in->t = readline(prompt);
-	ft_free(prompt);
+	ft_free((void **)&prompt);
 	if (!l->in->t)
 		return (0);
 	add_history(l->in->t);
@@ -75,7 +75,7 @@ bool	ft_readline(t_loop *l)
 
 void	del_toks(void *content)
 {
-	ft_free(content);
+	ft_free((void **)&content);
 }
 
 // msh_loop = execute . evaluate . parse . tokenize
@@ -107,5 +107,5 @@ void	msh_loop(void)
 		del_msh(m);
 	}
 	free_strs(*l.env);
-	ft_free(l.env);
+	ft_free((void **)&l.env);
 }
