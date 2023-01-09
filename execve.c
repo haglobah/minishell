@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 14:01:43 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 18:54:45 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ char	*search_PATH(t_msh *m, char *exec_name)
 		return (NULL);
 	paths = ft_split(pathstr, ':');
 	if (paths == NULL)
+	{
+		ft_free(pathstr);
 		return (NULL);
+	}
 	// printns(paths);
 	i = -1;
 	while (paths[++i] != NULL)
@@ -42,10 +45,6 @@ char	*search_PATH(t_msh *m, char *exec_name)
 			break ;
 		}
 		ft_free(tmppath);
-	}
-	if (exec_path == NULL)
-	{
-		ft_printf("%s: command not found\n", exec_name);
 	}
 	free_strs(paths);
 	ft_free(pathstr);
@@ -89,6 +88,7 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	ev->pathname = find_path(m, ev->args);
 	if (!ev->pathname)
 	{
+		ft_printf("%s: command not found\n", ev->args[0]);
 		ft_free(ev);
 		return (NULL);
 	}
