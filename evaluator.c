@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/09 22:29:39 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,10 @@ void	replace_string_at(char **sp, int dollar, char *content, int vlen)
 
 void	find_replace(t_msh *m, char **sp, int dollar)
 {
-	int		clen;
 	int		vlen;
 	char	*content;
 	char	*varname;
 
-	clen = 0;
 	vlen = 0;
 	content = NULL;
 	varname = get_var(sp, dollar);
@@ -69,7 +67,6 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 		content = ft_getenv(m->env, varname);
 		if (content != NULL)
 		{
-			clen = ft_strlen(content);
 			replace_string_at(sp, dollar, content, vlen);
 			ft_free((void **)&content);
 		}
