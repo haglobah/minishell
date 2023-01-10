@@ -26,7 +26,7 @@ void	index_pipes(char **toks, int *places)
 		{
 			places[c] = i + 1;
 			//ft_free((void **)&toks[i]);
-			toks[i] = NULL;
+			//toks[i] = NULL;
 			c++;
 		}
 		i++;
