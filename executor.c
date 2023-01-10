@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 23:08:30 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/10 16:34:22 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,7 +301,10 @@ int	exec_cmds_builtin_sub(t_msh *m, int *forks, int *fd)
 		else if (pid == 0)
 		{
 			if (run_child(m, fd, *forks) == 1)
+			{
+				ft_free((void **)&fd);
 				return (1);
+			}
 		}
 		else
 			run_parent(m, fd, *forks);

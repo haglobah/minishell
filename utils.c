@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/10 17:25:13 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	*ft_realloc(void *ptr, size_t size)
 	void	*new_ptr;
 
 	if (ptr == NULL)
-		return (malloc(size));
+		return (ft_calloc(1, size));
 	if (!size)
 		return (ptr);
 	new_ptr = malloc(size);
@@ -119,6 +119,8 @@ int	free_strs(char **sp)
 {
 	int	i;
 
+	if (!sp)
+		return (0);
 	i = -1;
 	while (sp[++i] != NULL)
 	{
@@ -133,6 +135,8 @@ int	free_strspl(char **sp, char *place)
 	int	i;
 
 	(void)place;
+	if (!sp)
+		return (0);
 	i = -1;
 	while (sp[++i] != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/10 17:30:48 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,12 @@ t_ct	*mk_ct(void)
 
 void	del_cmd(t_cmd *cmd)
 {
-	int	i;
-
 	if (cmd)
 	{
 		if (cmd->argv)
 			free_strs(cmd->argv);
 		if (cmd->args)
-		{
-			i = -1;
-			while (cmd->args[++i] != NULL)
-			{
-				ft_free((void **)&cmd->args[i]);
-			}
-			ft_free((void **)&cmd->args);
-		}
+			free_strs(cmd->args);
 		if (cmd->in)
 			ft_free((void **)&cmd->in);
 		if (cmd->here)
