@@ -6,7 +6,7 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2023/01/09 20:01:57 by tpeters          ###   ########.fr        #
+#    Updated: 2023/01/10 16:09:24 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ $(DOWNLOADFOLDER):
 	$(MAKE) install -C $(DOWNLOADFOLDER)/readline-8.1.2
 
 $(LFT) :
-	git clone git@github.com:Ludmuterol/libft.git
+	git clone https://github.com/Ludmuterol/libft.git
 
 $(LFTLIB) : $(LFT)
 	$(MAKE) -C libft bonus
@@ -91,7 +91,7 @@ test: $(TOBJS) $(OBJS)
 	./$(TEST)
 
 norm: 
-	norminette $(MAIN) $(SRCS)
+	norminette $(MAIN) $(SRCS) msh.h
 
 run: all
 	./$(NAME)
