@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 23:08:30 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ int	exec_builtin_from_child(t_msh *m, int forks)
 	char	*name;
 	char	**args;
 
-	ft_printf("Called from child!\n");
 	args = m->ct->cmds[forks]->args;
 	name = args[0];
 	if (s_iseq(name, "echo"))
@@ -54,9 +53,8 @@ int	exec_builtin_from_child(t_msh *m, int forks)
 		free_all(m);
 		exit(0);
 	}
-	else 
+	else
 	{
-		ft_printf("%s did not execute. It was called from child.\n", name);
 		free_all(m);
 		exit(0);
 	}
@@ -94,7 +92,6 @@ int	execute_cmd(t_msh *m, int forks)
 	t_execve	*ev;
 	t_cmd		*cmd;
 
-	ft_printf("I exist: pid %i\n", getpid());
 	cmd = m->ct->cmds[forks];
 	if (is_builtin(cmd))
 	{
@@ -103,16 +100,14 @@ int	execute_cmd(t_msh *m, int forks)
 	else
 	{
 		ev = mk_execve(m, m->ct->cmds[forks]);
-		ft_printf("ev: %p\n", ev);
-		if ((ev != NULL)) 
+		if ((ev != NULL))
 		{
 			if (execve(ev->pathname, ev->args, *m->env) == -1)
 			{
-				ft_printf("execve failed.\n");
+				ft_printf("%s: command not found\n", ev->args[0]);
 				del_execve(ev);
 				exit(1);
 			}
-			ft_printf("here2\n");
 		}
 		free_all(m);
 		exit(1);
@@ -123,7 +118,7 @@ int	execute_cmd(t_msh *m, int forks)
 int	*mk_pipes(t_msh *m)
 {
 	int	*fd;
-	int i;
+	int	i;
 
 	fd = (int *)ft_calloc(sizeof(int), (m->ct->senc + 1) * 2);
 	if (!fd)
@@ -131,7 +126,8 @@ int	*mk_pipes(t_msh *m)
 	i = -1;
 	while (++i < m->ct->senc + 1)
 	{
-		if(pipe(fd + i * 2)){
+		if (pipe(fd + i * 2))
+		{
 			perror("pipe");
 			return (NULL);
 		}
@@ -139,6 +135,7 @@ int	*mk_pipes(t_msh *m)
 	return (fd);
 }
 
+//WATCHOUT FOR THE RIGHT ORDER!!! Currently file > heredoc
 int	setup_in(t_msh *m, int *fd, int forks)
 {
 	char	*infile;
@@ -156,7 +153,7 @@ int	setup_in(t_msh *m, int *fd, int forks)
 	}
 	else
 	{
-		if (forks != 0)
+		if (forks != 0 || m->ct->cmds[forks]->here)
 			dup2(fd[forks * 2 + 0], STDIN_FILENO);
 	}
 	return (0);
@@ -173,7 +170,8 @@ int	setup_out(t_msh *m, int *fd, int forks)
 	{
 		if (!(m->ct->cmds[forks]->appp))
 			unlink(outfile);
-		fd_open = open(outfile, O_WRONLY | O_CREAT | O_APPEND * (m->ct->cmds[forks]->appp), 0666);
+		fd_open = open(outfile, O_WRONLY | O_CREAT | O_APPEND \
+		* (m->ct->cmds[forks]->appp), 0666);
 		if (fd_open == -1)
 			return (1);
 		dup2(fd_open, STDOUT_FILENO);
@@ -194,7 +192,7 @@ int	run_child(t_msh *m, int *fd, int forks)
 	setup_in(m, fd, forks);
 	setup_out(m, fd, forks);
 	close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
-	ft_free(fd);
+	ft_free((void **)&fd);
 	if (execute_cmd(m, forks) == 1)
 		return (1);
 	return (0);
@@ -202,31 +200,64 @@ int	run_child(t_msh *m, int *fd, int forks)
 
 int	run_parent(t_msh *m, int *fd, int forks)
 {
+	int		fdin;
+	char	*tmp;
+
 	if (m->ct->cmds[0]->in && forks == 0)
 	{
-		int fdin;
 		fdin = open(m->ct->cmds[0]->in, O_RDONLY);
-		char *tmp = get_next_line(fdin);
+		tmp = get_next_line(fdin);
 		while (tmp)
 		{
-			ft_free(tmp);
+			ft_free((void **)&tmp);
 			write(fd[forks * 2 + 1], tmp, ft_strlen(tmp));
 			tmp = get_next_line(fdin);
 		}
 		if (fdin)
 			close(fdin);
 	}
+	if (m->ct->cmds[forks]->here)
+	{
+		ft_putstr_fd(m->ct->cmds[forks]->here, fd[forks * 2 + 1]);
+	}
 	close(fd[forks * 2 + 0]);
 	close(fd[forks * 2 + 1]);
+	return (0);
+}
+
+int	execute_only_cmds_sub(t_msh *m, int *fd, int forks)
+{
+	int	pid;
+	int	status;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		return (-1);
+	}
+	else if (pid == 0)
+	{
+		if (run_child(m, fd, forks) == 1)
+			return (1);
+	}
+	else
+	{
+		run_parent(m, fd, forks);
+		if (forks == m->ct->senc - 1)
+		{
+			waitpid(pid, &status, 0);
+			*(m->rv) = WEXITSTATUS(status);
+		}
+	}
 	return (0);
 }
 
 int	execute_only_cmds(t_msh *m)
 {
 	int	*fd;
-	int	pid;
 	int	forks;
-	int	status;
+	int	tmp_return;
 
 	fd = mk_pipes(m);
 	if (fd == NULL)
@@ -234,26 +265,9 @@ int	execute_only_cmds(t_msh *m)
 	forks = 0;
 	while (forks < m->ct->senc)
 	{
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			return (-1);
-		}
-		else if (pid == 0)
-		{
-			if (run_child(m, fd, forks) == 1)
-				return (1);
-		}
-		else
-		{
-			run_parent(m, fd, forks);
-			if (forks == m->ct->senc - 1)
-			{
-				waitpid(pid, &status, 0);
-				*(m->rv) = WEXITSTATUS(status);
-			}
-		}
+		tmp_return = execute_only_cmds_sub(m, fd, forks);
+		if (tmp_return)
+			return (tmp_return);
 		forks++;
 	}
 	while (1)
@@ -261,30 +275,22 @@ int	execute_only_cmds(t_msh *m)
 		if (wait(NULL) <= 0)
 			break ;
 	}
-	ft_free(fd);
+	ft_free((void **)&fd);
 	return (0);
 }
 
 int	run_builtin(t_msh *m, int *fd, int forks)
 {
 	(void)fd;
-	ft_printf("Executed builtin as parent.\n");
 	return (exec_builtin(m, forks));
 }
 
-int	exec_cmds_builtin(t_msh *m)
+int	exec_cmds_builtin_sub(t_msh *m, int *forks, int *fd)
 {
-	int	*fd;
 	int	pid;
-	int	forks;
-	int	fd_open;
-	int	tmpfd;
 
-	fd = mk_pipes(m);
-	if (fd == NULL)
-		return (0);
-	forks = 0;
-	while (forks < m->ct->senc - 1)
+	*forks = 0;
+	while (*forks < m->ct->senc - 1)
 	{
 		pid = fork();
 		if (pid == -1)
@@ -294,34 +300,58 @@ int	exec_cmds_builtin(t_msh *m)
 		}
 		else if (pid == 0)
 		{
-			if (run_child(m, fd, forks) == 1)
+			if (run_child(m, fd, *forks) == 1)
 				return (1);
 		}
 		else
-			run_parent(m, fd, forks);
-		forks++;
+			run_parent(m, fd, *forks);
+		(*forks)++;
 	}
+	return (0);
+}
+
+void	exec_cmds_builtin_sub2(t_msh *m, int *fd, int forks)
+{
+	int	fd_open;
+	int	tmpfd;
+
 	if (!(m->ct->cmds[forks]->appp))
 		unlink(m->ct->cmds[forks]->out);
-	fd_open = open(m->ct->cmds[forks]->out, O_WRONLY | O_CREAT | O_APPEND * (m->ct->cmds[forks]->appp), 0666);
+	fd_open = open(m->ct->cmds[forks]->out, O_WRONLY | O_CREAT | O_APPEND \
+	* (m->ct->cmds[forks]->appp), 0666);
 	tmpfd = dup(STDOUT_FILENO);
 	dup2(fd_open, STDOUT_FILENO);
 	close(fd_open);
 	*(m->rv) = run_builtin(m, fd, forks);
 	dup2(tmpfd, STDOUT_FILENO);
 	close(tmpfd);
+}
+
+int	exec_cmds_builtin(t_msh *m)
+{
+	int	*fd;
+	int	forks;
+	int	tmp_return;
+
+	fd = mk_pipes(m);
+	if (fd == NULL)
+		return (0);
+	tmp_return = exec_cmds_builtin_sub(m, &forks, fd);
+	if (tmp_return)
+		return (tmp_return);
+	exec_cmds_builtin_sub2(m, fd, forks);
 	while (1)
 	{
 		if (wait(NULL) <= 0)
 			break ;
 	}
-	ft_free(fd);
+	ft_free((void **)&fd);
 	return (0);
 }
 
 int	is_last_builtin(t_msh *m)
 {
-	int	i;
+	int		i;
 	t_cmd	*last;
 
 	i = -1;

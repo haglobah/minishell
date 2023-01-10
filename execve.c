@@ -3,22 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   execve.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 19:40:37 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-char	*search_PATH(t_msh *m, char *exec_name)
+bool	construct_exec_path(char **paths, char *exec_name, char **exec_path)
 {
-	char	*exec_path;
 	char	*tmppath;
 	char	*slash_name;
-	char	**paths;
 	int		i;
+
+	i = -1;
+	while (paths[++i] != NULL)
+	{
+		slash_name = ft_strjoin("/", exec_name);
+		if (slash_name == NULL)
+			return (NULL);
+		tmppath = ft_strjoin(paths[i], slash_name);
+		if (tmppath == NULL)
+			return (ft_free((void **)&slash_name), NULL);
+		ft_free((void **)&slash_name);
+		if (access(tmppath, F_OK) == 0)
+		{
+			*exec_path = tmppath;
+			return (true);
+		}
+		ft_free((void **)&tmppath);
+	}
+	return (false);
+}
+
+char	*search__path_(t_msh *m, char *exec_name)
+{
+	char	*exec_path;
+	char	**paths;
 	char	*pathstr;
 
 	exec_path = NULL;
@@ -27,28 +50,10 @@ char	*search_PATH(t_msh *m, char *exec_name)
 		return (NULL);
 	paths = ft_split(pathstr, ':');
 	if (paths == NULL)
-		return (NULL);
-	printns(paths);
-	i = -1;
-	while (paths[++i] != NULL)
-	{
-		slash_name = ft_strjoin("/", exec_name);
-		tmppath = ft_strjoin(paths[i], slash_name);
-		ft_printf("'%s'\n", tmppath);
-		ft_free(slash_name);
-		if (access(tmppath, F_OK) == 0)
-		{
-			exec_path = tmppath;
-			break ;
-		}
-		ft_free(tmppath);
-	}
-	if (exec_path == NULL)
-	{
-		ft_printf("%s: command not found\n", exec_name);
-	}
+		return (ft_free((void **)&pathstr), NULL);
+	construct_exec_path(paths, exec_name, &exec_path);
 	free_strs(paths);
-	ft_free(pathstr);
+	ft_free((void **)&pathstr);
 	return (exec_path);
 }
 
@@ -67,9 +72,8 @@ char	*find_path(t_msh *m, char **args)
 	}
 	else
 	{
-		path = search_PATH(m, args[0]);
+		path = search__path_(m, args[0]);
 	}
-	ft_printf("path: %s\n", path);
 	return (path);
 }
 
@@ -83,13 +87,14 @@ t_execve	*mk_execve(t_msh *m, t_cmd *cmd)
 	ev->args = cmd->args;
 	if (ev->args == NULL)
 	{
-		ft_free(ev);
+		ft_free((void **)&ev);
 		return (NULL);
 	}
 	ev->pathname = find_path(m, ev->args);
 	if (!ev->pathname)
 	{
-		ft_free(ev);
+		ft_printf("%s: command not found\n", ev->args[0]);
+		ft_free((void **)&ev);
 		return (NULL);
 	}
 	return (ev);
@@ -101,7 +106,7 @@ void	del_execve(t_execve *ev)
 	if (ev)
 	{
 		if (ev->pathname)
-			ft_free(ev->pathname);
-		ft_free(ev);
+			ft_free((void **)&ev->pathname);
+		ft_free((void **)&ev);
 	}
 }

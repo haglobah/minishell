@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
 //Beware: c = 1! (pipecount one 'too high')
-int	count_pipes(char **toks, int *places)
+void	index_pipes(char **toks, int *places)
 {
 	int	c;
 	int	i;
@@ -25,13 +25,30 @@ int	count_pipes(char **toks, int *places)
 		if (s_iseq(toks[i], "|"))
 		{
 			places[c] = i + 1;
-			ft_free(toks[i]);
+			ft_free((void **)&toks[i]);
 			toks[i] = NULL;
 			c++;
 		}
 		i++;
 	}
 	places[c] = i;
+}
+
+static int	count_pipes(char **toks)
+{
+	int	c;
+	int	i;
+
+	i = 0;
+	c = 1;
+	while (toks[i])
+	{
+		if (s_iseq(toks[i], "|"))
+		{
+			c++;
+		}
+		i++;
+	}
 	return (c);
 }
 
@@ -83,10 +100,11 @@ int	split_by_pipes(t_msh *m)
 	int	pipecount;
 	int	*pipe_places;
 
-	pipe_places = (int *)ft_calloc(NUM_PIPES + 1, sizeof(int));
+	pipecount = count_pipes(m->toks);
+	pipe_places = (int *)ft_calloc(pipecount + 1, sizeof(int));
 	if (!pipe_places)
 		return (-2);
-	pipecount = count_pipes(m->toks, pipe_places);
+	index_pipes(m->toks, pipe_places);
 	m->ct->sentences = (char ***)ft_calloc(pipecount + 1, sizeof(char **));
 	m->ct->senc = pipecount;
 	if (!m->ct->sentences)
@@ -97,7 +115,7 @@ int	split_by_pipes(t_msh *m)
 		put_split_to_table(m, i, pipe_places);
 		i++;
 	}
-	ft_free(pipe_places);
+	ft_free((void **)&pipe_places);
 	return (pipecount);
 }
 
@@ -151,11 +169,11 @@ char	*parse_here(t_cmd *cmd, char *here)
 	int	i;
 	int	j;
 
+	if (here == NULL)
+		return (NULL);
 	j = ft_strlen(here) - 2;
 	while (here[j] != '\n')
-	{
 		j--;
-	}
 	i = 0;
 	if (char_in_set(here[i], "'\""))
 	{
@@ -167,7 +185,9 @@ char	*parse_here(t_cmd *cmd, char *here)
 	}
 	else
 	{
-		i += ft_strlen(here) - 2 - j;
+		while (here[i] != '\n')
+			i++;
+		i++;
 	}
 	return (ft_substr(here, i, j - i));
 }

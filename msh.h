@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   msh.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 12:40:03 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:51 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 19:52:21 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 # include <sys/wait.h>
 # include <stdarg.h>
 
-# define NUM_PIPES 50
-
 extern int	g_our_global;
 
 typedef int	t_curr_token_start;
@@ -42,10 +40,15 @@ typedef struct s_mk_strlist
 	char	*str_to_add;
 }	t_strlst;
 
+typedef struct s_input
+{
+	char	*t;
+	bool	here_did_realloc;
+}	t_in;
 
 typedef struct s_main_loop
 {
-	char	*t;
+	t_in	*in;
 	char	***env;
 	int		rv;
 }	t_loop;
@@ -108,7 +111,7 @@ void		del_ct(t_ct *ct);
 
 typedef struct s_minishell
 {
-	char	*t;
+	t_in	*in;
 	char	**toks;
 	t_ct	*ct;
 	char	***env;
@@ -116,13 +119,14 @@ typedef struct s_minishell
 }	t_msh;
 
 //data.c
-t_msh		*mk_msh(char **toks, char ***env, char *t, int *rv);
+t_msh		*mk_msh(char **toks, char ***env, t_in *in, int *rv);
 void		del_msh(t_msh *m);
 void		free_all(t_msh *m);
 
 //utils.c
 void		*ft_realloc(void *ptr, size_t size);
-void		ft_free(void *ptr /*, char *place*/);
+void		*ft_reallocpl(void *ptr, size_t size, char *place);
+void		ft_free(void **ptr);
 int			s_iseq(char *s1, char *s2);
 int			s_isneq(char *s1, char *s2, int n);
 int			s_in_s(char *s, char **slist);
@@ -132,6 +136,7 @@ void		serror(char *token);
 int			serrorm1(char *token);
 int			strslen(char **strs);
 int			free_strs(char **sp);
+int			free_strspl(char **sp, char *place);
 void		*free_strsv(char **sp);
 bool		free_strsb(char **sp);
 void		prints(char **slist);
@@ -145,7 +150,7 @@ void		print_tokarr(char **toks);
 char		**list_to_arr(t_list *toks);
 
 //lexer.c
-t_list		*lex(char *in);
+t_list		*lex(t_in *in);
 
 //parser.c
 int			parse_msh(t_msh *m);
@@ -173,7 +178,7 @@ int			ft_env(t_msh *m, char **args);
 int			ft_exit(t_msh *m, char **args);
 
 //env.c
-bool		extend_env(char ***env, char *to_add);
+bool		extend_env(t_msh *m, char *to_add);
 char		**clone_env(void);
 bool		ft_setenv(t_msh *m, char *name, char *value);
 char		*ft_getenv(char ***msh_env, char *varname);

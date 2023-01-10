@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:11:20 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:57:25 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,24 @@ void	*ft_realloc(void *ptr, size_t size)
 		return (malloc(size));
 	if (!size)
 		return (ptr);
-	new_ptr = malloc(size); //NOT PROTECTED
+	new_ptr = malloc(size);
+	if (new_ptr == NULL)
+		return (NULL);
 	ft_memcpy(new_ptr, ptr, size);
-	ft_free(ptr);
+	ft_free((void **)&ptr);
 	return (new_ptr);
 }
 
-void	ft_free(void *ptr /*, char *place*/)
+// ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
+void	ft_free(void **ptr)
 {
-	if (ptr != NULL)
+	if (*ptr != NULL)
 	{
-		ft_printf("Freeing non-NULL %p \n", ptr);
-		ft_printf("%s \n", ptr);
-		free(ptr);
-		ptr = NULL;
+		free(*ptr);
+		*ptr = NULL;
 	}
 	else
 	{
-		ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
 	}
 }
 
@@ -85,7 +85,7 @@ int	s_in_s(char *s, char **slist)
 	i = 0;
 	while (slist[i])
 	{
-		if(s_iseq(s, slist[i]))
+		if (s_iseq(s, slist[i]))
 			return (1);
 		i++;
 	}
@@ -122,9 +122,23 @@ int	free_strs(char **sp)
 	i = -1;
 	while (sp[++i] != NULL)
 	{
-		ft_free(sp[i]);
+		ft_free((void **)&sp[i]);
 	}
-	ft_free(sp);
+	ft_free((void **)&sp);
+	return (0);
+}
+
+int	free_strspl(char **sp, char *place)
+{
+	int	i;
+
+	(void)place;
+	i = -1;
+	while (sp[++i] != NULL)
+	{
+		ft_free((void **)&sp[i]);
+	}
+	ft_free((void **)&sp);
 	return (0);
 }
 
@@ -147,7 +161,7 @@ void	prints(char **slist)
 	i = -1;
 	while (slist[++i])
 	{
-		ft_printf("%s\n", slist[i]);
+		ft_printf("'%s'\n", slist[i]);
 	}
 }
 
@@ -201,8 +215,8 @@ char	**mk_strlist(int argc, ...)
 			while (t.i)
 			{
 				t.i--;
-				ft_free(t.lst[t.i]);
-				ft_free(t.lst);
+				ft_free((void **)&t.lst[t.i]);
+				ft_free((void **)&t.lst);
 				return (NULL);
 			}
 		}

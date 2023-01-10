@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:17:26 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/04 19:32:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2022/12/15 00:02:55 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,14 @@
 
 void	print_tokens(t_list *tokens)
 {
+	int	i;
+
+	i = 0;
 	while (tokens)
 	{
-		ft_printf("%s%%\n", tokens->content);
+		ft_printf("%d: '%s'\n", i, tokens->content);
 		tokens = tokens->next;
+		i++;
 	}
 }
 
@@ -34,7 +38,7 @@ void	print_tokarr(char **toks)
 	ft_printf("\n");
 }
 
-int		alloc_toks(t_list *toks, char ***tok_arr)
+int	alloc_toks(t_list *toks, char ***tok_arr)
 {
 	int	i;
 	int	slen;

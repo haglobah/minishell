@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 13:21:59 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
+//ft_printf("Token added in %s: '%s'\n", place, substr);
 void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 {
 	char	*substr;
@@ -34,12 +35,34 @@ int	handle_nullchar(t_list **res, char *in, t_lex *l)
 	return (0);
 }
 
-void	read_n_app(char **line, char **in)
+//IS 'a<<D        | b<<F' => TEST2:'a<<D        ' a problem?
+int	read_n_app(char **line, char **in, t_lex *l)
 {
-	ft_printf("heredoc>");
-	*line = get_next_line(0);
-	*in = (char *)ft_realloc(*in, ft_strlen(*line) + ft_strlen(*in) + 1);
-	ft_strlcat(*in, *line, ft_strlen(*line) + ft_strlen(*in) + 1);
+	char	*tmp;
+	int		offset;
+	int		herelen;
+
+	*line = readline("heredoc>");
+	if (*line == NULL)
+	{
+		ft_printf("^D\n");
+		return (0);
+	}
+	herelen = ft_strlen(*line) + ft_strlen(*in) + 1;
+	tmp = (char *)ft_calloc(herelen + 1, sizeof(char));
+	if (!tmp)
+		return (0);
+	offset = 0;
+	ft_memcpy(tmp, *in, l->n - offset);
+	tmp[ft_strlen(tmp)] = '\n';
+	ft_memcpy(tmp + ft_strlen(tmp), *line, ft_strlen(*line));
+	ft_memcpy(
+		tmp + ft_strlen(tmp),
+		*in + l->n - offset,
+		ft_strlen(*in) - (l->n - offset));
+	ft_free((void **)&(*in));
+	*in = tmp;
+	return (1);
 }
 
 void	insert_nl(char **in)
@@ -51,20 +74,24 @@ void	insert_nl(char **in)
 	ft_printf("in: %s", *in);
 }
 
-void	handle_nlenv(t_list **res, char *in, t_lex *l, char *delim)
+void	handle_nlenv(t_list **res, t_in *in, t_lex *l, char *delim)
 {
 	char	*line;
 
 	while (true)
 	{
-		read_n_app(&line, &in);
-		l->n += ft_strlen(line);
+		if (read_n_app(&line, &(in->t), l) == 0)
+		{
+			return ;
+		}
+		in->here_did_realloc = true;
+		l->n += ft_strlen(line) + 1;
 		if (s_iseq(line, delim))
 			break ;
-		ft_free(line);
+		ft_free((void **)&line);
 	}
-	ft_free(line);
-	add_tok(res, in, l, "heredoc");
+	ft_free((void **)&line);
+	add_tok(res, in->t, l, "heredoc");
 }
 
 char	*read_delim(char *in, t_lex *l)
@@ -83,11 +110,6 @@ char	*read_delim(char *in, t_lex *l)
 	delim = ft_substr(in, l->cst, l->n - l->cst);
 	if (!delim)
 		return (NULL);
-	delim = ft_realloc(delim, ft_strlen(delim) + 2);
-	if (!delim)
-		return (NULL);
-	delim[ft_strlen(delim)] = '\n';
-	delim[ft_strlen(delim) + 1] = '\0';
 	if (char_in_set(in[l->cst - 1], "'\""))
 		l->cst += -1;
 	while (in[l->n] && char_in_set(in[l->n], "'\" \v\t\f\r"))
@@ -95,22 +117,22 @@ char	*read_delim(char *in, t_lex *l)
 	return (delim);
 }
 
-void	handle_pipered(t_list **res, char *in, t_lex *l)
+void	handle_pipered(t_list **res, t_in *in, t_lex *l)
 {
 	char	*delim;
 
 	if (l->ctt == 1
-		&& (in[l->cst] == '|'
+		&& (in->t[l->cst] == '|'
 			|| l->n - l->cst > 1
-			|| in[l->cst] != in[l->n]))
+			|| (in->t)[l->cst] != (in->t)[l->n]))
 	{
-		add_tok(res, in, l, "pipe&red");
-		if (s_isneq(&in[l->cst], "<<", 2))
+		add_tok(res, (in->t), l, "pipe&red");
+		if (s_isneq(&(in->t)[l->cst], "<<", 2))
 		{
 			l->cst = l->n;
-			delim = read_delim(in, l);
+			delim = read_delim((in->t), l);
 			handle_nlenv(res, in, l, delim);
-			ft_free(delim);
+			ft_free((void **)&delim);
 		}
 		l->cst = l->n;
 		l->ctt = 0;
@@ -211,7 +233,7 @@ void	handle_rest(t_list **res, char *in, t_lex *l)
 		l->n++;
 }
 
-t_list	*lex(char *in)
+t_list	*lex(t_in *in)
 {
 	t_list	*res;
 	t_lex	l;
@@ -220,21 +242,21 @@ t_list	*lex(char *in)
 	l = (t_lex){.cst = 0, .n = 0, .ctt = 0};
 	while (1)
 	{
-		if (handle_nullchar(&res, in, &l))
+		if (handle_nullchar(&res, in->t, &l))
 			break ;
 		handle_pipered(&res, in, &l);
-		handle_quotes(&res, in, &l);
-		if (handle_vars(&res, in, &l))
+		handle_quotes(&res, in->t, &l);
+		if (handle_vars(&res, in->t, &l))
 			continue ;
-		if (handle_prn(&res, in, &l))
+		if (handle_prn(&res, in->t, &l))
 			continue ;
-		if (char_in_set(in[l.n], " \v\t\f\r"))
+		if (char_in_set(in->t[l.n], " \v\t\f\r"))
 		{
-			if (handle_whitespace(&res, in, &l))
+			if (handle_whitespace(&res, in->t, &l))
 				continue ;
 			break ;
 		}
-		handle_rest(&res, in, &l);
+		handle_rest(&res, in->t, &l);
 	}
 	return (res);
 }

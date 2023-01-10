@@ -6,7 +6,7 @@
 /*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 22:36:40 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,16 @@ void	replace_string_at(char **sp, int dollar, char *content, int vlen)
 		t.k++;
 		t.z++;
 	}
-	ft_free(*sp);
+	ft_free((void **)&(*sp));
 	*sp = t.new_arg;
 }
 
 void	find_replace(t_msh *m, char **sp, int dollar)
 {
-	int		clen;
 	int		vlen;
 	char	*content;
 	char	*varname;
 
-	clen = 0;
 	vlen = 0;
 	content = NULL;
 	varname = get_var(sp, dollar);
@@ -69,11 +67,14 @@ void	find_replace(t_msh *m, char **sp, int dollar)
 		content = ft_getenv(m->env, varname);
 		if (content != NULL)
 		{
-			clen = ft_strlen(content);
 			replace_string_at(sp, dollar, content, vlen);
-			ft_free(content);
+			ft_free((void **)&content);
 		}
-		ft_free(varname);
+		else
+		{
+			replace_string_at(sp, dollar, "", vlen);
+		}
+		ft_free((void **)&varname);
 	}
 }
 
@@ -99,7 +100,7 @@ int	rm_quotes(char **sp, int here_quoted)
 		is_quoted = 1;
 	tmp = *sp;
 	*sp = ft_substr(*sp, 1, ft_strlen(*sp) - 2);
-	ft_free(tmp);
+	ft_free((void **)&tmp);
 	return (is_quoted);
 }
 
@@ -183,8 +184,6 @@ void	loop_through_cmds(t_msh *m)
 		swap_in_vars(m, &cmds[i]->in, cmds[i]->here_quoted);
 		swap_in_vars(m, &cmds[i]->out, cmds[i]->here_quoted);
 		cmds[i]->args = cons_args(cmds[i]);
-		ft_printf("\n");
-		printcmd(m->ct->cmds[i]);
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2022/12/07 11:49:08 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	copy_env(char **new, char **old)
 	return (i);
 }
 
-bool	extend_env(char ***env, char *to_add)
+bool	add_entry(char ***env, char *to_add)
 {
 	char	*eqsign;
 	char	**new;
@@ -54,6 +54,25 @@ bool	extend_env(char ***env, char *to_add)
 	free_strs((*env));
 	*env = new;
 	return (true);
+}
+
+bool	extend_env(t_msh *m, char *to_add)
+{
+	char	*var;
+	char	*eqsignp;
+	char	*varname;
+	int		eqpos;
+
+	eqsignp = ft_strchr(to_add, '=');
+	eqpos = eqsignp - to_add;
+	varname = ft_substr(to_add, 0, eqpos);
+	if (!varname)
+		return (NULL);
+	var = ft_getenv(m->env, varname);
+	if (var)
+		rm_entry(m, varname);
+	free(varname);
+	return (add_entry(m->env, to_add));
 }
 
 char	**clone_env(void)
@@ -98,7 +117,7 @@ bool	ft_setenv(t_msh *m, char *name, char *value)
 			res = ft_calloc(sizeof(char), (eqpos + 1) + ft_strlen(value) + 1);
 			ft_strlcpy(res, env[i], eqpos + 2);
 			ft_strlcpy(&res[eqpos + 1], value, ft_strlen(value) + 1);
-			ft_free(env[i]);
+			ft_free((void **)&env[i]);
 			env[i] = res;
 		}
 	}
@@ -130,8 +149,8 @@ char	*ft_getenv(char ***msh_env, char *varname)
 
 void	strip_env(t_msh *m, int pos, int len)
 {
-	ft_free((*m->env)[pos]);
-	ft_memmove((*m->env)[pos], (*m->env)[pos + 1], sizeof(char *) * len);
+	ft_free((void **)&(*m->env)[pos]);
+	ft_memmove((*m->env) + pos, (*m->env) + pos + 1, sizeof(char *) * len);
 }
 
 int	rm_entry(t_msh *m, char *varname)
