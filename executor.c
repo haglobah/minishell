@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/10 16:34:22 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/10 17:50:52 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int	execute_cmd(t_msh *m, int forks)
 			{
 				ft_printf("%s: command not found\n", ev->args[0]);
 				del_execve(ev);
+				free_all(m);
 				exit(1);
 			}
 		}
