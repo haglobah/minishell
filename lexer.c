@@ -12,6 +12,7 @@
 
 #include "msh.h"
 
+//ft_printf("Token added in %s: '%s'\n", place, substr);
 void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 {
 	char	*substr;
@@ -20,7 +21,6 @@ void	add_tok(t_list **res, char *in, t_lex *l, char *place)
 	substr = ft_substr(in, l->cst, l->n - l->cst);
 	if (!substr)
 		return ;
-	//ft_printf("Token added in %s: '%s'\n", place, substr);
 	ft_lstadd_back(res, ft_lstnew(substr));
 }
 
@@ -35,28 +35,31 @@ int	handle_nullchar(t_list **res, char *in, t_lex *l)
 	return (0);
 }
 
-int		read_n_app(char **line, char **in, t_lex *l)
+//IS 'a<<D        | b<<F' => TEST2:'a<<D        ' a problem?
+int	read_n_app(char **line, char **in, t_lex *l)
 {
+	char	*tmp;
+	int		offset;
+	int		herelen;
+
 	*line = readline("heredoc>");
 	if (*line == NULL)
 	{
 		ft_printf("^D\n");
 		return (0);
 	}
-	int	herelen = ft_strlen(*line) + ft_strlen(*in) + 1;
-	char *tmp = (char *)ft_calloc(herelen + 1, sizeof(char));
+	herelen = ft_strlen(*line) + ft_strlen(*in) + 1;
+	tmp = (char *)ft_calloc(herelen + 1, sizeof(char));
 	if (!tmp)
 		return (0);
-	int	offset = 0; //IS 'a<<D        | b<<F' => TEST2:'a<<D        ' a problem?
-	// ft_printf("TEST1:'%s'\n", tmp);
+	offset = 0;
 	ft_memcpy(tmp, *in, l->n - offset);
-	// ft_printf("TEST2:'%s'\n", tmp);
 	tmp[ft_strlen(tmp)] = '\n';
-	// ft_printf("TEST3:'%s'\n", tmp);
 	ft_memcpy(tmp + ft_strlen(tmp), *line, ft_strlen(*line));
-	// ft_printf("TEST4:'%s'\n", tmp);
-	ft_memcpy(tmp + ft_strlen(tmp), *in + l->n - offset, ft_strlen(*in) - (l->n - offset));
-	// ft_printf("TEST5:'%s'\n", tmp);
+	ft_memcpy(
+		tmp + ft_strlen(tmp),
+		*in + l->n - offset,
+		ft_strlen(*in) - (l->n - offset));
 	ft_free((void **)&(*in));
 	*in = tmp;
 	return (1);
