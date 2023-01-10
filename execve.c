@@ -12,13 +12,36 @@
 
 #include "msh.h"
 
-char	*search_PATH(t_msh *m, char *exec_name)
+bool	construct_exec_path(char **paths, char *exec_name, char **exec_path)
 {
-	char	*exec_path;
 	char	*tmppath;
 	char	*slash_name;
-	char	**paths;
 	int		i;
+
+	i = -1;
+	while (paths[++i] != NULL)
+	{
+		slash_name = ft_strjoin("/", exec_name);
+		if (slash_name == NULL)
+			return (NULL);
+		tmppath = ft_strjoin(paths[i], slash_name);
+		if (tmppath == NULL)
+			return (ft_free((void **)&slash_name), NULL);
+		ft_free((void **)&slash_name);
+		if (access(tmppath, F_OK) == 0)
+		{
+			*exec_path = tmppath;
+			return (true);
+		}
+		ft_free((void **)&tmppath);
+	}
+	return (false);
+}
+
+char	*search__path_(t_msh *m, char *exec_name)
+{
+	char	*exec_path;
+	char	**paths;
 	char	*pathstr;
 
 	exec_path = NULL;
@@ -27,25 +50,8 @@ char	*search_PATH(t_msh *m, char *exec_name)
 		return (NULL);
 	paths = ft_split(pathstr, ':');
 	if (paths == NULL)
-	{
-		ft_free((void **)&pathstr);
-		return (NULL);
-	}
-	// printns(paths);
-	i = -1;
-	while (paths[++i] != NULL)
-	{
-		slash_name = ft_strjoin("/", exec_name);
-		tmppath = ft_strjoin(paths[i], slash_name);
-		// ft_printf("'%s'\n", tmppath);
-		ft_free((void **)&slash_name);
-		if (access(tmppath, F_OK) == 0)
-		{
-			exec_path = tmppath;
-			break ;
-		}
-		ft_free((void **)&tmppath);
-	}
+		return (ft_free((void **)&pathstr), NULL);
+	construct_exec_path(paths, exec_name, &exec_path);
 	free_strs(paths);
 	ft_free((void **)&pathstr);
 	return (exec_path);
@@ -66,9 +72,8 @@ char	*find_path(t_msh *m, char **args)
 	}
 	else
 	{
-		path = search_PATH(m, args[0]);
+		path = search__path_(m, args[0]);
 	}
-	// ft_printf("path: %s\n", path);
 	return (path);
 }
 

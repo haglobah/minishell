@@ -20,19 +20,6 @@ void	ft_strcpy(char *dst, char *src)
 	}
 }
 
-void	*ft_reallocpl(void *ptr, size_t size, char *place)
-{
-	void	*new_ptr;
-
-	if (ptr == NULL)
-		return (malloc(size));
-	if (!size)
-		return (ptr);
-	new_ptr = malloc(size); //NOT PROTECTED
-	ft_memcpy(new_ptr, ptr, size);
-	ft_freepl(ptr, place);
-	return (new_ptr);
-}
 void	*ft_realloc(void *ptr, size_t size)
 {
 	void	*new_ptr;
@@ -41,26 +28,15 @@ void	*ft_realloc(void *ptr, size_t size)
 		return (malloc(size));
 	if (!size)
 		return (ptr);
-	new_ptr = malloc(size); //NOT PROTECTED
+	new_ptr = malloc(size);
+	if (new_ptr == NULL)
+		return (NULL);
 	ft_memcpy(new_ptr, ptr, size);
 	ft_free((void **)&ptr);
 	return (new_ptr);
 }
 
-void	ft_freepl(void *ptr, char *place)
-{
-	if (ptr != NULL)
-	{
-		(void)place;
-		free(ptr);
-		ptr = NULL;
-	}
-	else
-	{
-		// ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
-	}
-}
-
+// ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
 void	ft_free(void **ptr)
 {
 	if (*ptr != NULL)
@@ -70,7 +46,6 @@ void	ft_free(void **ptr)
 	}
 	else
 	{
-		// ft_printf("%s: freeing a NULL pointer/a pointer twice.\n");
 	}
 }
 
@@ -110,7 +85,7 @@ int	s_in_s(char *s, char **slist)
 	i = 0;
 	while (slist[i])
 	{
-		if(s_iseq(s, slist[i]))
+		if (s_iseq(s, slist[i]))
 			return (1);
 		i++;
 	}
@@ -157,12 +132,13 @@ int	free_strspl(char **sp, char *place)
 {
 	int	i;
 
+	(void)place;
 	i = -1;
 	while (sp[++i] != NULL)
 	{
-		ft_freepl(sp[i], place);
+		ft_free((void **)&sp[i]);
 	}
-	ft_freepl(sp, place);
+	ft_free((void **)&sp);
 	return (0);
 }
 

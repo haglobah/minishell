@@ -95,7 +95,7 @@ void	del_msh(t_msh *m)
 	if (m)
 	{
 		if (m->in->here_did_realloc)
-			ft_freepl(m->in->t, "t");
+			ft_free((void **)&m->in->t);
 		free_strspl(m->toks, "toks");
 		if (m->ct)
 			del_ct(m->ct);

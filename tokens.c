@@ -38,7 +38,7 @@ void	print_tokarr(char **toks)
 	ft_printf("\n");
 }
 
-int		alloc_toks(t_list *toks, char ***tok_arr)
+int	alloc_toks(t_list *toks, char ***tok_arr)
 {
 	int	i;
 	int	slen;

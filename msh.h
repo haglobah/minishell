@@ -27,8 +27,6 @@
 # include <sys/wait.h>
 # include <stdarg.h>
 
-# define NUM_PIPES 50
-
 extern int	g_our_global;
 
 typedef int	t_curr_token_start;
@@ -47,7 +45,6 @@ typedef struct s_input
 	char	*t;
 	bool	here_did_realloc;
 }	t_in;
-
 
 typedef struct s_main_loop
 {
@@ -130,7 +127,6 @@ void		free_all(t_msh *m);
 void		*ft_realloc(void *ptr, size_t size);
 void		*ft_reallocpl(void *ptr, size_t size, char *place);
 void		ft_free(void **ptr);
-void		ft_freepl(void *ptr, char *place);
 int			s_iseq(char *s1, char *s2);
 int			s_isneq(char *s1, char *s2, int n);
 int			s_in_s(char *s, char **slist);

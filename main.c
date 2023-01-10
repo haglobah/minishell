@@ -91,10 +91,8 @@ void	msh_loop(void)
 	l = (t_loop){.in = &in, .rv = 0, .env = NULL};
 	l.env = ft_calloc(1, sizeof(char **));
 	*l.env = clone_env();
-	while (1)
+	while (ft_readline(&l) != 0)
 	{
-		if (ft_readline(&l) == 0)
-			break ;
 		lex_lst = lex(l.in);
 		toks = list_to_arr(lex_lst);
 		ft_lstclear(&lex_lst, del_toks);

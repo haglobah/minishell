@@ -170,15 +170,10 @@ char	*parse_here(t_cmd *cmd, char *here)
 	int	j;
 
 	if (here == NULL)
-	{
 		return (NULL);
-	}
-	//ft_printf("Our here: '%s' \n", here);
 	j = ft_strlen(here) - 2;
 	while (here[j] != '\n')
-	{
 		j--;
-	}
 	i = 0;
 	if (char_in_set(here[i], "'\""))
 	{
@@ -194,7 +189,6 @@ char	*parse_here(t_cmd *cmd, char *here)
 			i++;
 		i++;
 	}
-	//ft_printf("Result: '%s'\n", ft_substr(here, i, j - i));
 	return (ft_substr(here, i, j - i));
 }
 

@@ -104,7 +104,7 @@ int	execute_cmd(t_msh *m, int forks)
 		{
 			if (execve(ev->pathname, ev->args, *m->env) == -1)
 			{
-				ft_printf("execve failed.\n");
+				ft_printf("%s: command not found\n", ev->args[0]);
 				del_execve(ev);
 				exit(1);
 			}
@@ -135,6 +135,7 @@ int	*mk_pipes(t_msh *m)
 	return (fd);
 }
 
+//WATCHOUT FOR THE RIGHT ORDER!!! Currently file > heredoc
 int	setup_in(t_msh *m, int *fd, int forks)
 {
 	char	*infile;
@@ -142,7 +143,7 @@ int	setup_in(t_msh *m, int *fd, int forks)
 
 	close(fd[forks * 2 + 1]);
 	infile = m->ct->cmds[forks]->in;
-	if (infile && !s_iseq(infile, ""))	//WATCHOUT FOR THE RIGHT ORDER!!! Currently file > heredoc
+	if (infile && !s_iseq(infile, ""))
 	{
 		fd_open = open(infile, O_RDONLY);
 		if (fd_open == -1)
@@ -191,7 +192,7 @@ int	run_child(t_msh *m, int *fd, int forks)
 	setup_in(m, fd, forks);
 	setup_out(m, fd, forks);
 	close_fds(forks * 2 + 0, fd, m->ct->senc + 1);
-	ft_freepl(fd, "fd at child");
+	ft_free((void **)&fd);
 	if (execute_cmd(m, forks) == 1)
 		return (1);
 	return (0);
@@ -274,7 +275,7 @@ int	execute_only_cmds(t_msh *m)
 		if (wait(NULL) <= 0)
 			break ;
 	}
-	ft_freepl(fd, "fd at parent");
+	ft_free((void **)&fd);
 	return (0);
 }
 
