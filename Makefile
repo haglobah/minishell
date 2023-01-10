@@ -33,7 +33,7 @@ ifeq ($(OS),Windows_NT)
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
-		LINK_FLAGS += -ltinfo
+#		LINK_FLAGS += -ltinfo
 		LSANLFLAGS := -rdynamic -LLeakSanitizer -llsan -ldl -lstdc++
 	endif
 	ifeq ($(UNAME_S),Darwin)
@@ -89,6 +89,9 @@ re: fclean
 test: $(TOBJS) $(OBJS)
 	$(CC) $(TOBJS) $(OBJS) $(LINK_FLAGS) -o $(TEST)
 	./$(TEST)
+
+norm: 
+	norminette $(MAIN) $(SRCS)
 
 run: all
 	./$(NAME)
