@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 17:36:28 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 19:23:13 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/11 20:17:02 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,20 @@ int	ft_cd(t_msh *m, char **args)
 
 int	ft_pwd(t_msh *m, char **args)
 {
+	char	*ret;
+
 	if (strslen(args) >= 2)
 	{
 		ft_printf("pwd: too many arguments\n");
 		return (1);
 	}
 	else
-		ft_printf("%s\n", ft_getenv(m->env, "PWD"));
+	{
+		ret = ft_getenv(m->env, "PWD");
+		ft_printf("%s\n", ret);
+		if (ret)
+			free(ret);
+	}
 	return (0);
 }
 
