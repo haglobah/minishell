@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 09:39:54 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/10 17:50:52 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/11 19:44:33 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	exec_builtin_from_child(t_msh *m, int forks)
 	return (0);
 }
 
-int	exec_builtin(t_msh *m, int forks)
+int	exec_builtin(t_msh *m, int forks, int *fd)
 {
 	char	*name;
 	char	**args;
@@ -83,7 +83,10 @@ int	exec_builtin(t_msh *m, int forks)
 	else if (s_iseq(name, "env"))
 		return (ft_env(m, args));
 	else if (s_iseq(name, "exit"))
+	{
+		ft_free((void **)&fd);
 		return (ft_exit(m, args));
+	}
 	return (0);
 }
 
@@ -282,8 +285,7 @@ int	execute_only_cmds(t_msh *m)
 
 int	run_builtin(t_msh *m, int *fd, int forks)
 {
-	(void)fd;
-	return (exec_builtin(m, forks));
+	return (exec_builtin(m, forks, fd));
 }
 
 int	exec_cmds_builtin_sub(t_msh *m, int *forks, int *fd)
