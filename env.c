@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 16:31:21 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/11 20:05:50 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ bool	extend_env(t_msh *m, char *to_add)
 	var = ft_getenv(m->env, varname);
 	if (var)
 		rm_entry(m, varname);
+	free(var);
 	free(varname);
 	return (add_entry(m->env, to_add));
 }
