@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 20:13:24 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/10 17:30:48 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/11 20:54:43 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,4 @@ void	del_msh(t_msh *m)
 			del_ct(m->ct);
 		ft_free((void **)&m);
 	}
-}
-
-void	free_all(t_msh *m)
-{
-	free_strs(*m->env);
-	ft_free((void **)&m->env);
-	del_msh(m);
 }

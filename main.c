@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/17 10:23:18 by tpeters           #+#    #+#             */
-/*   Updated: 2023/01/09 20:00:41 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/11 21:11:13 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,6 @@ bool	ft_readline(t_loop *l)
 		return (0);
 	add_history(l->in->t);
 	return (1);
-}
-
-void	del_toks(void *content)
-{
-	ft_free((void **)&content);
 }
 
 // msh_loop = execute . evaluate . parse . tokenize

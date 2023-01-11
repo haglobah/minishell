@@ -6,12 +6,14 @@
 #    By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/17 10:24:15 by tpeters           #+#    #+#              #
-#    Updated: 2023/01/10 16:09:24 by tpeters          ###   ########.fr        #
+#    Updated: 2023/01/11 21:20:08 by tpeters          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS = lexer.c parser.c evaluator.c tokens.c utils.c data.c executor.c \
-		builtins.c env.c execve.c
+		builtins.c env.c execve.c builtins2.c data2.c env2.c evaluator2.c \
+		executor2.c executor3.c executor4.c lexer2.c lexer3.c parser2.c \
+		parser3.c utils2.c utils3.c utils4.c
 MAIN = main.c
 OBJS = $(SRCS:.c=.o)
 MO = main.o
