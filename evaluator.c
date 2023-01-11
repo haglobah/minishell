@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   evaluator.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 11:26:40 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/09 22:36:40 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/11 19:54:48 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	insert_rv(t_msh *m, char **sp, int dollar)
 
 	str = ft_itoa(*(m->rv));
 	replace_string_at(sp, dollar, str, 1);
+	ft_free((void **)&str);
 }
 
 int	rm_quotes(char **sp, int here_quoted)
