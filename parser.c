@@ -6,7 +6,7 @@
 /*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:00:48 by bhagenlo          #+#    #+#             */
-/*   Updated: 2023/01/10 17:33:10 by tpeters          ###   ########.fr       */
+/*   Updated: 2023/01/11 16:49:12 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ void	put_split_to_table(t_msh *m, int pi, int *pipe_places)
 		tok_place = pipe_places[pi] + sen_i;
 		if (m->toks[tok_place])
 		{
-			m->ct->sentences[pi][sen_i] = ft_strdup(m->toks[tok_place]);
+			if (!s_iseq(m->toks[tok_place], "|"))
+			{
+				m->ct->sentences[pi][sen_i] = ft_strdup(m->toks[tok_place]);
+			}
 		}
 		sen_i++;
 	}
