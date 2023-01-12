@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bhagenlo <bhagenlo@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: tpeters <tpeters@student.42heilbronn.de    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/11 21:15:04 by tpeters           #+#    #+#             */
-/*   Updated: 2023/01/12 12:39:55 by bhagenlo         ###   ########.fr       */
+/*   Updated: 2023/01/12 15:40:20 by tpeters          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,17 @@ char	*parse_here(t_cmd *cmd, char *here)
 		i++;
 		while (!char_in_set(here[i], "'\""))
 			i++;
-		i++;
 		cmd->here_quoted = 1;
 	}
 	else
 	{
 		while (here[i] != '\n')
 			i++;
-		i++;
 	}
+	i++;
 	if (j <= i)
 		return (ft_strdup(""));
-	else
-		return (ft_substr(here, i, j - i));
+	return (ft_substr(here, i, j - i));
 }
 
 void	fill_io(char **sen, t_cmd *cmd, int *i, int *j)
